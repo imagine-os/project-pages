@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>C · Pulso — landing</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1C2E42}a:hover{color:#35597D}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; padding: 0 32px 32px; background: #EDE4D4; color: #1C2E42; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column;">
+  <header style="height: 96px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
+    <img src="assets/88ea88bf581742edfaf0c2c44c8eedeb.png" alt="HOY" style="height: 40px; width: auto;">
+    <nav aria-label="Principal" style="display: flex; gap: 8px; padding: 6px; border-radius: 999px; background: #FBF7EF;">
+      <a href="#clases" style="padding: 10px 18px; border-radius: 999px; background: #1C2E42; color: #FBF7EF; text-decoration: none; font-size: 14px; font-weight: 500;">Clases</a>
+      <a href="#horario" style="padding: 10px 18px; border-radius: 999px; text-decoration: none; font-size: 14px;">Horario</a>
+      <a href="#profes" style="padding: 10px 18px; border-radius: 999px; text-decoration: none; font-size: 14px;">Profes</a>
+      <a href="#planes" style="padding: 10px 18px; border-radius: 999px; text-decoration: none; font-size: 14px;">Planes</a>
+    </nav>
+    <a href="#entrar" style="display: inline-flex; align-items: center; min-height: 46px; padding: 0 22px; border-radius: 999px; background: #FBF7EF; text-decoration: none; font-size: 14px; font-weight: 500;">Entrar</a>
+  </header>
+
+  <main style="flex: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 16px;">
+    <section style="grid-column: 1 / span 2; grid-row: 1 / span 2; position: relative; overflow: hidden; border-radius: 36px; background: {{brand}}; color: #FBF7EF; padding: 48px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div style="position: absolute; right: -90px; bottom: -90px; width: 380px; height: 380px; border-radius: 50%; border: 1.5px solid rgba(251,247,239,0.22); box-shadow: 0 0 0 40px rgba(251,247,239,0.05), 0 0 0 80px rgba(251,247,239,0.04), 0 0 0 120px rgba(251,247,239,0.03);" aria-hidden="true"></div>
+      <span style="position: relative; display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(251,247,239,0.14); font-size: 13px; font-weight: 500;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #F7F3B2;" aria-hidden="true"></span>Human club · Medellín</span>
+      <div style="position: relative; display: flex; flex-direction: column; gap: 20px;">
+        <h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 104px; line-height: 0.92; letter-spacing: -0.02em;">Muévete<br>con <em style="font-style: italic; color: #F7F3B2;">nosotros</em>.</h1>
+        <p style="margin: 0; max-width: 34ch; font-size: 18px; line-height: 1.55; color: rgba(251,247,239,0.86);">Un estudio para moverte, conectar y hacer una pausa. Tu primera clase es de prueba.</p>
+        <a href="#prueba" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 28px; border-radius: 999px; background: #F7F3B2; color: #1C2E42; text-decoration: none; font-size: 16px; font-weight: 600;">Reservar mi clase de prueba
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </section>
+
+    <section style="grid-column: 3; grid-row: 1 / span 3; border-radius: 36px; overflow: hidden; position: relative;" aria-label="La comunidad HOY">
+      <img src="assets/dddbec3e27e7e0708c1a6b7400b1deac.webp" alt="Cuatro alumnas de HOY en una postura de pilates con aro" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%;">
+      <span style="position: absolute; left: 20px; bottom: 20px; padding: 10px 16px; border-radius: 999px; background: rgba(251,247,239,0.92); font-size: 14px; font-weight: 500;">Pilates con aro · 50 min</span>
+    </section>
+
+    <section style="grid-column: 4; grid-row: 1; border-radius: 36px; background: #F7F3B2; color: #4A4212; padding: 28px; display: flex; flex-direction: column; justify-content: space-between;" aria-label="Fecha de apertura">
+      <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;">Abrimos</span>
+      <div style="display: flex; align-items: baseline; gap: 10px;"><span style="font-size: 120px; font-weight: 700; line-height: 0.8; letter-spacing: -0.04em; color: #1C2E42;">30</span><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 30px; color: #1C2E42;">de octubre</span></div>
+    </section>
+
+    <section style="grid-column: 4; grid-row: 2 / span 2; border-radius: 36px; background: #FBF7EF; padding: 28px; display: flex; flex-direction: column; gap: 14px;" aria-label="Primera semana">
+      <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #4C5D70;">Primera semana</span>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(36,56,79,0.12);"><span style="font-size: 15px; font-weight: 600; width: 74px; white-space: nowrap;">7:10 a. m.</span><span style="flex: 1; font-size: 15px;">Barre Full Body</span></div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(36,56,79,0.12);"><span style="font-size: 15px; font-weight: 600; width: 74px; white-space: nowrap;">9:10 a. m.</span><span style="flex: 1; font-size: 15px;">Pilates Mat</span></div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(36,56,79,0.12);"><span style="font-size: 15px; font-weight: 600; width: 74px; white-space: nowrap;">6:10 p. m.</span><span style="flex: 1; font-size: 15px;">Vinyasa Yoga</span></div>
+      <a href="#horario" style="margin-top: auto; display: inline-flex; align-items: center; justify-content: center; min-height: 50px; border-radius: 999px; border: 1.5px solid #1C2E42; text-decoration: none; font-size: 15px; font-weight: 500;">Ver todo el horario</a>
+    </section>
+
+    <section style="grid-column: 1 / span 2; grid-row: 3; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;" aria-label="Clases">
+      <a href="#pilates" style="border-radius: 28px; background: #5A7355; color: #FBF7EF; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></svg>
+        <span><span style="display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; line-height: 1;">Pilates</span><span style="font-size: 13px; opacity: 0.85;">50 min</span></span></a>
+      <a href="#barre" style="border-radius: 28px; background: #C4704F; color: #1C1410; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M3 9h18M3 15h18M7 9v6M17 9v6"/></svg>
+        <span><span style="display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; line-height: 1;">Barre</span><span style="font-size: 13px;">50 min</span></span></a>
+      <a href="#yoga" style="border-radius: 28px; background: #D8C24A; color: #2B260A; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>
+        <span><span style="display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; line-height: 1;">Yoga</span><span style="font-size: 13px;">50 min</span></span></a>
+      <a href="#respiracion" style="border-radius: 28px; background: #5F85B1; color: #0E1622; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M3 9c3-3 6-3 9 0s6 3 9 0M3 15c3-3 6-3 9 0s6 3 9 0"/></svg>
+        <span><span style="display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; line-height: 1;">Respira</span><span style="font-size: 13px;">50 min</span></span></a>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"brand":{"editor":"color","default":"#35597D","options":["#35597D","#1C2E42","#5A7355"]},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { brand: this.props.brand ?? '#35597D' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!-- @dsCard group="Display" height=300 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Card</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Card, CardHeader, Badge, Button } = BG;
+  return html`<div className="grid gap-4 p-6 md:grid-cols-3">
+    <${Card}>
+      <${CardHeader} kicker="Web page" title="Founding 20 landing" description="Card wheel, offer, how it works, claim." aside=${html`<${Badge} tone="warning" size="sm">Draft<//>`} />
+    <//>
+    <${Card} stripe="cat-4" variant="flat">
+      <${CardHeader} kicker="Claim form" title="Claim your card" description="Name, email, ZIP, project, wall opt-in." />
+    <//>
+    <${Card} selected interactive>
+      <${CardHeader} title="Group call · screenshare" description="A review needs a decision, not just a comment thread." />
+      <div className="mt-4"><${Button} size="sm" variant="secondary" iconEnd=${html`<${I.ArrowUpRight}/>`}>Open study<//></div>
+    <//>
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

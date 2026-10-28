@@ -1,0 +1,630 @@
+﻿<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Between Gigs 2.0 Backend Handoff</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column with a sticky contents rail on wide screens; brand band on top. */
+:root {
+  --bg: #f4f6f2; --surface: #ffffff; --sunken: #e9eee7; --line: #d6ded4;
+  --ink: #0d1f16; --muted: #4a5d51; --subtle: #6b7d71;
+  --brand: #0f3d2a; --brand-ink: #f2fbf6; --accent: #12a565; --accent-ink: #0b6b42; --mint: #2ee08e;
+  --code-bg: #eef3ec; --warn: #a35c00; --warn-bg: #fff4e2;
+  --display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #07140e; --surface: #0e2018; --sunken: #0a1912; --line: #21382c;
+  --ink: #e8f3ec; --muted: #a9bdb1; --subtle: #86998d;
+  --brand: #0d3424; --brand-ink: #f2fbf6; --accent: #2ee08e; --accent-ink: #5ff0ab; --mint: #2ee08e;
+  --code-bg: #0b1a13; --warn: #ffb44d; --warn-bg: #2a1d08; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #07140e; --surface: #0e2018; --sunken: #0a1912; --line: #21382c;
+  --ink: #e8f3ec; --muted: #a9bdb1; --subtle: #86998d;
+  --brand: #0d3424; --brand-ink: #f2fbf6; --accent: #2ee08e; --accent-ink: #5ff0ab; --mint: #2ee08e;
+  --code-bg: #0b1a13; --warn: #ffb44d; --warn-bg: #2a1d08; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); }
+a { color: var(--accent-ink); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: .86em; }
+code { background: var(--code-bg); border: 1px solid var(--line); padding: .05em .35em; border-radius: 5px; overflow-wrap: anywhere; }
+
+.band { background: var(--brand); color: var(--brand-ink); position: relative; overflow: hidden;
+  background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.1px); background-size: 12px 12px; }
+.band::after { content: ""; position: absolute; left: -15%; right: -15%; bottom: -230px; height: 260px; border-radius: 50%;
+  border-top: 1.5px solid rgba(46,224,142,.55); box-shadow: 0 -20px 60px rgba(46,224,142,.16); pointer-events: none; }
+.band-in { max-width: 1180px; margin: 0 auto; padding-block: 44px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); position: relative; z-index: 1; }
+.eyebrow { font: 700 12px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--mint); }
+h1 { font: 600 clamp(32px, 5vw, 52px)/1.08 var(--display); letter-spacing: -.02em; margin: 14px 0 12px; text-wrap: balance; }
+.lede { max-width: 66ch; color: rgba(242,251,246,.84); font-size: 18px; margin: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; font-size: 14px; color: rgba(242,251,246,.75); }
+.meta b { color: var(--brand-ink); font-weight: 600; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 32px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; font-size: 14px; }
+nav.toc p { font: 700 11px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--subtle); margin: 6px 0 12px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: s; }
+nav.toc a { display: block; padding: 6px 10px; border-radius: 8px; color: var(--muted); text-decoration: none; }
+nav.toc a:hover { background: var(--sunken); color: var(--ink); }
+main { min-width: 0; display: grid; gap: 56px; }
+section { min-width: 0; display: grid; gap: 16px; scroll-margin-top: 20px; }
+h2 { font: 600 26px/1.2 var(--display); letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+h3 { font: 600 18px/1.3 var(--display); margin: 8px 0 0; }
+p { margin: 0; max-width: 72ch; }
+.muted { color: var(--muted); }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 72ch; }
+
+.links { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.link { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); text-decoration: none; color: var(--ink); min-width: 0; }
+.link:hover { border-color: var(--accent); }
+.link b { font-weight: 600; }
+.link span { color: var(--muted); font-size: 14px; }
+.link .mono { color: var(--accent-ink); font-size: 12.5px; overflow-wrap: anywhere; }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.box { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.box h3 { margin: 0; }
+.box.done { border-left: 4px solid var(--accent); }
+.box.todo { border-left: 4px solid var(--warn); }
+.note { border: 1px solid var(--line); background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 16px; font-size: 15px; }
+.note b { color: var(--warn); }
+
+.diagram { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; overflow-x: auto; }
+.diagram pre.mermaid { margin: 0; background: transparent; text-align: center; font-family: var(--body); }
+.cap { font-size: 14px; color: var(--subtle); margin-top: -6px; }
+
+.table { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font: 600 12px/1.2 var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--subtle); background: var(--sunken); white-space: nowrap; }
+td code { white-space: nowrap; }
+td.w { min-width: 260px; }
+.pill { display: inline-block; font: 600 12px/1 var(--body); padding: 5px 8px; border-radius: 999px; background: var(--sunken); color: var(--muted); white-space: nowrap; }
+.pill.owner { background: color-mix(in oklab, var(--accent) 16%, var(--surface)); color: var(--accent-ink); }
+.pill.public { background: color-mix(in oklab, #3b82f6 14%, var(--surface)); color: var(--ink); }
+.pill.self { background: color-mix(in oklab, var(--warn) 14%, var(--surface)); color: var(--ink); }
+
+ol.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: st; }
+ol.steps li { counter-increment: st; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+ol.steps li::before { content: counter(st); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--brand); color: var(--brand-ink); font: 600 14px/1 var(--display); }
+ol.steps b { display: block; }
+.copy { display: inline-flex; gap: 6px; align-items: center; font: 600 13px/1 var(--body); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.copy:hover { border-color: var(--accent); }
+
+@media (max-width: 900px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  nav.toc { position: static; }
+  nav.toc ol { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<header class="band">
+  <div class="band-in">
+    <span class="eyebrow">Handoff · Backend</span>
+    <h1>Between Gigs 2.0: what to stitch to the backend</h1>
+    <p class="lede">For Anu. The front end is built and live as a static site. Every read and write already goes through one TypeScript interface, so the backend work is a Worker API plus one replacement implementation of that interface. This page has the links, the diagrams, every endpoint and the order to build them in.</p>
+    <div class="meta"><span>Prepared <b>22 Oct 2026</b></span><span>Repo <b>Between-Gigs/between-gig-2.0</b>, branch <b>main</b></span><span>Stack <b>Next 16 static export · Cloudflare Worker · D1 · Clerk · Resend</b></span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Contents">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#links">Links</a></li>
+      <li><a href="#scope">Built vs. to build</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#journey">Gigster journey</a></li>
+      <li><a href="#status">Profile status</a></li>
+      <li><a href="#data">Data model</a></li>
+      <li><a href="#api">API endpoints</a></li>
+      <li><a href="#emails">Emails</a></li>
+      <li><a href="#auth">Auth and secrets</a></li>
+      <li><a href="#plan">Build order</a></li>
+      <li><a href="#done">Definition of done</a></li>
+      <li><a href="#questions">Open questions</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- 1. Links -->
+    <section id="links" aria-labelledby="links-h">
+      <h2 id="links-h">Links</h2>
+      <p class="muted">The preview runs on sample data kept in the browser, so everything can be clicked through before the backend exists. Use the Preview guide to sign in as any role.</p>
+      <div class="links">
+        <a class="link" href="https://between-gigs.github.io/between-gig-2.0/preview/" target="_blank" rel="noreferrer"><b>Preview guide</b><span>Sign in as owner, an invited person or a Gigster at each status</span><span class="mono">between-gigs.github.io/between-gig-2.0/preview/</span></a>
+        <a class="link" href="https://between-gigs.github.io/between-gig-2.0/" target="_blank" rel="noreferrer"><b>Live preview</b><span>GitHub Pages, rebuilt on every push to main</span><span class="mono">between-gigs.github.io/between-gig-2.0/</span></a>
+        <a class="link" href="https://between-gigs.github.io/between-gig-2.0/owners/" target="_blank" rel="noreferrer"><b>Owner dashboard</b><span>Review queue, people, waitlist (sign in as owner first)</span><span class="mono">/owners/</span></a>
+        <a class="link" href="https://between-gigs.github.io/between-gig-2.0/emails/" target="_blank" rel="noreferrer"><b>Every email</b><span>All 7 templates, light and dark, plus the sample outbox</span><span class="mono">/emails/</span></a>
+        <a class="link" href="https://github.com/Between-Gigs/between-gig-2.0" target="_blank" rel="noreferrer"><b>Front-end repo</b><span>Next 16, React 19, TypeScript, Tailwind v4</span><span class="mono">github.com/Between-Gigs/between-gig-2.0</span></a>
+        <a class="link" href="https://github.com/Between-Gigs/between-gig-2.0/blob/main/lib/data/source.ts" target="_blank" rel="noreferrer"><b>The contract: DataSource</b><span>Every method the UI calls. Start here.</span><span class="mono">lib/data/source.ts</span></a>
+        <a class="link" href="https://github.com/Between-Gigs/between-gig-2.0/blob/main/lib/data/types.ts" target="_blank" rel="noreferrer"><b>Types</b><span>Person, Profile, ProfileFields, Session, Outbox…</span><span class="mono">lib/data/types.ts</span></a>
+        <a class="link" href="https://github.com/Between-Gigs/between-gig-2.0/blob/main/lib/data/sample.ts" target="_blank" rel="noreferrer"><b>Reference implementation</b><span>The sample store: the exact behaviour to reproduce server-side</span><span class="mono">lib/data/sample.ts</span></a>
+        <a class="link" href="https://github.com/Between-Gigs/between-gig-2.0/blob/main/docs/handoff/data-layer.md" target="_blank" rel="noreferrer"><b>Data-layer notes</b><span>Method-by-method mapping and table proposals</span><span class="mono">docs/handoff/data-layer.md</span></a>
+        <a class="link" href="https://github.com/Between-Gigs/between-gig-2.0/blob/main/docs/handoff/clerk.md" target="_blank" rel="noreferrer"><b>Clerk setup</b><span>The bridge, dashboard settings, owner role</span><span class="mono">docs/handoff/clerk.md</span></a>
+        <a class="link" href="https://github.com/Between-Gigs/between-gig-2.0/tree/main/emails" target="_blank" rel="noreferrer"><b>Email templates</b><span>Pure functions: props in, subject + HTML + text out. Reuse in the Worker.</span><span class="mono">emails/*.ts · renderEmail()</span></a>
+        <a class="link" href="https://github.com/Between-Gigs/between-gig-2.0/blob/main/lib/profile/validate.ts" target="_blank" rel="noreferrer"><b>Validation</b><span>Share with the Worker so submit is checked server-side</span><span class="mono">lib/profile/validate.ts</span></a>
+        <a class="link" href="https://github.com/imagine-os/between-gigs" target="_blank" rel="noreferrer"><b>Current live app</b><span>Existing D1 schema and funnel routes to reuse</span><span class="mono">github.com/imagine-os/between-gigs · db/schema.ts</span></a>
+      </div>
+    </section>
+
+    <!-- 2. Scope -->
+    <section id="scope" aria-labelledby="scope-h">
+      <h2 id="scope-h">What's built and what's left</h2>
+      <div class="split">
+        <div class="box done">
+          <h3>Built (front end)</h3>
+          <ul class="plain">
+            <li>Public funnel: <code>/professionals</code>, call-sheet sign-up, <code>/storyboard</code> and its forms, policies</li>
+            <li>Invite → join → sign in (Clerk) → 5-step profile builder with autosave → submit</li>
+            <li>My profile, public profile <code>/p/[slug]</code></li>
+            <li>Owners: dashboard, review queue, approve / suggest edits / undo, people search, waitlist bulk invite</li>
+            <li>7 email templates as pure functions, with plain-text twins</li>
+            <li>QA: <code>pnpm check</code> (types, lint, build, screenshots, axe, end-to-end flow)</li>
+          </ul>
+        </div>
+        <div class="box todo">
+          <h3>To build (backend)</h3>
+          <ul class="plain">
+            <li>A Worker API (one route per DataSource method, listed below)</li>
+            <li>D1 tables: <code>people</code>, <code>invites</code>, <code>profile_drafts</code>, <code>profiles</code>, <code>review_notes</code>, <code>activity</code></li>
+            <li>Clerk token verification and the owner role check on every request</li>
+            <li>Email sending through the existing <code>welcome_email_outbox</code> and its drain (<code>lib/welcome-email.ts</code>)</li>
+            <li>Photo upload to storage (R2), URL saved in the profile</li>
+            <li><code>lib/data/api.ts</code>: the live DataSource, exported from <code>lib/data/index.ts</code></li>
+          </ul>
+        </div>
+      </div>
+      <p class="note"><b>The one swap.</b> No component imports the sample store. Write <code>lib/data/api.ts</code> implementing <code>DataSource</code> with <code>fetch</code> calls, then change the export in <code>lib/data/index.ts</code>. Leave out the optional <code>demo</code> block; the UI hides demo controls when it's missing.</p>
+    </section>
+
+    <!-- 3. Architecture -->
+    <section id="architecture" aria-labelledby="arch-h">
+      <h2 id="arch-h">Architecture</h2>
+      <p class="muted">Green is built. Amber is what the backend adds. The front end is a static export (no server), so anything secret or authoritative lives in the Worker.</p>
+      <div class="diagram">
+<pre class="mermaid">
+flowchart LR
+  subgraph Browser["Browser · static site (GitHub Pages now, Cloudflare later)"]
+    UI["Pages and components"]
+    DS["DataSource interface<br/>lib/data/source.ts"]
+    SAMPLE["sample.ts<br/>localStorage (today)"]
+    API_CLIENT["api.ts<br/>fetch client (to build)"]
+    CLERKJS["Clerk components<br/>@clerk/react"]
+    UI --> DS
+    DS -.today.-> SAMPLE
+    DS ==live==> API_CLIENT
+    UI --> CLERKJS
+  end
+  subgraph Worker["Cloudflare Worker API (to build)"]
+    AUTH["Verify Clerk token<br/>role check"]
+    ROUTES["/api/... routes"]
+    VAL["validateAll()<br/>shared from lib/profile"]
+    MAIL["renderEmail()<br/>shared from emails/"]
+    AUTH --> ROUTES
+    ROUTES --> VAL
+    ROUTES --> MAIL
+  end
+  API_CLIENT -- "Bearer token" --> AUTH
+  CLERKJS <--> CLERK[("Clerk<br/>email code, users")]
+  AUTH -. verifyToken .-> CLERK
+  ROUTES --> D1[("D1<br/>leads, people, invites,<br/>profiles, activity…")]
+  ROUTES --> R2[("R2<br/>profile photos")]
+  ROUTES --> OUTBOX[("welcome_email_outbox")]
+  OUTBOX --> SENDER["drainWelcomeEmails()<br/>existing, lib/welcome-email.ts"] --> RESEND[("Email bridge<br/>Resend")]
+
+  classDef built fill:#e3f7ec,stroke:#12a565,color:#0d1f16;
+  classDef todo fill:#fff2dc,stroke:#c77a00,color:#0d1f16;
+  classDef ext fill:#eef1f6,stroke:#7a869a,color:#0d1f16;
+  class UI,DS,SAMPLE,CLERKJS built;
+  class API_CLIENT,AUTH,ROUTES,VAL,MAIL,R2 todo;
+  class CLERK,D1,OUTBOX,SENDER,RESEND ext;
+</pre>
+      </div>
+      <p class="cap">D1, the outbox table and the sender already exist in the live app (imagine-os/between-gigs); the new tables sit alongside them.</p>
+    </section>
+
+    <!-- 4. Journey -->
+    <section id="journey" aria-labelledby="journey-h">
+      <h2 id="journey-h">A Gigster's journey, end to end</h2>
+      <p class="muted">From the call sheet to a live profile, with the endpoint and email at each step.</p>
+      <div class="diagram">
+<pre class="mermaid">
+sequenceDiagram
+  autonumber
+  actor G as Gigster
+  participant W as Web app
+  participant C as Clerk
+  participant A as Worker API
+  participant D as D1
+  participant M as Outbox / Resend
+  actor O as Owner
+
+  G->>W: Get on the call sheet (email, ZIP)
+  W->>A: POST /api/professionals3
+  A->>D: insert leads, form_responses
+  A->>M: queue welcome
+  O->>W: Waitlist, Invite N people
+  W->>A: POST /api/owners/invite
+  A->>D: insert people (invited), invites (token hash)
+  A->>M: queue invite (/join?invite=token)
+  G->>W: Opens invite link
+  W->>A: GET /api/invites/:token
+  A->>D: record opened_at
+  G->>C: Sign up with email code
+  W->>A: POST /api/session/sync
+  A->>D: people → registered, invites.used_at
+  loop While building (autosave ~0.7 s after typing)
+    W->>A: PUT /api/profile/draft
+    A->>D: upsert profile_drafts (registered → draft)
+  end
+  G->>W: Submit
+  W->>A: POST /api/profile/submit
+  A->>D: validate, copy to profiles, status submitted
+  A->>M: queue profile-submitted
+  O->>W: Review queue, Approve
+  W->>A: POST /api/owners/people/:id/approve
+  A->>D: status approved, activity row
+  A->>M: queue approved (profileUrl)
+  G->>W: /p/:slug is public
+</pre>
+      </div>
+      <p class="cap">"Suggest edits" instead of Approve: <code>POST /api/owners/people/:id/request-changes</code> writes <code>review_notes</code>, sets <code>changes_requested</code> and queues the changes-requested email; the Gigster edits and submits again.</p>
+    </section>
+
+    <!-- 5. Status -->
+    <section id="status" aria-labelledby="status-h">
+      <h2 id="status-h">Profile status</h2>
+      <p class="muted">The value of <code>people.status</code>. Every transition below is the only allowed path; reject anything else with 409.</p>
+      <div class="diagram">
+<pre class="mermaid">
+stateDiagram-v2
+  direction LR
+  [*] --> invited: owner invites a lead
+  invited --> registered: Clerk sign-up + session/sync
+  registered --> draft: first saveDraft
+  draft --> submitted: submit (server-side validation)
+  submitted --> approved: owner approves
+  submitted --> changes_requested: owner suggests edits
+  changes_requested --> submitted: Gigster resubmits
+  approved --> submitted: Gigster edits and resubmits
+  approved --> submitted: undo (short window)
+  changes_requested --> submitted: undo (short window)
+</pre>
+      </div>
+      <p class="cap">The public page reads only <code>profiles</code>, and only while the status is <code>approved</code>. Open question 3 below covers whether an approved page should stay live during a resubmission.</p>
+    </section>
+
+    <!-- 6. Data -->
+    <section id="data" aria-labelledby="data-h">
+      <h2 id="data-h">Data model</h2>
+      <p class="muted">Existing tables are reused as they are. The new ones are a proposal; field shapes follow <code>lib/data/types.ts</code>. <code>fields</code> is <code>ProfileFields</code> stored as JSON.</p>
+      <div class="diagram">
+<pre class="mermaid">
+erDiagram
+  leads ||--o| people : "invited as"
+  people ||--o{ invites : "has"
+  people ||--o| profile_drafts : "edits"
+  people ||--o| profiles : "submits"
+  people ||--o{ review_notes : "receives"
+  people ||--o{ activity : "appears in"
+  leads ||--o{ form_responses : "answers"
+
+  leads {
+    text id PK "existing"
+    text email
+    text zip_code
+    text category
+  }
+  people {
+    text id PK "new"
+    text lead_id FK
+    text email
+    text name
+    text slug UK
+    text status "invited..approved"
+    text auth_user_id "Clerk user id"
+    int invited_at
+    int registered_at
+    int submitted_at
+    int approved_at
+    int updated_at
+  }
+  invites {
+    text token_hash PK "never the token"
+    text person_id FK
+    text email
+    int created_at
+    int expires_at "30 days"
+    int opened_at
+    int used_at
+  }
+  profile_drafts {
+    text person_id PK
+    json fields
+    int step
+    int saved_at
+  }
+  profiles {
+    text person_id PK
+    json fields "frozen at submit"
+    int submitted_at
+  }
+  review_notes {
+    text id PK
+    text person_id FK
+    text section "about|skills|where|story"
+    text note
+    text by
+    int created_at
+  }
+  activity {
+    text id PK
+    text kind
+    text person_id FK
+    text who
+    text by
+    int at
+  }
+  form_responses {
+    text id PK "existing"
+    text form_id
+    json payload
+  }
+</pre>
+      </div>
+      <div class="table">
+        <table>
+          <thead><tr><th>Table</th><th>State</th><th>Used for</th></tr></thead>
+          <tbody>
+            <tr><td><code>leads</code></td><td><span class="pill">Existing</span></td><td>The call sheet / waitlist (≈500 rows). Source for invites.</td></tr>
+            <tr><td><code>form_responses</code></td><td><span class="pill">Existing</span></td><td>Call-sheet details; could also hold drafts and profiles (<code>form_id = 'gigster-profile'</code>) if you prefer one table.</td></tr>
+            <tr><td><code>sketches</code>, <code>privacy_requests</code></td><td><span class="pill">Existing</span></td><td>Storyboard forms and privacy requests, unchanged.</td></tr>
+            <tr><td><code>welcome_email_outbox</code></td><td><span class="pill">Existing</span></td><td>Every email: <code>message_type</code> = template, <code>template_payload</code> = JSON props.</td></tr>
+            <tr><td><code>people</code>, <code>invites</code>, <code>profile_drafts</code>, <code>profiles</code>, <code>review_notes</code>, <code>activity</code></td><td><span class="pill owner">New</span></td><td>Onboarding, review and the owner dashboard.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. API -->
+    <section id="api" aria-labelledby="api-h">
+      <h2 id="api-h">API endpoints</h2>
+      <p class="muted">One route per <code>DataSource</code> method. Route names are a proposal; the method names are fixed. Access: <span class="pill public">Public</span> anyone, <span class="pill self">Self</span> the signed-in person, <span class="pill owner">Owner</span> Clerk <code>publicMetadata.role === "owner"</code>, checked on every call.</p>
+
+      <h3>Public funnel (routes already live in the current app)</h3>
+      <div class="table"><table>
+        <thead><tr><th>Method</th><th>Route</th><th>Access</th><th>Does</th></tr></thead>
+        <tbody>
+          <tr><td><code>funnel.joinWaitlist</code></td><td><code>POST /api/professionals3</code></td><td><span class="pill public">Public</span></td><td class="w">Insert <code>leads</code> + <code>form_responses</code>, queue <code>welcome</code>. Keep the <code>website</code> honeypot.</td></tr>
+          <tr><td><code>funnel.addDetails</code></td><td><code>POST /api/professionals3/details</code></td><td><span class="pill public">Public</span></td><td class="w">Optional category and "What would you offer?".</td></tr>
+          <tr><td><code>funnel.submitSketch</code></td><td><code>POST /api/sketches</code></td><td><span class="pill public">Public</span></td><td class="w">Storyboard talent / buyer form, queue <code>coming-soon</code>.</td></tr>
+          <tr><td><code>funnel.privacyRequest</code></td><td><code>POST /api/privacy-requests</code></td><td><span class="pill public">Public</span></td><td class="w">Insert <code>privacy_requests</code>. Never triggers marketing mail.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Auth, invites and profiles</h3>
+      <div class="table"><table>
+        <thead><tr><th>Method</th><th>Route</th><th>Access</th><th>Does</th></tr></thead>
+        <tbody>
+          <tr><td><code>invites.lookup</code></td><td><code>GET /api/invites/:token</code></td><td><span class="pill public">Public</span></td><td class="w">Hash the token; return <code>valid · used · expired · unknown</code> and the email only. First valid open sets <code>opened_at</code>.</td></tr>
+          <tr><td><code>auth.syncExternal</code></td><td><code>POST /api/session/sync</code></td><td><span class="pill self">Self</span></td><td class="w">Right after Clerk sign-in. Read email and role from the verified token, never the body. Invited + valid token → <code>registered</code>, set name, slug, <code>auth_user_id</code>, <code>used_at</code>, terms version. Unknown email → <code>unknown-email</code>.</td></tr>
+          <tr><td><code>auth.session</code></td><td><code>GET /api/session</code></td><td><span class="pill self">Self</span></td><td class="w"><code>{ personId, email, role, name }</code> or null.</td></tr>
+          <tr><td><code>profiles.getDraft</code></td><td><code>GET /api/profile/draft</code></td><td><span class="pill self">Self</span></td><td class="w">Draft, or a blank one with the registered name.</td></tr>
+          <tr><td><code>profiles.saveDraft</code></td><td><code>PUT /api/profile/draft</code></td><td><span class="pill self">Self</span></td><td class="w">Upsert <code>{ fields, step }</code>. First save: <code>registered → draft</code>. Never changes submitted / approved. Called ~0.7 s after typing stops, so keep it cheap.</td></tr>
+          <tr><td><code>profiles.submit</code></td><td><code>POST /api/profile/submit</code></td><td><span class="pill self">Self</span></td><td class="w"><code>validateAll()</code> server-side, copy draft → <code>profiles</code>, status <code>submitted</code>, clear notes, queue <code>profile-submitted</code>, activity row.</td></tr>
+          <tr><td><code>profiles.getProfile</code></td><td><code>GET /api/profile</code></td><td><span class="pill self">Self</span></td><td class="w">The submitted copy.</td></tr>
+          <tr><td>Photo upload</td><td><code>POST /api/profile/photo</code></td><td><span class="pill self">Self</span></td><td class="w">New: upload to R2, return a URL for <code>fields.photo</code>. Today the builder stores a 480px data URL.</td></tr>
+          <tr><td><code>people.getPublic</code></td><td><code>GET /api/p/:slug</code></td><td><span class="pill public">Public</span></td><td class="w"><code>profile: null</code> unless approved. Never return the email.</td></tr>
+          <tr><td><code>people.similar</code></td><td><code>GET /api/p/:slug/similar</code></td><td><span class="pill public">Public</span></td><td class="w">Other approved people, those with photos first.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Owners</h3>
+      <div class="table"><table>
+        <thead><tr><th>Method</th><th>Route</th><th>Access</th><th>Does</th></tr></thead>
+        <tbody>
+          <tr><td><code>owners.dashboard</code></td><td><code>GET /api/owners/dashboard</code></td><td><span class="pill owner">Owner</span></td><td class="w">Counts by status, waitlist counts, review queue, latest activity, and the cumulative funnel (signups → invited → opened → account → submitted → approved; count everyone who ever reached a stage).</td></tr>
+          <tr><td><code>owners.reviewQueue</code></td><td><code>GET /api/owners/review</code></td><td><span class="pill owner">Owner</span></td><td class="w"><code>status = 'submitted'</code>, oldest <code>submitted_at</code> first.</td></tr>
+          <tr><td><code>owners.approve</code></td><td><code>POST /api/owners/people/:id/approve</code></td><td><span class="pill owner">Owner</span></td><td class="w">Only from submitted. <code>approved_at</code>, clear notes, activity, queue <code>approved</code>.</td></tr>
+          <tr><td><code>owners.requestChanges</code></td><td><code>POST /api/owners/people/:id/request-changes</code></td><td><span class="pill owner">Owner</span></td><td class="w">Only from submitted, at least one note. Insert <code>review_notes</code>, status <code>changes_requested</code>, queue <code>changes-requested</code> (notes as <code>section|note</code> lines).</td></tr>
+          <tr><td><code>owners.undoReview</code></td><td><code>POST /api/owners/people/:id/undo-review</code></td><td><span class="pill owner">Owner</span></td><td class="w">The Undo toast. Back to submitted, clear notes, delete that activity row, cancel the email if still queued. Latest decision only, short window.</td></tr>
+          <tr><td><code>owners.activity</code></td><td><code>GET /api/owners/activity?limit</code></td><td><span class="pill owner">Owner</span></td><td class="w">Newest first.</td></tr>
+          <tr><td><code>owners.waitlist</code></td><td><code>GET /api/owners/waitlist?...</code></td><td><span class="pill owner">Owner</span></td><td class="w"><code>leads</code> left join <code>people</code> / <code>invites</code> → not invited · invited · opened · registered. Search, interest filter, sort.</td></tr>
+          <tr><td><code>owners.invite</code></td><td><code>POST /api/owners/invite</code></td><td><span class="pill owner">Owner</span></td><td class="w">For each lead not yet invited: <code>people</code> (invited) + <code>invites</code> (token hash, 30 days), queue <code>invite</code>, activity. Run as a resumable batch and rate-limit Resend.</td></tr>
+          <tr><td><code>people.list</code></td><td><code>GET /api/people?text&amp;status&amp;service&amp;area&amp;availability&amp;sort</code></td><td><span class="pill owner">Owner</span></td><td class="w">With completeness from <code>validate.ts</code>. Filter JSON fields with <code>json_each</code> or denormalised columns.</td></tr>
+          <tr><td><code>people.get</code></td><td><code>GET /api/people/:id</code></td><td><span class="pill owner">Owner</span> <span class="pill self">Self</span></td><td class="w">Person, draft/profile, notes.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="cap">Not needed live: <code>auth.register</code>, <code>requestCode</code>, <code>verifyCode</code> (Clerk does these), <code>emails.outbox / get</code> (sample tooling) and the whole <code>demo</code> block.</p>
+    </section>
+
+    <!-- 8. Emails -->
+    <section id="emails" aria-labelledby="emails-h">
+      <h2 id="emails-h">Emails</h2>
+      <p class="muted">The Worker queues a row; the live app's drain (<code>drainWelcomeEmails</code> in <code>imagine-os/between-gigs</code> <code>lib/welcome-email.ts</code>, which posts to the email bridge with <code>BG_EMAIL_BRIDGE_TOKEN</code>) sends it. Extend it to render every template with <code>renderEmail(template, props, { assetBase: SITE_URL, siteUrl: SITE_URL })</code> and sends <code>subject</code>, <code>html</code> and <code>text</code> from <span class="mono">Between Gigs &lt;hello@between-gigs.com&gt;</span>. Logos and artwork load from <code>${SITE_URL}/email/</code>, so deploy <code>public/email/</code> there.</p>
+      <div class="table"><table>
+        <thead><tr><th>Template</th><th>Queued by</th><th>Props (all strings)</th></tr></thead>
+        <tbody>
+          <tr><td><code>welcome</code></td><td><code>joinWaitlist</code></td><td><code>storyboardUrl</code></td></tr>
+          <tr><td><code>coming-soon</code></td><td><code>submitSketch</code></td><td><code>kind</code></td></tr>
+          <tr><td><code>invite</code></td><td><code>owners.invite</code></td><td><code>inviteUrl</code> (<code>${SITE_URL}/join?invite=TOKEN</code>), <code>email</code></td></tr>
+          <tr><td><code>sign-in-code</code></td><td>Not used with Clerk</td><td><code>code</code>, <code>email</code>, <code>minutes</code></td></tr>
+          <tr><td><code>profile-submitted</code></td><td><code>profiles.submit</code></td><td><code>firstName</code>, <code>profileUrl</code>, <code>editUrl</code></td></tr>
+          <tr><td><code>approved</code></td><td><code>owners.approve</code></td><td><code>firstName</code>, <code>profileUrl</code> (<code>${SITE_URL}/p/SLUG</code>), <code>editUrl</code></td></tr>
+          <tr><td><code>changes-requested</code></td><td><code>owners.requestChanges</code></td><td><code>firstName</code>, <code>notes</code> (<code>section|note</code> per line), <code>editUrl</code></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 9. Auth & secrets -->
+    <section id="auth" aria-labelledby="auth-h">
+      <h2 id="auth-h">Auth and secrets</h2>
+      <div class="split">
+        <div class="box">
+          <h3>How a request is trusted</h3>
+          <ul class="plain">
+            <li>The browser gets a Clerk session token (<code>getToken()</code>) and sends <code>Authorization: Bearer …</code>.</li>
+            <li>The Worker verifies it with <code>@clerk/backend</code> <code>verifyToken</code>, then maps <code>sub</code> → <code>people.auth_user_id</code>.</li>
+            <li>Owner = Clerk <code>publicMetadata.role === "owner"</code> (only settable from the dashboard or server).</li>
+            <li>Never trust an email, role or person id from a request body.</li>
+            <li>Joining stays invite-only: Clerk allowlist from the invite step, or reject in <code>session/sync</code>.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Config</h3>
+          <div class="table"><table>
+            <thead><tr><th>Name</th><th>Where</th></tr></thead>
+            <tbody>
+              <tr><td><code>CLERK_SECRET_KEY</code></td><td>Worker secret only. Never in the front end.</td></tr>
+              <tr><td><code>BG_EMAIL_BRIDGE_TOKEN</code></td><td>Worker secret the live outbox drain already uses</td></tr>
+              <tr><td><code>SITE_URL</code></td><td>Worker var, e.g. <code>https://between-gigs.com</code></td></tr>
+              <tr><td><code>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code></td><td>Front-end build (public by design)</td></tr>
+              <tr><td><code>NEXT_PUBLIC_API_URL</code></td><td>Front-end build: the Worker's base URL (new)</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+      <p class="note"><b>Clerk dashboard to-dos.</b> Turn on email verification code; set the owners' public metadata to <code>{"role":"owner"}</code>; add the sign-in / sign-up paths and allowed origins; create the production instance (<code>pk_live_…</code>) with its DNS records. App <span class="mono">app_3K6djWZKXZ3KfSdhAkKl11f6TcV</span>, development instance today.</p>
+    </section>
+
+    <!-- 10. Plan -->
+    <section id="plan" aria-labelledby="plan-h">
+      <h2 id="plan-h">Suggested build order</h2>
+      <p class="muted">Each step is shippable on its own; the front end keeps working on sample data for anything not yet live.</p>
+      <div class="diagram">
+<pre class="mermaid">
+flowchart LR
+  A["1 · Schema + migrations<br/>new D1 tables"] --> B["2 · Auth<br/>verifyToken, session, session/sync"]
+  B --> C["3 · Invites<br/>lookup + owners.invite batch"]
+  C --> D["4 · Profiles<br/>draft, submit, photo to R2"]
+  D --> E["5 · Owners<br/>queue, approve, changes, undo, people, dashboard"]
+  E --> F["6 · Emails<br/>queue all 7 through the outbox"]
+  F --> G["7 · Swap<br/>lib/data/api.ts live"]
+</pre>
+      </div>
+      <ol class="steps">
+        <li><div><b>Schema.</b> Add the six tables with a D1 migration next to the existing ones. Index <code>people(status, submitted_at)</code>, <code>people(slug)</code>, <code>people(email)</code>, <code>invites(token_hash)</code>.</div></li>
+        <li><div><b>Auth.</b> A small middleware that verifies the Clerk token and loads the person and role; <code>GET /api/session</code> and <code>POST /api/session/sync</code>.</div></li>
+        <li><div><b>Invites.</b> <code>GET /api/invites/:token</code> and the owner invite batch (store a hash of a random 32-byte token).</div></li>
+        <li><div><b>Profiles.</b> Draft upsert, submit with server-side validation, photo upload.</div></li>
+        <li><div><b>Owners.</b> Review queue, approve, request changes, undo, people search, waitlist, dashboard counts and funnel.</div></li>
+        <li><div><b>Emails.</b> Queue rows in <code>welcome_email_outbox</code> with the props above; teach the existing drain to render every template with <code>emails/*.ts</code>.</div></li>
+        <li><div><b>Swap.</b> Write <code>lib/data/api.ts</code>, point <code>lib/data/index.ts</code> at it behind <code>NEXT_PUBLIC_API_URL</code>, and keep the sample for local QA.</div></li>
+      </ol>
+    </section>
+
+    <!-- 11. Done -->
+    <section id="done" aria-labelledby="done-h">
+      <h2 id="done-h">Definition of done</h2>
+      <ul class="plain">
+        <li>The live preview runs the full journey above against the Worker: invite → join → build → submit → approve → <code>/p/slug</code>, with real emails arriving.</li>
+        <li>Every owner route returns 403 for a signed-in Gigster, and 401 without a token.</li>
+        <li>Status changes outside the diagram return 409.</li>
+        <li><code>pnpm check</code> still passes locally on the sample store (it's the regression suite for the UI).</li>
+        <li>No secret appears in the front-end bundle (search the built <code>out/</code> for <code>sk_</code> and the bridge token).</li>
+      </ul>
+    </section>
+
+    <!-- 12. Questions -->
+    <section id="questions" aria-labelledby="q-h">
+      <h2 id="q-h">Open questions for Anu</h2>
+      <ol class="steps">
+        <li><div><b>Hosting.</b> Keep the front end on Pages and call a separate Worker, or move both onto one Cloudflare project (then <code>@clerk/nextjs</code> with middleware becomes possible)?</div></li>
+        <li><div><b>Profile storage.</b> New <code>profile_drafts</code> / <code>profiles</code> tables, or rows in the existing <code>form_responses</code>? The interface works with either.</div></li>
+        <li><div><b>Approved Gigsters who edit.</b> Should the old approved version stay public while the new one waits for review? (Today a resubmission takes the page down.)</div></li>
+        <li><div><b>Invite waves.</b> One batch for all ≈500, or waves by ZIP or interest? The waitlist filters support waves.</div></li>
+        <li><div><b>Reminders.</b> A reminder for invites not opened after N days, and who sends it?</div></li>
+        <li><div><b>Photos.</b> R2 bucket and size limits; resize on upload or on read?</div></li>
+      </ol>
+      <p class="muted">Questions for Patti and Peter (copy, checklist, owners list) are in <code>docs/handoff/milestone-4.md</code>.</p>
+    </section>
+  </main>
+</div>
+
+<!--claude-mermaid-runtime-begin:3477-->
+<style>.mermaid-diagram{margin-block:4px}.mermaid-diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
+<script>(function(){
+var CFG={"palettes":{"light":{"surface":"#f4efe4","text":"#42392e","line":"#8a7f6d","border":"#7a6c52","bg":"#fffdf8"},"dark":{"surface":"#262b34","text":"#f2f3f5","line":"#a8adb8","border":"#9aa4b8","bg":"#1f232b"}}};
+if(typeof mermaid==='undefined')return;
+var pres=Array.prototype.slice.call(document.querySelectorAll('pre.mermaid')).filter(function(p){if(p.hasAttribute('data-claude-mermaid-claimed'))return false;p.setAttribute('data-claude-mermaid-claimed','1');return true;});
+if(!pres.length)return;
+var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+var root=document.documentElement;
+var items=pres.map(function(pre){
+var mount=document.createElement('div');mount.className='mermaid-diagram';
+return {pre:pre,mount:mount,src:pre.textContent||''};
+});
+var seq=0;
+var renderGen=0;
+var lastKey='';
+function pageBg(fallback){
+var els=[document.body,document.documentElement];
+for(var i=0;i<els.length;i++){
+var c=els[i]&&getComputedStyle(els[i]).backgroundColor;
+if(c&&c!=='transparent'&&c!=='rgba(0, 0, 0, 0)')return c;
+}
+return fallback;
+}
+function render(){
+var theme=root.getAttribute('data-theme');
+var dark=theme==='dark'||(!!(mq&&mq.matches)&&theme!=='light');
+var pal=dark?CFG.palettes.dark:CFG.palettes.light;
+var bg=pageBg(pal.bg);
+var key=(dark?'d':'l')+'|'+bg;
+if(key===lastKey)return;
+lastKey=key;
+var gen=++renderGen;
+var font=getComputedStyle(document.body).fontFamily||'sans-serif';
+var nat={useMaxWidth:false};
+mermaid.initialize({
+startOnLoad:false,securityLevel:'strict',theme:'base',
+flowchart:nat,sequence:nat,er:nat,state:nat,class:nat,pie:nat,
+gantt:nat,journey:nat,timeline:nat,gitGraph:nat,mindmap:nat,xyChart:nat,
+quadrantChart:nat,sankey:nat,c4:nat,requirement:nat,block:nat,
+packet:nat,kanban:nat,architecture:nat,radar:nat,
+themeVariables:{background:bg,mainBkg:pal.surface,primaryColor:pal.surface,
+primaryTextColor:pal.text,lineColor:pal.line,primaryBorderColor:pal.border,
+nodeBorder:pal.border,clusterBorder:pal.border,edgeLabelBackground:bg,
+clusterBkg:'rgba(127,127,127,0.07)',titleColor:pal.text,
+darkMode:dark,rowOdd:bg,rowEven:'rgba(127,127,127,0.07)',
+attributeBackgroundColorOdd:bg,attributeBackgroundColorEven:'rgba(127,127,127,0.07)',
+fontSize:'16px',fontFamily:font},
+themeCSS:'.node rect, .node circle, .node polygon, .node path, .cluster rect { stroke-width: 2px; }'
+});
+items.forEach(function(it){
+var id='claude-mermaid-'+seq++;
+mermaid.render(id,it.src).then(function(r){
+if(gen!==renderGen)return;
+var prev=it.pre.previousElementSibling;
+if(prev&&prev.className==='mermaid-diagram'&&prev!==it.mount)return;
+it.mount.innerHTML=r.svg;
+if(!it.mount.parentNode)it.pre.parentNode.insertBefore(it.mount,it.pre);
+it.pre.style.display='none';
+},function(){
+var scratch=document.getElementById(id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+scratch=document.getElementById('d'+id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+if(gen!==renderGen)return;
+if(it.mount.parentNode)it.mount.parentNode.removeChild(it.mount);
+it.pre.style.display='';
+});
+});
+}
+render();
+if(mq&&mq.addEventListener)mq.addEventListener('change',render);
+if(typeof MutationObserver!=='undefined')new MutationObserver(render).observe(root,{attributes:true,attributeFilter:['data-theme']});
+})();</script>
+<!--claude-mermaid-runtime-end-->
+
+</body></html>

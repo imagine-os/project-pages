@@ -1,0 +1,1685 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Between Gigs 2.0 Build Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a 3D swimlane board (start left, finished right, or top to bottom) with a spec panel docked on the right; stacks on phones.
+   Dark by design, like a soundstage at night. Each screen carries its Studio stack behind it: design, code, data and API. */
+:root {
+  --bg: #061510; --panel: #0c2119; --panel-2: #10291f; --line: #1f3a2e; --ink: #eaf5ef; --muted: #a2b8ac; --subtle: #7b9285;
+  --mint: #2ee08e; --mint-soft: #2ee08e22; --amber: #f2c14e; --sky: #7fd3ff; --violet: #c7a6ff; --leaf: #8ff0c2; --ghost: #5f7a6c;
+  --display: "Sora", "Segoe UI", system-ui, sans-serif; --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--body); overflow: hidden; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 400px; height: 100%; }
+#stage { position: relative; min-width: 0; overflow: hidden; cursor: grab; touch-action: none; }
+#stage:active { cursor: grabbing; }
+canvas { display: block; }
+.labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.lab { position: absolute; white-space: nowrap; font: 600 12px/1 var(--body); padding: 6px 10px; border-radius: 999px; background: #061510d9; border: 1px solid var(--line); }
+.lab-stage { transform: translate(-50%, -100%); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.lab-stage b { color: var(--mint); margin-right: 6px; }
+.lab-lane { transform: translate(-100%, -50%); display: grid; gap: 3px; padding: 8px 12px; border-radius: 12px; text-align: right; }
+.lab-lane.v { transform: translate(-50%, -100%); text-align: center; }
+.lab-lane b { font: 700 13px var(--display); letter-spacing: .02em; }
+.lab-lane span { color: var(--subtle); font-weight: 500; font-size: 11.5px; }
+.lab[hidden] { display: none !important; }
+.lab-stage, .lab-lane b, .lab-lane span { overflow: hidden; text-overflow: ellipsis; }
+.lab-edge { transform: translate(-50%, -50%); font-weight: 600; font-size: 11.5px; color: var(--ink); border-color: currentColor; }
+.lab-now { transform: translate(-50%, -100%); color: #062015; background: var(--mint); border-color: var(--mint); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.tip { position: absolute; pointer-events: none; padding: 8px 12px; border-radius: 10px; background: #061510ee; border: 1px solid var(--line); font: 600 13px var(--body); transform: translate(12px, 12px); max-width: 260px; }
+.hud[hidden] { display: none; }
+.hud { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); top: 14px; display: grid; gap: 4px; max-width: 560px; pointer-events: none; }
+.hud h1 { margin: 0; font: 600 clamp(20px, 2.3vw, 30px)/1.1 var(--display); letter-spacing: -.01em; text-wrap: balance; }
+.hud p { margin: 0; color: var(--muted); font-size: 14px; }
+.hint { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); padding: 8px 14px; border-radius: 999px; background: var(--amber); color: #2a1d00; font: 700 13px var(--body); pointer-events: none; }
+.bottom { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); right: 16px; bottom: 14px; display: grid; gap: 8px; }
+.stagebar { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.stagebar::-webkit-scrollbar { display: none; }
+.stagebar button { flex: none; padding: 7px 12px; font-size: 12.5px; }
+.stagebar button b { color: var(--mint); margin-right: 5px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.controls .pages { background: var(--panel); }
+.controls .pages button { padding: 7px 12px; }
+button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; font: 600 13px var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; cursor: pointer; }
+button:hover { border-color: var(--mint); }
+.ic { width: 16px; height: 16px; flex: none; }
+.icon-only .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.icon-only { padding: 9px; }
+button[aria-pressed="true"] { background: var(--mint); color: #062015; border-color: var(--mint); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+
+aside { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; scrollbar-width: none; padding-block: 20px 28px; padding-left: 22px; padding-right: max(22px, env(safe-area-inset-right, 0px)); display: grid; align-content: start; gap: 20px; }
+aside::-webkit-scrollbar { display: none; }
+.eyebrow { font: 700 11px var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--mint); }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+.stat b { display: block; font: 600 22px/1 var(--display); font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 12px; line-height: 1.3; display: block; margin-top: 4px; }
+.seg { display: flex; padding: 3px; gap: 3px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); }
+.seg button { flex: 1; border: 0; background: transparent; padding: 8px 10px; }
+.seg button[aria-pressed="true"] { background: var(--mint); color: #062015; }
+.detail { display: grid; gap: 12px; }
+.detail img { width: 100%; border-radius: 10px; border: 1px solid var(--line); aspect-ratio: 16/10; object-fit: cover; object-position: top; background: var(--panel-2); }
+.detail h2 { margin: 0; font: 600 22px/1.2 var(--display); text-wrap: balance; }
+.detail p { margin: 0; color: var(--muted); }
+.detail ul, .detail ol { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; font-size: 14px; }
+.path { font: 500 13px ui-monospace, Menlo, monospace; color: var(--subtle); overflow-wrap: anywhere; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.open { display: inline-flex; gap: 6px; align-items: center; color: #062015; background: var(--mint); text-decoration: none; font-weight: 700; font-size: 13px; border-radius: 999px; padding: 9px 16px; }
+.btn-mint { background: var(--mint); color: #062015; border-color: var(--mint); font-weight: 700; }
+.small { font-size: 12px; color: var(--subtle); }
+.specs { display: grid; gap: 10px; }
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tool { display: grid; gap: 4px; padding: 6px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); color: var(--ink); text-decoration: none; }
+.tool:hover, .tool:focus-visible { border-color: var(--mint); }
+.tool img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; border-radius: 6px; display: block; }
+.tool b { display: flex; align-items: center; justify-content: space-between; gap: 6px; font: 700 13px var(--body); }
+.tool b .pill { font-style: normal; }
+.tool small { color: var(--muted); font-size: 12px; line-height: 1.35; }
+.layer { border: 1px solid var(--line); border-left: 3px solid var(--mint); border-radius: 10px; padding: 10px 12px; background: var(--panel-2); display: grid; gap: 8px; }
+.layer.todo { border-left-color: var(--amber); }
+.layer.none { border-left-color: var(--ghost); }
+.layer header { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.layer header b { font: 700 11px var(--body); letter-spacing: .14em; text-transform: uppercase; }
+.pill { font: 700 10.5px var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.pill.build { color: var(--amber); } .pill.live { color: var(--mint); } .pill.clerk { color: var(--sky); } .pill.sample, .pill.none { color: var(--subtle); } .pill.new { color: var(--amber); } .pill.exist { color: var(--subtle); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-btn { font: 500 12px ui-monospace, Menlo, monospace; padding: 4px 9px; border-radius: 8px; background: var(--bg); text-align: left; overflow-wrap: anywhere; }
+.call { display: grid; gap: 4px; padding: 6px 0; border-top: 1px dashed var(--line); }
+.call:first-of-type { border-top: 0; padding-top: 0; }
+.call .row { gap: 6px; }
+.find { display: grid; gap: 8px; }
+.find input { width: 100%; font: 500 14px var(--body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.find input::placeholder { color: var(--subtle); }
+.index { display: grid; gap: 12px; }
+.lane-group { display: grid; gap: 6px; }
+.lane-group > span { font: 700 11px var(--body); letter-spacing: .14em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+.lane-group > span i { width: 10px; height: 10px; border-radius: 3px; }
+.lane-group div { display: flex; flex-wrap: wrap; gap: 6px; }
+.lane-group button { font-size: 12.5px; padding: 6px 11px; border-radius: 9px; }
+.lane-group button[aria-current="true"] { border-color: var(--mint); background: var(--mint-soft); }
+.legend { display: grid; gap: 8px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 10px; }
+.sw { width: 22px; height: 4px; border-radius: 2px; flex: none; }
+.box-sw { width: 14px; height: 14px; border-radius: 4px; flex: none; border: 2px solid; }
+.howto { display: grid; gap: 8px; padding: 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); }
+.howto h2 { font-size: 20px; }
+
+/* The full-page viewer: every screen at full height, desktop and mobile. */
+dialog.viewer { width: min(1240px, calc(100vw - 32px)); height: calc(100dvh - 32px); max-width: none; max-height: none; padding: 0; margin: auto; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+dialog.viewer::backdrop { background: #020a07c7; }
+.vw { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100%; }
+.vw-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.vw-head h2 { margin: 0; font: 600 18px/1.2 var(--display); }
+.vw-head .path { display: block; margin-top: 2px; }
+.vw-body { display: flex; gap: 18px; justify-content: center; padding: 16px; min-height: 0; background: var(--bg); }
+.vw-col { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 8px; min-height: 0; min-width: 0; }
+.vw-col.desktop { flex: 1 1 760px; max-width: 1100px; }
+.vw-col.mobile { flex: 0 0 auto; width: min(390px, 100%); }
+.vw-col > span { font: 700 11px var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--subtle); }
+.vw-scroll { overflow-y: auto; scrollbar-width: none; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); }
+.vw-col.mobile .vw-scroll { border-radius: 28px; border-width: 6px; border-color: #1b352a; }
+.vw-scroll::-webkit-scrollbar { display: none; }
+.vw-scroll img { display: block; width: 100%; height: auto; }
+/* The backend plan for Anu: a card in the panel, and a sheet with the full plan. Amber marks what is still to build. */
+.anu { display: grid; gap: 10px; padding: 16px; border-radius: 14px; border: 1px dashed var(--amber); background: #f2c14e0d; }
+.anu .eyebrow { color: var(--amber); }
+.anu h3 { margin: 0; font: 600 18px/1.25 var(--display); }
+.anu p { margin: 0; color: var(--muted); font-size: 14px; }
+.anu .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn-amber { background: var(--amber); color: #2a1d00; border-color: var(--amber); font-weight: 700; }
+.btn-amber:hover { border-color: var(--ink); }
+.meter { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--amber); transition: width .3s; }
+.small { font-size: 12px; color: var(--subtle); }
+
+dialog.plan { width: min(1000px, calc(100vw - 32px)); height: calc(100dvh - 32px); max-height: none; max-width: none; margin: 16px 16px 16px auto; padding: 0; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+dialog.plan::backdrop { background: #020a07b8; }
+.plan-in { display: grid; grid-template-rows: auto auto minmax(0, 1fr); height: 100%; }
+.plan-head { display: flex; gap: 16px; align-items: start; justify-content: space-between; padding: 20px 24px 14px; border-bottom: 1px solid var(--line); }
+.plan-head h2 { margin: 4px 0 6px; font: 600 clamp(20px, 2.4vw, 28px)/1.15 var(--display); text-wrap: balance; }
+.plan-head p { margin: 0; color: var(--muted); max-width: 64ch; }
+.plan-head .eyebrow { color: var(--amber); }
+.plan-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: end; }
+.plan-nav { display: flex; gap: 6px; padding: 10px 24px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.plan-nav::-webkit-scrollbar { display: none; }
+.plan-nav a { flex: none; color: var(--muted); text-decoration: none; font: 600 13px var(--body); padding: 7px 12px; border-radius: 999px; border: 1px solid transparent; }
+.plan-nav a:hover, .plan-nav a[aria-current="true"] { color: var(--ink); border-color: var(--line); background: var(--panel-2); }
+.plan-body { position: relative; overflow-y: auto; padding: 8px 24px 40px; scroll-behavior: smooth; scrollbar-width: none; }
+.plan-body::-webkit-scrollbar { display: none; }
+.plan-body section { padding-top: 24px; scroll-margin-top: 8px; }
+.plan-body h3 { margin: 0 0 6px; font: 600 20px/1.25 var(--display); }
+.plan-body h4 { margin: 0; font: 600 16px/1.3 var(--display); }
+.plan-body p { margin: 0 0 10px; color: var(--muted); max-width: 75ch; }
+.plan-body code { font: 500 12.5px ui-monospace, Menlo, monospace; color: #cfe9dc; background: #061510; border: 1px solid var(--line); border-radius: 6px; padding: 1px 5px; overflow-wrap: anywhere; }
+.plan-body a { color: var(--mint); }
+.lede { color: var(--ink) !important; font-size: 16px; }
+
+.arch { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 10px; align-items: stretch; margin: 14px 0 6px; }
+.col { display: grid; align-content: start; gap: 8px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); }
+.col > b { font: 700 11px var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--subtle); }
+.box { padding: 9px 11px; border-radius: 9px; font-size: 13.5px; line-height: 1.35; border: 1px solid; }
+.box small { display: block; color: var(--muted); font-size: 12px; }
+.box.built { border-color: #2ee08e66; background: #2ee08e14; }
+.box.todo { border-color: var(--amber); border-style: dashed; background: #f2c14e10; }
+.box.ext { border-color: #7a869a66; background: #7a869a14; }
+.arrow { display: grid; place-items: center; align-content: center; gap: 4px; color: var(--subtle); font-size: 11px; text-align: center; max-width: 92px; }
+.arrow span:first-child { font-size: 20px; color: var(--amber); }
+.key { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.key i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 6px; vertical-align: -1px; border: 1px solid; }
+
+.steps { display: grid; gap: 10px; margin-top: 12px; counter-reset: s; }
+.step { border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); scroll-margin-top: 8px; }
+.step summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 12px; }
+.step summary::-webkit-details-marker { display: none; }
+.step summary:focus-visible { outline: 2px solid var(--mint); outline-offset: -2px; }
+.num { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1.5px dashed var(--amber); color: var(--amber); font: 700 14px var(--display); }
+.step.done .num { border-style: solid; background: var(--amber); color: #2a1d00; }
+.step summary small { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+.count { font: 600 12px var(--body); color: var(--subtle); white-space: nowrap; }
+.step .inner { padding: 0 14px 14px 56px; display: grid; gap: 10px; }
+.tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.tasks label { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: start; font-size: 14px; color: var(--ink); cursor: pointer; padding: 6px 8px; border-radius: 8px; }
+.tasks label:hover { background: #ffffff08; }
+.tasks input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--amber); }
+.tasks input:checked + span { color: var(--subtle); text-decoration: line-through; text-decoration-color: #7b928588; }
+.check { font-size: 13px; color: var(--muted); border-left: 2px solid var(--mint); padding-left: 10px; }
+
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; }
+.chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel-2); font: 600 13px ui-monospace, Menlo, monospace; }
+.chip.live { border-color: var(--mint); color: var(--mint); }
+.flow .to { color: var(--subtle); }
+.rules { display: grid; gap: 6px; margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 10px; table-layout: fixed; }
+th { text-align: left; font: 700 11px var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--subtle); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--muted); overflow-wrap: anywhere; }
+td:first-child { color: var(--ink); }
+tr.grp td { color: var(--amber); font: 700 11px var(--body); letter-spacing: .14em; text-transform: uppercase; padding-top: 16px; border-bottom-color: transparent; }
+.tag { display: inline-block; font: 700 10.5px var(--body); letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--subtle); margin-left: 4px; }
+.tag.own { color: var(--amber); border-color: #f2c14e66; }
+.tag.pub { color: var(--mint); border-color: #2ee08e55; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.card { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: var(--panel-2); }
+.card ul, .card ol { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted); font-size: 14px; }
+.links { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin-top: 10px; }
+.links a { display: grid; gap: 2px; text-decoration: none; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink) !important; font-weight: 600; font-size: 14px; }
+.links a small { color: var(--subtle); font-weight: 500; font-size: 12px; overflow-wrap: anywhere; }
+.links a:hover { border-color: var(--mint); }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--mint); color: #062015; font-weight: 700; padding: 10px 16px; border-radius: 999px; z-index: 10; }
+@media (max-width: 860px) {
+  dialog.plan { width: 100vw; height: 100dvh; margin: 0; border-radius: 0; border: 0; }
+  .plan-head { flex-direction: column; padding: 16px; } .plan-head p { display: none; } .plan-nav, .plan-body { padding-inline: 16px; }
+  .arch { grid-template-columns: minmax(0, 1fr); } .arrow { max-width: none; grid-auto-flow: column; } .arrow span:first-child { transform: rotate(90deg); }
+  .step .inner { padding-left: 14px; } .two { grid-template-columns: minmax(0, 1fr); }
+  thead { display: none; } table, tbody, tr, td { display: block; width: 100%; } tr { padding: 8px 0; border-bottom: 1px solid var(--line); } td { border: 0; padding: 2px 0; }
+}
+
+@media (max-width: 860px) {
+  body { overflow: auto; }
+  .app { grid-template-columns: minmax(0, 1fr); height: auto; }
+  #stage { height: 74vh; min-height: 420px; }
+  .stagebar { display: none; }
+  .controls .lbl, .vw-head .seg .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .controls button, .controls .pages button { padding: 9px 11px; }
+  .controls { justify-content: center; }
+  .controls { gap: 6px; } .controls button { padding: 7px 11px; font-size: 12px; } .controls .pages button { padding: 6px 9px; }
+  aside { border-left: 0; border-top: 1px solid var(--line); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .hud h1 { font-size: 18px; } .hud p { display: none; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  dialog.viewer { width: 100vw; height: 100dvh; border-radius: 0; border: 0; }
+  .vw-body { padding: 10px; }
+  .vw-col.desktop { flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+
+<div class="app">
+  <div id="stage" aria-label="3D swimlane board of the Between Gigs 2.0 build. Drag to orbit, right-drag or two fingers to pan, scroll to zoom, click a screen for its specs.">
+    <div class="hud">
+      <span class="eyebrow">Between Gigs 2.0 · Build map · 23 Oct 2026</span>
+      <h1 id="hud-title">From first visit to live profile</h1>
+      <p id="hud-text">Start on the left, finished on the right. Rows are who does it. Lines are the order of operations. Every screen has its Studio stack behind it: design, code, data and API.</p>
+    </div>
+    <div class="labels" id="labels"></div>
+    <div class="tip" id="tip" hidden></div>
+    <div class="hint" id="hint" hidden>Scroll in the scene to read down the page</div>
+    <div class="bottom">
+      <div class="stagebar" id="stagebar" role="group" aria-label="Jump to a stage"></div>
+      <div class="controls" role="group" aria-label="View">
+        <div class="seg pages" role="group" aria-label="Page height">
+          <button type="button" data-page="desktop" data-icon="monitor" aria-pressed="true">Desktop height</button>
+          <button type="button" data-page="mobile" data-icon="smartphone" aria-pressed="false">Mobile height</button>
+          <button type="button" data-page="card" data-icon="grid" aria-pressed="false">Cards</button>
+        </div>
+        <button id="tour" type="button" data-icon="play" aria-pressed="false">Play the journey</button>
+        <button id="stacks" type="button" data-icon="layers" aria-pressed="false">Show all stacks</button>
+        <button id="dir" type="button" data-icon="arrowDown">Top to bottom</button>
+        <button id="overview" type="button" data-icon="scan">Overview</button>
+      </div>
+    </div>
+  </div>
+
+  <aside aria-label="Details">
+    <div class="stats">
+      <div class="stat"><b>26</b><span>pages built</span></div>
+      <div class="stat"><b>7</b><span>emails</span></div>
+      <div class="stat"><b>56</b><span>commits in 3 days</span></div>
+      <div class="stat"><b>27</b><span>screens mapped</span></div>
+    </div>
+
+    <div class="seg" role="group" aria-label="Board">
+      <button type="button" id="view-product" data-icon="workflow" aria-pressed="true">Product flow</button>
+      <button type="button" id="view-plan" data-icon="gantt" aria-pressed="false">Build timeline</button>
+    </div>
+
+    <section class="detail" id="detail" aria-live="polite"></section>
+
+    <section class="find" aria-labelledby="find-label">
+      <label class="eyebrow" id="find-label" for="find">Find</label>
+      <input id="find" type="search" placeholder="A page, file, table, route or email" autocomplete="off">
+      <span class="small" id="find-count"></span>
+      <div class="index" id="index"></div>
+    </section>
+
+    <div class="legend" id="legend"></div>
+
+    <section class="anu" aria-labelledby="anu-title">
+      <span class="eyebrow">For Anu · Backend</span>
+      <h3 id="anu-title">Stitch the backend to the built front end</h3>
+      <p>One interface to implement, a Worker API, six new tables and seven build steps. The amber layers in each screen's stack, and the Backend row of the build timeline, open the matching part.</p>
+      <div class="meter" aria-hidden="true"><i id="anu-meter"></i></div>
+      <span class="small" id="anu-progress">0 of 0 tasks ticked</span>
+      <div class="row">
+        <button type="button" class="btn-amber" id="open-plan" data-icon="book">Open the backend plan</button>
+        <button type="button" id="copy-plan-side" data-icon="checklist">Copy as checklist</button>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<dialog class="viewer" id="viewer" aria-labelledby="vw-title">
+  <div class="vw">
+    <header class="vw-head">
+      <div><h2 id="vw-title">Screen</h2><span class="path" id="vw-path"></span></div>
+      <div class="row">
+        <div class="seg" role="group" aria-label="Show">
+          <button type="button" data-vw="both" data-icon="columns" aria-pressed="true">Both</button>
+          <button type="button" data-vw="desktop" data-icon="monitor" aria-pressed="false">Desktop</button>
+          <button type="button" data-vw="mobile" data-icon="smartphone" aria-pressed="false">Mobile</button>
+        </div>
+        <button type="button" id="vw-prev" data-icon="left" class="icon-only">Previous screen</button>
+        <button type="button" id="vw-next" data-icon="right" class="icon-only">Next screen</button>
+        <a class="open" id="vw-live" data-icon="external" target="_blank" rel="noreferrer">Open it live</a>
+        <button type="button" id="vw-close" data-icon="x" autofocus>Close</button>
+      </div>
+    </header>
+    <div class="vw-body" id="vw-body">
+      <div class="vw-col desktop"><span>Desktop · 1440 wide</span><div class="vw-scroll" tabindex="0" aria-label="Desktop page, full height"><img id="vw-d" alt=""></div></div>
+      <div class="vw-col mobile"><span>Mobile · 390 wide</span><div class="vw-scroll" tabindex="0" aria-label="Mobile page, full height"><img id="vw-m" alt=""></div></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="plan" id="plan" aria-labelledby="plan-title">
+  <div class="plan-in">
+    <header class="plan-head">
+      <div>
+        <span class="eyebrow">For Anu · Backend handoff · 23 Oct 2026</span>
+        <h2 id="plan-title">Stitch the backend to the built front end</h2>
+        <p>The front end is built and runs on sample data in the browser. Your job is the real backend behind one interface, then a one-line swap.</p>
+      </div>
+      <div class="plan-actions">
+        <button type="button" id="copy-plan" data-icon="checklist">Copy as checklist</button>
+        <button type="button" id="close-plan" data-icon="x" autofocus>Close</button>
+      </div>
+    </header>
+    <nav class="plan-nav" aria-label="Plan sections" id="plan-nav">
+      <a href="#p-overview">Overview</a>
+      <a href="#p-steps">Build order</a>
+      <a href="#p-status">Status rules</a>
+      <a href="#p-data">Tables</a>
+      <a href="#p-endpoints">Endpoints</a>
+      <a href="#p-emails">Emails</a>
+      <a href="#p-config">Config</a>
+      <a href="#p-done">Done when</a>
+      <a href="#p-questions">Open questions</a>
+      <a href="#p-links">Links</a>
+    </nav>
+    <div class="plan-body" id="plan-body">
+
+      <section id="p-overview">
+        <h3>Overview</h3>
+        <p class="lede">Every read and write in the app goes through one interface, <code>DataSource</code> in <code>lib/data/source.ts</code>. Today it is backed by <code>lib/data/sample.ts</code> (localStorage). Build a Cloudflare Worker API, then write <code>lib/data/api.ts</code> with <code>fetch</code> calls and export it from <code>lib/data/index.ts</code>. No component changes.</p>
+        <div class="arch" role="img" aria-label="Architecture: the browser calls the Worker with a Clerk token; the Worker uses D1, R2 and the email outbox.">
+          <div class="col"><b>Browser · static site</b>
+            <div class="box built">Pages and components<small>26 pages, built</small></div>
+            <div class="box built">DataSource<small>lib/data/source.ts</small></div>
+            <div class="box built">sample.ts<small>localStorage, today</small></div>
+            <div class="box todo">api.ts<small>fetch client, to build</small></div>
+            <div class="box ext">Clerk components<small>@clerk/react, email code</small></div>
+          </div>
+          <div class="arrow"><span>→</span><span>fetch + Bearer Clerk token</span></div>
+          <div class="col"><b>Cloudflare Worker</b>
+            <div class="box todo">Verify Clerk token<small>@clerk/backend verifyToken, role check</small></div>
+            <div class="box todo">/api/… routes<small>one per DataSource method</small></div>
+            <div class="box todo">validateAll()<small>shared from lib/profile/validate.ts</small></div>
+            <div class="box todo">renderEmail()<small>shared from emails/</small></div>
+          </div>
+          <div class="arrow"><span>→</span><span>SQL, upload, queue</span></div>
+          <div class="col"><b>Storage and services</b>
+            <div class="box ext">D1<small>leads, people, invites, profiles…</small></div>
+            <div class="box todo">R2<small>profile photos</small></div>
+            <div class="box ext">welcome_email_outbox<small>existing table</small></div>
+            <div class="box ext">drainWelcomeEmails()<small>existing, lib/welcome-email.ts → Resend</small></div>
+          </div>
+        </div>
+        <div class="key"><span><i style="border-color:#2ee08e66;background:#2ee08e14"></i>Built</span><span><i style="border-color:var(--amber);border-style:dashed"></i>To build</span><span><i style="border-color:#7a869a66;background:#7a869a14"></i>Existing or external</span></div>
+      </section>
+
+      <section id="p-steps">
+        <h3>Build order</h3>
+        <p>Seven steps, in order. Tick tasks as you go; ticks are saved in this browser only. "Copy as checklist" gives you Markdown to paste into an issue.</p>
+        <div class="steps" id="steps"></div>
+      </section>
+
+      <section id="p-status">
+        <h3>Profile status rules</h3>
+        <p><code>people.status</code> moves only along these paths. Reject anything else with <b>409</b>. The public page reads <code>profiles</code>, and only while the status is <code>approved</code>.</p>
+        <div class="flow" aria-label="Main path">
+          <span class="chip">invited</span><span class="to">→</span>
+          <span class="chip">registered</span><span class="to">→</span>
+          <span class="chip">draft</span><span class="to">→</span>
+          <span class="chip">submitted</span><span class="to">→</span>
+          <span class="chip live">approved</span>
+        </div>
+        <ul class="rules">
+          <li><code>invited → registered</code>: Clerk sign-up, then <code>POST /api/session/sync</code>.</li>
+          <li><code>registered → draft</code>: the first draft save.</li>
+          <li><code>draft → submitted</code>: submit, validated on the server.</li>
+          <li><code>submitted → approved</code> or <code>submitted → changes_requested</code>: the owner's decision.</li>
+          <li><code>changes_requested → submitted</code> and <code>approved → submitted</code>: the Gigster edits and resubmits.</li>
+          <li>Undo (latest decision, short window): <code>approved</code> or <code>changes_requested → submitted</code>.</li>
+        </ul>
+      </section>
+
+      <section id="p-data">
+        <h3>Tables (D1)</h3>
+        <p>Existing and unchanged: <code>leads</code>, <code>form_responses</code>, <code>sketches</code>, <code>privacy_requests</code>, <code>welcome_email_outbox</code>. New (a proposal): the six below. <code>fields</code> is <code>ProfileFields</code> from <code>lib/data/types.ts</code>, stored as JSON.</p>
+        <table>
+          <thead><tr><th style="width:22%">Table</th><th>Columns</th><th style="width:34%">Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>people</code></td><td>id, lead_id → leads.id, email, name, slug (unique), status, auth_user_id, invited_at, registered_at, submitted_at, approved_at, updated_at</td><td>One row per invited sign-up. auth_user_id is the Clerk user id.</td></tr>
+            <tr><td><code>invites</code></td><td>token_hash (pk), person_id, email, created_at, expires_at, opened_at, used_at</td><td>Store a hash, never the token. 30-day expiry.</td></tr>
+            <tr><td><code>profile_drafts</code></td><td>person_id (pk), fields JSON, step, saved_at</td><td>The autosaved working copy.</td></tr>
+            <tr><td><code>profiles</code></td><td>person_id (pk), fields JSON, submitted_at</td><td>Frozen at submit. The public page reads only this.</td></tr>
+            <tr><td><code>review_notes</code></td><td>id, person_id, section (about · skills · where · story), note, by, created_at</td><td>One short note per section. Cleared on submit and approve.</td></tr>
+            <tr><td><code>activity</code></td><td>id, kind, person_id, who, by, at</td><td>One row per action: invite, first open, register, submit, approve, changes.</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:10px">Prefer to keep profiles in <code>form_responses</code> (<code>form_id = 'gigster-profile'</code>)? Drafts and profiles map onto it one to one; the interface doesn't change.</p>
+      </section>
+
+      <section id="p-endpoints">
+        <h3>Endpoints</h3>
+        <p>One route per <code>DataSource</code> method. Route names are a proposal. Never trust an email, role or person id from a request body: read them from the verified token. No token → <b>401</b>; owner route as a Gigster → <b>403</b>.</p>
+        <table>
+          <thead><tr><th style="width:36%">Route</th><th style="width:22%">Method</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr class="grp"><td colspan="3">Session</td></tr>
+            <tr><td><code>GET /api/session</code></td><td><code>auth.session</code></td><td>Token → people.auth_user_id → { personId, email, role, name }. Owner = Clerk publicMetadata.role "owner".</td></tr>
+            <tr><td><code>POST /api/session/sync</code></td><td><code>auth.syncExternal</code></td><td>After Clerk sign-in: invited → registered, set name, slug, used_at, auth_user_id, terms version. Unknown email → unknown-email.</td></tr>
+            <tr class="grp"><td colspan="3">Invites</td></tr>
+            <tr><td><code>GET /api/invites/:token</code> <span class="tag pub">public</span></td><td><code>invites.lookup</code></td><td>Hash and look up. Returns state (valid, used, expired, unknown) and email only. Records opened_at.</td></tr>
+            <tr><td><code>POST /api/owners/invite</code> <span class="tag own">owner</span></td><td><code>owners.invite</code></td><td>People + invite per lead, queue invite email, activity. Skips anyone already invited. Batch, resumable, rate-limited.</td></tr>
+            <tr class="grp"><td colspan="3">Profile (the Gigster)</td></tr>
+            <tr><td><code>GET /api/profile/draft</code></td><td><code>profiles.getDraft</code></td><td>The draft, or a blank one with the registered name.</td></tr>
+            <tr><td><code>PUT /api/profile/draft</code></td><td><code>profiles.saveDraft</code></td><td>Upsert, called ~0.7 s after typing. First save: registered → draft. Never changes submitted or approved.</td></tr>
+            <tr><td><code>POST /api/profile/submit</code></td><td><code>profiles.submit</code></td><td>validateAll on the server, copy to profiles, status submitted, clear notes, queue profile-submitted.</td></tr>
+            <tr><td><code>GET /api/profile</code></td><td><code>profiles.getProfile</code></td><td>The submitted copy.</td></tr>
+            <tr><td><code>POST /api/profile/photo</code> <span class="tag">new</span></td><td>builder upload</td><td>Upload to R2, return the URL. Today the builder keeps a 480px data URL.</td></tr>
+            <tr class="grp"><td colspan="3">Public profiles</td></tr>
+            <tr><td><code>GET /api/p/:slug</code> <span class="tag pub">public</span></td><td><code>people.getPublic</code></td><td>profile: null unless approved. Never return the email.</td></tr>
+            <tr><td><code>GET /api/p/:slug/similar</code> <span class="tag pub">public</span></td><td><code>people.similar</code></td><td>Approved people, ones with photos first.</td></tr>
+            <tr class="grp"><td colspan="3">Owners</td></tr>
+            <tr><td><code>GET /api/owners/dashboard</code> <span class="tag own">owner</span></td><td><code>owners.dashboard</code></td><td>Status counts, waitlist counts, queue, latest activity, and a cumulative funnel (signups → invited → opened → account → submitted → approved).</td></tr>
+            <tr><td><code>GET /api/owners/activity</code> <span class="tag own">owner</span></td><td><code>owners.activity</code></td><td>Latest activity rows.</td></tr>
+            <tr><td><code>GET /api/owners/review-queue</code> <span class="tag own">owner</span></td><td><code>owners.reviewQueue</code></td><td>Submitted, oldest first.</td></tr>
+            <tr><td><code>POST /api/owners/people/:id/approve</code> <span class="tag own">owner</span></td><td><code>owners.approve</code></td><td>Only from submitted. approved_at, clear notes, activity, queue approved.</td></tr>
+            <tr><td><code>POST /api/owners/people/:id/request-changes</code> <span class="tag own">owner</span></td><td><code>owners.requestChanges</code></td><td>Only from submitted, at least one note. Insert notes, activity, queue changes-requested.</td></tr>
+            <tr><td><code>POST /api/owners/people/:id/undo-review</code> <span class="tag own">owner</span></td><td><code>owners.undoReview</code></td><td>Latest decision, short window. Back to submitted, delete its activity row, cancel its email if still queued.</td></tr>
+            <tr><td><code>GET /api/people</code> <span class="tag own">owner</span></td><td><code>people.list</code></td><td>Filters: text, status, service, area, availability, craft, profile (complete, missing, no-photo), sort.</td></tr>
+            <tr><td><code>GET /api/people/:id</code></td><td><code>people.get</code></td><td>An owner, or the person themself.</td></tr>
+            <tr><td><code>GET /api/owners/waitlist</code> <span class="tag own">owner</span></td><td><code>owners.waitlist</code></td><td>leads join people: not invited, invited, opened, registered.</td></tr>
+            <tr class="grp"><td colspan="3">Waitlist funnel (already live in the current app)</td></tr>
+            <tr><td><code>POST /api/professionals3</code> <span class="tag pub">public</span></td><td><code>funnel.joinWaitlist</code></td><td>leads + form_responses, queue welcome.</td></tr>
+            <tr><td><code>POST /api/professionals3/details</code> <span class="tag pub">public</span></td><td><code>funnel.addDetails</code></td><td>Category and details for that sign-up.</td></tr>
+            <tr><td><code>POST /api/sketches</code> <span class="tag pub">public</span></td><td><code>funnel.submitSketch</code></td><td>sketches, queue coming-soon.</td></tr>
+            <tr><td><code>POST /api/privacy-requests</code> <span class="tag pub">public</span></td><td><code>funnel.privacyRequest</code></td><td>privacy_requests.</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:10px">Not needed live: <code>auth.register</code>, <code>requestCode</code>, <code>verifyCode</code> (Clerk does these), <code>emails.outbox / get</code> and the <code>demo</code> block.</p>
+      </section>
+
+      <section id="p-emails">
+        <h3>Emails</h3>
+        <p>Queue a row in <code>welcome_email_outbox</code> (<code>message_type</code> = template, <code>template_payload</code> = JSON props). Extend the existing <code>drainWelcomeEmails</code> to render every template with <code>renderEmail(template, props, { assetBase: SITE_URL, siteUrl: SITE_URL })</code>. Deploy <code>public/email/</code> to <code>between-gigs.com/email/</code> for the logos.</p>
+        <table>
+          <thead><tr><th style="width:26%">Template</th><th style="width:30%">Queued by</th><th>Props</th></tr></thead>
+          <tbody>
+            <tr><td><code>welcome</code></td><td>funnel.joinWaitlist</td><td>storyboardUrl</td></tr>
+            <tr><td><code>coming-soon</code></td><td>funnel.submitSketch</td><td>kind</td></tr>
+            <tr><td><code>invite</code></td><td>owners.invite</td><td>inviteUrl (<code>${SITE_URL}/join?invite=TOKEN</code>), email</td></tr>
+            <tr><td><code>profile-submitted</code></td><td>profiles.submit</td><td>firstName, profileUrl, editUrl</td></tr>
+            <tr><td><code>approved</code></td><td>owners.approve</td><td>firstName, profileUrl, editUrl</td></tr>
+            <tr><td><code>changes-requested</code></td><td>owners.requestChanges</td><td>firstName, notes (<code>section|note</code> per line), editUrl</td></tr>
+            <tr><td><code>sign-in-code</code></td><td>not used with Clerk</td><td>code, email, minutes</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="p-config">
+        <h3>Config</h3>
+        <p>Names only. Set the values in Cloudflare and the build; never put a secret in the front end or in Git.</p>
+        <table>
+          <thead><tr><th style="width:42%">Name</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td><code>CLERK_SECRET_KEY</code></td><td>Worker secret only. Never in the front end.</td></tr>
+            <tr><td><code>BG_EMAIL_BRIDGE_TOKEN</code></td><td>Worker secret, already used by the live outbox drain.</td></tr>
+            <tr><td><code>SITE_URL</code></td><td>Worker variable.</td></tr>
+            <tr><td><code>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code></td><td>Front-end build. Public by design.</td></tr>
+            <tr><td><code>NEXT_PUBLIC_API_URL</code></td><td>Front-end build: the Worker's base URL. New.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="p-done">
+        <div class="two">
+          <div class="card"><h4>Done when</h4>
+            <ul>
+              <li>The live preview runs invite → join → build → submit → approve → <code>/p/slug</code> against the Worker, with real emails.</li>
+              <li>Owner routes return 403 for a Gigster and 401 without a token.</li>
+              <li>Transitions outside the status rules return 409.</li>
+              <li><code>pnpm check</code> still passes on the sample store. It is the UI's regression suite.</li>
+              <li>No secret in the built <code>out/</code> folder.</li>
+            </ul>
+          </div>
+          <div class="card" id="p-questions"><h4>Open questions</h4>
+            <ol>
+              <li>Front end on Pages with a separate Worker, or one Cloudflare project (then <code>@clerk/nextjs</code> middleware)?</li>
+              <li>New <code>profile_drafts</code> and <code>profiles</code> tables, or rows in <code>form_responses</code>?</li>
+              <li>Should an approved page stay live while a resubmission waits for review?</li>
+              <li>Invite all ≈500 at once, or in waves by ZIP or interest?</li>
+              <li>Reminders for unopened invites after N days?</li>
+              <li>Photos: R2 bucket, size limit, resize on upload or on read?</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="p-links">
+        <h3>Links</h3>
+        <div class="links">
+          <a href="https://github.com/between-gigs/between-gig-2.0/blob/main/docs/handoff/backend.md" target="_blank" rel="noreferrer">Full handoff with diagrams<small>docs/handoff/backend.md</small></a>
+          <a href="https://github.com/between-gigs/between-gig-2.0/blob/main/docs/handoff/data-layer.md" target="_blank" rel="noreferrer">Method by method<small>docs/handoff/data-layer.md</small></a>
+          <a href="https://github.com/between-gigs/between-gig-2.0/blob/main/lib/data/source.ts" target="_blank" rel="noreferrer">The interface<small>lib/data/source.ts</small></a>
+          <a href="https://github.com/between-gigs/between-gig-2.0/blob/main/lib/data/sample.ts" target="_blank" rel="noreferrer">Reference behaviour<small>lib/data/sample.ts</small></a>
+          <a href="https://github.com/between-gigs/between-gig-2.0/blob/main/lib/data/types.ts" target="_blank" rel="noreferrer">Types<small>lib/data/types.ts</small></a>
+          <a href="https://github.com/between-gigs/between-gig-2.0/blob/main/docs/handoff/clerk.md" target="_blank" rel="noreferrer">Sign-in with Clerk<small>docs/handoff/clerk.md</small></a>
+          <a href="https://between-gigs.github.io/between-gig-2.0/preview/" target="_blank" rel="noreferrer">Preview guide<small>sign in as any role</small></a>
+          <a href="https://between-gigs.github.io/between-gig-2.0/owners/" target="_blank" rel="noreferrer">Owner dashboard<small>/owners/</small></a>
+          <a href="https://between-gigs.github.io/between-gig-2.0/emails/" target="_blank" rel="noreferrer">Every email<small>/emails/ with the sample outbox</small></a>
+          <a href="https://github.com/imagine-os/between-gigs" target="_blank" rel="noreferrer">Current live app<small>db/schema.ts, lib/welcome-email.ts</small></a>
+        </div>
+      </section>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// Anu's plan: the build steps with tickable tasks (saved in this browser only), copy as Markdown, and the sheet.
+const STEPS = [
+  { title: "Schema and migrations", sub: "Six new D1 tables", tasks: [
+    "Add people, invites, profile_drafts, profiles, review_notes and activity as D1 migrations",
+    "Unique people.slug and invites.token_hash; store a hash of each invite token, never the token",
+    "Indexes on people(email), people(status, submitted_at) and activity(at)",
+    "Leave leads, form_responses, sketches, privacy_requests and welcome_email_outbox as they are",
+  ], check: "Migrations run cleanly on a fresh database and on a copy of the live one." },
+  { title: "Auth with Clerk", sub: "Verify the token on every request", tasks: [
+    "Worker verifies the Clerk session token with @clerk/backend verifyToken (CLERK_SECRET_KEY as a Worker secret)",
+    "GET /api/session: token → people.auth_user_id → { personId, email, role, name }",
+    "POST /api/session/sync: read email and role from the token, never the body; invited → registered, set name, slug, used_at, auth_user_id, terms version",
+    "Owner = Clerk publicMetadata.role \"owner\"; 401 without a token, 403 for the wrong role",
+    "Only invited emails can sign up (Clerk allowlist or a user.created webhook check)",
+  ], check: "An invited email signs up and lands on the builder; an unknown email gets unknown-email." },
+  { title: "Invites", sub: "Lookup and the owner batch", tasks: [
+    "GET /api/invites/:token: hash, return valid, used, expired or unknown with the email only; record opened_at on first open",
+    "POST /api/owners/invite: a person and invite (30-day expiry) per lead, queue the invite email, write activity",
+    "Skip anyone already invited; make the batch resumable and rate-limit the sends",
+  ], check: "Owner invites from the Waitlist page; each person gets their own working link." },
+  { title: "Profiles and photos", sub: "Draft, submit, public page", tasks: [
+    "GET and PUT /api/profile/draft; first save moves registered → draft, never touches submitted or approved",
+    "POST /api/profile/submit: validateAll on the server, copy to profiles, status submitted, clear notes, queue profile-submitted",
+    "GET /api/profile returns the submitted copy",
+    "POST /api/profile/photo: upload to R2 and return the URL (replaces the 480px data URL)",
+    "GET /api/p/:slug and /similar: approved only, never return the email",
+  ], check: "A Gigster builds and submits; reloading keeps every answer; /p/slug stays hidden until approved." },
+  { title: "Owner tools", sub: "Dashboard, review, people, waitlist", tasks: [
+    "GET /api/owners/dashboard with the cumulative funnel, plus activity and review-queue",
+    "Approve and request-changes, only from submitted; request-changes needs at least one note",
+    "Undo-review: latest decision, short window; delete its activity row and cancel its email if still queued",
+    "GET /api/people with text, status, service, area, availability, craft, profile and sort filters",
+    "GET /api/owners/waitlist: not invited, invited, opened, registered",
+  ], check: "Every owner page works with real data; anything outside the status rules returns 409." },
+  { title: "Emails", sub: "All seven through the outbox", tasks: [
+    "Queue each template in welcome_email_outbox (message_type, template_payload JSON)",
+    "Extend drainWelcomeEmails to render every template with renderEmail(template, props, { assetBase: SITE_URL, siteUrl: SITE_URL })",
+    "Deploy public/email/ to between-gigs.com/email/ for the logos",
+  ], check: "Invite, submitted, approved and changes-requested arrive in a real inbox, light and dark." },
+  { title: "Swap the front end", sub: "One line in lib/data/index.ts", tasks: [
+    "Write lib/data/api.ts implementing DataSource with fetch and a Bearer token from Clerk getToken() (leave out the demo block)",
+    "Export it from lib/data/index.ts and set NEXT_PUBLIC_API_URL in the build",
+    "pnpm check still passes on the sample store, and no secret appears in out/",
+  ], check: "The preview runs invite → join → build → submit → approve → /p/slug end to end." },
+];
+const KEY = "bg2-anu-plan";
+let ticks = {};
+try { ticks = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch { ticks = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(ticks)); } catch { /* storage unavailable */ } };
+const stepsEl = document.getElementById("steps");
+const total = STEPS.reduce((n, s) => n + s.tasks.length, 0);
+STEPS.forEach((s, i) => {
+  const d = document.createElement("details"); d.className = "step"; d.id = `step-${i + 1}`; if (i < 2) d.open = true;
+  const sum = document.createElement("summary");
+  sum.innerHTML = `<span class="num">${i + 1}</span><span><b></b><small></small></span><span class="count"></span>`;
+  sum.querySelector("b").textContent = s.title; sum.querySelector("small").textContent = s.sub;
+  const inner = document.createElement("div"); inner.className = "inner";
+  const ul = document.createElement("ul"); ul.className = "tasks";
+  s.tasks.forEach((t, j) => {
+    const id = `${i}.${j}`; const li = document.createElement("li");
+    li.innerHTML = `<label><input type="checkbox"><span></span></label>`;
+    li.querySelector("span").textContent = t;
+    const box = li.querySelector("input"); box.checked = !!ticks[id];
+    box.onchange = () => { if (box.checked) ticks[id] = 1; else delete ticks[id]; save(); progress(); };
+    ul.appendChild(li);
+  });
+  const chk = document.createElement("p"); chk.className = "check"; chk.textContent = `Check: ${s.check}`;
+  inner.append(ul, chk); d.append(sum, inner); stepsEl.appendChild(d);
+});
+function progress() {
+  let done = 0;
+  STEPS.forEach((s, i) => {
+    const n = s.tasks.filter((_, j) => ticks[`${i}.${j}`]).length; done += n;
+    const el = document.getElementById(`step-${i + 1}`);
+    el.classList.toggle("done", n === s.tasks.length);
+    el.querySelector(".count").textContent = `${n} of ${s.tasks.length}`;
+  });
+  document.getElementById("anu-progress").textContent = `${done} of ${total} tasks ticked · saved in this browser`;
+  document.getElementById("anu-meter").style.width = `${(done / total) * 100}%`;
+  document.dispatchEvent(new Event("plan-progress"));
+}
+progress();
+
+function markdown() {
+  const lines = ["# Between Gigs 2.0: backend build plan (for Anu)", "",
+    "Implement `DataSource` (lib/data/source.ts) as a Cloudflare Worker API, then write lib/data/api.ts and export it from lib/data/index.ts.",
+    "Full handoff: https://github.com/between-gigs/between-gig-2.0/blob/main/docs/handoff/backend.md", ""];
+  STEPS.forEach((s, i) => {
+    lines.push(`## ${i + 1}. ${s.title}`);
+    s.tasks.forEach((t, j) => lines.push(`- [${ticks[`${i}.${j}`] ? "x" : " "}] ${t}`));
+    lines.push(`- Check: ${s.check}`, "");
+  });
+  lines.push("## Done when", "- invite → join → build → submit → approve → /p/slug works against the Worker, with real emails",
+    "- Owner routes: 403 for a Gigster, 401 without a token; transitions outside the status rules: 409",
+    "- pnpm check still passes on the sample store; no secret in out/");
+  return lines.join("\n");
+}
+function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status"); t.textContent = msg; (plan.open ? plan : document.body).appendChild(t); setTimeout(() => t.remove(), 2200); }
+async function copyPlan() {
+  const text = markdown();
+  try { await navigator.clipboard.writeText(text); toast("Checklist copied as Markdown"); }
+  catch {
+    const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    (plan.open ? plan : document.body).appendChild(ta); ta.select();
+    try { document.execCommand("copy"); toast("Checklist copied as Markdown"); } catch { toast("Couldn't copy here"); }
+    ta.remove();
+  }
+}
+
+const plan = document.getElementById("plan"), body = document.getElementById("plan-body");
+let opener = null;
+function openPlan(section) {
+  opener = document.activeElement;
+  if (!plan.open) plan.showModal();
+  const target = section && document.getElementById(section);
+  if (target) {
+    if (target.tagName === "DETAILS") target.open = true;
+    requestAnimationFrame(() => { body.scrollTop = target.offsetTop - 8; });
+  } else body.scrollTop = 0;
+}
+plan.addEventListener("close", () => { if (opener && opener.focus) opener.focus(); });
+plan.addEventListener("click", (e) => { if (e.target === plan) plan.close(); });
+document.getElementById("open-plan").onclick = () => openPlan();
+document.getElementById("close-plan").onclick = () => plan.close();
+document.getElementById("copy-plan").onclick = copyPlan;
+document.getElementById("copy-plan-side").onclick = copyPlan;
+// The section tabs follow the reading position.
+const navLinks = [...document.querySelectorAll("#plan-nav a")];
+navLinks.forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); const t = document.querySelector(a.getAttribute("href")); body.scrollTop = t.offsetTop - 8; }));
+body.addEventListener("scroll", () => {
+  let cur = navLinks[0];
+  for (const a of navLinks) { const t = document.querySelector(a.getAttribute("href")); if (t.offsetTop - 40 <= body.scrollTop) cur = a; }
+  navLinks.forEach((a) => a.setAttribute("aria-current", String(a === cur)));
+  cur.scrollIntoView({ block: "nearest", inline: "nearest" });
+});
+navLinks[0].setAttribute("aria-current", "true");
+
+</script>
+<script>
+const SITE = "https://between-gigs.github.io/between-gig-2.0";
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const C = { mint: 0x2ee08e, amber: 0xf2c14e, sky: 0x7fd3ff, violet: 0xc7a6ff, leaf: 0x8ff0c2, grey: 0x7b9285 };
+const hex = (n) => "#" + n.toString(16).padStart(6, "0");
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// ——— Icons (Lucide paths), so buttons read at a glance. A button with data-icon gets the icon plus its label;
+// on narrow screens the scene's controls show the icon alone (the label stays for screen readers and as a tooltip).
+const ICONS = {
+  monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  smartphone: '<rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/>',
+  grid: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  layers: '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  arrowDown: '<path d="M12 5v14M19 12l-7 7-7-7"/>',
+  arrowRight: '<path d="M5 12h14M12 5l7 7-7 7"/>',
+  scan: '<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>',
+  workflow: '<rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/>',
+  gantt: '<path d="M8 6h10M6 12h9M11 18h7"/>',
+  expand: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
+  external: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  copy: '<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+  board: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/>',
+  columns: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/>',
+  book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  checklist: '<path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/>',
+  x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  left: '<path d="m15 18-6-6 6-6"/>',
+  right: '<path d="m9 18 6-6-6-6"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+};
+const iconSvg = (n) => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] ?? ""}</svg>`;
+function decorate(root = document) {
+  root.querySelectorAll("[data-icon]").forEach((el) => {
+    const name = el.dataset.icon;
+    if (el.dataset.iconDone === name) return;
+    const label = (el.querySelector(".lbl")?.textContent ?? el.textContent).trim();
+    el.innerHTML = `${iconSvg(name)}<span class="lbl">${esc(label)}</span>`;
+    el.title = label;
+    el.dataset.iconDone = name;
+  });
+}
+function setLabel(el, icon, label) { el.dataset.icon = icon; el.dataset.iconDone = ""; el.textContent = label; decorate(el.parentElement ?? document); }
+
+const W = 2.0, H = 1.25, CW = 2.55, SG = 0.9, LG = 0.9, GAP = 1.5, MW = 0.9;
+// Each page's real size (desktop at 1440 wide, mobile at 390), so every window in the scene is as tall as its page.
+const SIZES = {"builder-review": [1100, 1662, 585, 5179], "builder-start": [1100, 1027, 585, 3699], "builder-steps": [1100, 1302, 585, 4131], "call-sheet-dialog": [1100, 687, 585, 1266], "crew-call": [1100, 2045, 585, 8166], "email-approved": [1100, 1365, 585, 5179], "email-changes": [1100, 1274, 585, 4920], "email-invite": [1100, 1592, 585, 5998], "email-submitted": [1100, 1349, 585, 5229], "email-welcome": [1100, 1308, 585, 4752], "emails": [1100, 2539, 585, 10228], "home": [1100, 687, 585, 1266], "join-valid": [1100, 802, 585, 2767], "login": [1100, 724, 585, 2440], "owner-dashboard": [1100, 687, 585, 2557], "owner-dashboard-person": [1100, 687, 585, 1266], "owner-people": [1100, 1571, 585, 3235], "owner-review": [1100, 1889, 585, 6628], "owner-review-queue": [1100, 790, 585, 1693], "owner-waitlist": [1100, 1127, 585, 3168], "preview-guide": [1100, 2298, 585, 11724], "privacy": [1100, 2171, 585, 6603], "professionals": [1100, 5184, 585, 18085], "profile-approved": [1100, 2830, 585, 10986], "proposal-visitor": [1100, 2278, 585, 7536], "public-maya": [1100, 2526, 585, 10420], "storyboard": [1100, 687, 585, 1266]};
+
+// ——— What every screen is made of. Each DataSource call maps to one backend route and the tables it touches. ———
+const API = {
+  "auth.session": ["GET /api/session", ["people"], "build"],
+  "auth.syncExternal": ["POST /api/session/sync", ["people", "invites"], "build"],
+  "auth.signOut": ["Clerk signOut()", [], "clerk"],
+  "auth.register": ["Clerk sign-up (sample only today)", [], "clerk"],
+  "auth.requestCode": ["Clerk sends the code (sample only today)", [], "clerk"],
+  "auth.verifyCode": ["Clerk checks the code (sample only today)", [], "clerk"],
+  "invites.lookup": ["GET /api/invites/:token", ["invites"], "build"],
+  "profiles.getDraft": ["GET /api/profile/draft", ["profile_drafts"], "build"],
+  "profiles.saveDraft": ["PUT /api/profile/draft", ["profile_drafts", "people"], "build"],
+  "profiles.photo": ["POST /api/profile/photo", ["R2 photos"], "build"],
+  "profiles.submit": ["POST /api/profile/submit", ["profiles", "people", "review_notes", "welcome_email_outbox"], "build"],
+  "profiles.getProfile": ["GET /api/profile", ["profiles"], "build"],
+  "people.get": ["GET /api/people/:id", ["people", "profiles"], "build"],
+  "people.getPublic": ["GET /api/p/:slug", ["people", "profiles"], "build"],
+  "people.similar": ["GET /api/p/:slug/similar", ["people", "profiles"], "build"],
+  "people.list": ["GET /api/people", ["people", "profiles", "profile_drafts"], "build"],
+  "owners.dashboard": ["GET /api/owners/dashboard", ["people", "leads", "invites", "activity"], "build"],
+  "owners.activity": ["GET /api/owners/activity", ["activity"], "build"],
+  "owners.reviewQueue": ["GET /api/owners/review-queue", ["people", "profiles"], "build"],
+  "owners.approve": ["POST /api/owners/people/:id/approve", ["people", "review_notes", "activity", "welcome_email_outbox"], "build"],
+  "owners.requestChanges": ["POST /api/owners/people/:id/request-changes", ["people", "review_notes", "activity", "welcome_email_outbox"], "build"],
+  "owners.undoReview": ["POST /api/owners/people/:id/undo-review", ["people", "review_notes", "activity", "welcome_email_outbox"], "build"],
+  "owners.waitlist": ["GET /api/owners/waitlist", ["leads", "people", "invites"], "build"],
+  "owners.invite": ["POST /api/owners/invite", ["people", "invites", "activity", "welcome_email_outbox"], "build"],
+  "funnel.joinWaitlist": ["POST /api/professionals3", ["leads", "form_responses", "welcome_email_outbox"], "live"],
+  "funnel.addDetails": ["POST /api/professionals3/details", ["leads", "form_responses"], "live"],
+  "funnel.submitSketch": ["POST /api/sketches", ["sketches", "welcome_email_outbox"], "live"],
+  "funnel.privacyRequest": ["POST /api/privacy-requests", ["privacy_requests"], "live"],
+  "emails.outbox": ["Sample tooling, not needed live", [], "sample"],
+  "emails.get": ["Sample tooling, not needed live", [], "sample"],
+  "demo.signInAs": ["Sample only: the Preview guide", [], "sample"],
+  "renderEmail": ["Outbox drain: drainWelcomeEmails()", ["welcome_email_outbox"], "build"],
+};
+const NEW_TABLES = new Set(["people", "invites", "profile_drafts", "profiles", "review_notes", "activity", "R2 photos"]);
+const STATE = { build: "To build", live: "Live today", clerk: "Clerk", sample: "Sample only", none: "None" };
+
+const P_LANES = [
+  { id: "visitor", name: "Visitor", sub: "Public pages", color: C.mint },
+  { id: "gigster", name: "Gigster", sub: "Joins, builds a profile", color: C.leaf },
+  { id: "owner", name: "Owner", sub: "Invites and reviews", color: C.amber },
+  { id: "email", name: "Emails", sub: "Sent by the system", color: C.sky },
+  { id: "tools", name: "Team tools", sub: "Previews and checks", color: C.violet },
+];
+const P_STAGES = [
+  { id: "land", name: "Land" }, { id: "explore", name: "Explore" }, { id: "waitlist", name: "Join the waitlist" }, { id: "invite", name: "Get invited" },
+  { id: "signup", name: "Sign up" }, { id: "build", name: "Build the profile" }, { id: "submit", name: "Submit" }, { id: "review", name: "Review" },
+  { id: "live", name: "Live" }, { id: "anytime", name: "Anytime" },
+];
+const em = (name) => [`emails/${name}.ts`, "emails/layout.ts", "components/emails/EmailPreview.tsx"];
+const SCREENS = [
+  { id: "home", lane: "visitor", stage: "land", title: "Home: the call sheet", path: "/", text: "Coming soon, with the dotted forest panel and the glowing horizon.", files: ["app/page.tsx", "components/home/CallSheetHome.tsx"], calls: [] },
+  { id: "proposal-visitor", lane: "visitor", stage: "land", title: "Home once we open", path: "/proposals/home/", text: "Proposals for the open platform: visitor, Gigster and owner views.", files: ["components/proposals/HomeProposals.tsx"], calls: [] },
+  { id: "crew-call", lane: "visitor", stage: "explore", title: "Crew Call", path: "/crew-call/", text: "The client's V15 call sheet: embroidered patches, reviews, light and dark. Picking a service opens the planner.", files: ["components/crew-call/CrewCall.tsx", "lib/crew-call.ts", "components/funnel/Storyboard.tsx (Planner)"], calls: ["funnel.submitSketch"], emails: ["coming-soon"] },
+  { id: "storyboard", lane: "visitor", stage: "explore", title: "The Storyboard", path: "/storyboard/", text: "The approved sketchbook with the curling page turn. Its planner saves a request.", files: ["components/funnel/Storyboard.tsx"], calls: ["funnel.submitSketch"], emails: ["coming-soon"] },
+  { id: "professionals", lane: "visitor", stage: "explore", title: "For professionals", path: "/professionals/", text: "The client's layout: services and sample profiles as grids, each Gigster beside their work.", files: ["components/funnel/ProfessionalsLanding.tsx", "components/funnel/parts.tsx", "components/funnel/Carousel.tsx"], calls: [] },
+  { id: "call-sheet-dialog", lane: "visitor", stage: "waitlist", title: "Get on the call sheet", path: "/professionals/", text: "Email and ZIP, then optional details. Joins the waitlist and sends the welcome email.", files: ["components/funnel/CallSheetDialog.tsx"], calls: ["funnel.joinWaitlist", "funnel.addDetails"], emails: ["welcome"] },
+  { id: "email-welcome", lane: "email", stage: "waitlist", title: "Welcome email", path: "/emails/welcome/", text: "Sent when someone joins the waitlist. Links to the Storyboard.", files: em("welcome"), calls: ["renderEmail"] },
+  { id: "owner-waitlist", lane: "owner", stage: "invite", title: "Waitlist", path: "/owners/waitlist/", text: "The ~500 sign-ups. Select people, or all not invited, then Invite N people.", files: ["components/owners/OwnerWaitlist.tsx", "components/owners/kit.tsx"], calls: ["owners.waitlist", "owners.invite"], emails: ["invite"] },
+  { id: "email-invite", lane: "email", stage: "invite", title: "Invite email", path: "/emails/invite/", text: "Each person's own link: /join?invite=TOKEN, valid 30 days.", files: em("invite"), calls: ["renderEmail"] },
+  { id: "join-valid", lane: "gigster", stage: "signup", title: "Create the account", path: "/join/?invite=riley-7q2m", text: "Invite check, name and terms, then Clerk's email code.", files: ["components/auth/JoinView.tsx", "components/auth/ClerkLayer.tsx"], calls: ["invites.lookup", "auth.syncExternal", "auth.register"] },
+  { id: "login", lane: "gigster", stage: "signup", title: "Sign in", path: "/login/", text: "Clerk sign-in, themed to Between Gigs. Owners sign in here too.", files: ["components/auth/LoginView.tsx", "components/auth/ClerkLayer.tsx"], calls: ["auth.session", "auth.requestCode", "auth.verifyCode"] },
+  { id: "builder-start", lane: "gigster", stage: "build", title: "Welcome to the builder", path: "/profile/edit/", text: "Short sentences on what happens next, before step one.", files: ["components/builder/ProfileBuilder.tsx"], calls: ["people.get", "profiles.getDraft"] },
+  { id: "builder-steps", lane: "gigster", stage: "build", title: "Build the profile", path: "/profile/edit/", text: "Five autosaved steps with a live card preview that follows each step.", files: ["components/builder/ProfileBuilder.tsx", "components/profile/ProfilePreviewCard.tsx", "components/profile/PhotoPicker.tsx", "components/profile/ChipPicker.tsx", "lib/profile/validate.ts"], calls: ["profiles.saveDraft", "profiles.photo"] },
+  { id: "builder-review", lane: "gigster", stage: "submit", title: "Review and submit", path: "/profile/edit/?step=review", text: "Everything at a glance, with any owner notes. Submit sends it for review.", files: ["components/builder/ProfileBuilder.tsx", "lib/profile/validate.ts"], calls: ["profiles.submit"], emails: ["profile-submitted"] },
+  { id: "email-submitted", lane: "email", stage: "submit", title: "Profile submitted email", path: "/emails/profile-submitted/", text: "Confirms the submit, with links to the profile and the editor.", files: em("profile-submitted"), calls: ["renderEmail"] },
+  { id: "owner-dashboard", lane: "owner", stage: "review", title: "Dashboard", path: "/owners/", text: "One screen: numbers as tabs, the list in place, activity and the funnel.", files: ["components/owners/OwnerDashboard.tsx", "components/owners/Funnel.tsx", "components/owners/activity.tsx", "components/owners/kit.tsx"], calls: ["owners.dashboard", "owners.waitlist", "people.list"] },
+  { id: "owner-review-queue", lane: "owner", stage: "review", title: "Review queue", path: "/owners/review/", text: "Submitted profiles, oldest first, with tables you can fold away.", files: ["components/owners/ReviewQueue.tsx"], calls: ["owners.reviewQueue", "owners.activity"] },
+  { id: "owner-review", lane: "owner", stage: "review", title: "Review a profile", path: "/owners/people/imani-carter/", text: "Checklist in the pinned bar, Suggest edits or Approve.", files: ["components/owners/OwnerPerson.tsx", "components/owners/ReviewPanel.tsx"], calls: ["people.get", "profiles.getProfile", "owners.reviewQueue", "owners.approve", "owners.requestChanges", "owners.undoReview"], emails: ["approved", "changes-requested"] },
+  { id: "owner-dashboard-person", lane: "owner", stage: "review", title: "Review panel", path: "/owners/", text: "Slides in from the dashboard: Reviewing 1 of 4, Previous and Next, Approve & next.", files: ["components/owners/PersonDrawer.tsx", "components/owners/ReviewPanel.tsx"], calls: ["owners.approve", "owners.requestChanges", "owners.undoReview"], emails: ["approved", "changes-requested"] },
+  { id: "email-changes", lane: "email", stage: "review", title: "Changes requested email", path: "/emails/changes-requested/", text: "Each owner note under its section, with Update my profile.", files: em("changes-requested"), calls: ["renderEmail"] },
+  { id: "public-maya", lane: "visitor", stage: "live", title: "Live public profile", path: "/p/maya/", text: "The approved call-sheet profile clients see.", files: ["components/profile/PublicProfile.tsx", "components/profile/ProfileView.tsx"], calls: ["people.getPublic", "people.similar"] },
+  { id: "profile-approved", lane: "gigster", stage: "live", title: "My profile", path: "/profile/", text: "Status, next step and the card clients will see.", files: ["components/profile/MyProfile.tsx", "components/profile/ProfileView.tsx"], calls: ["people.get", "profiles.getProfile"] },
+  { id: "email-approved", lane: "email", stage: "live", title: "Approved email", path: "/emails/approved/", text: "You're on the call sheet. Links to the live profile.", files: em("approved"), calls: ["renderEmail"] },
+  { id: "privacy", lane: "visitor", stage: "anytime", title: "Policies", path: "/privacy/", text: "Privacy, terms, provider standards and licensing, with a request form.", files: ["components/policy/PolicyPage.tsx", "components/policy/PrivacyRequest.tsx"], calls: ["funnel.privacyRequest"] },
+  { id: "owner-people", lane: "owner", stage: "anytime", title: "People", path: "/owners/people/", text: "Search with craft, service, area, availability and profile filters.", files: ["components/owners/OwnerPeople.tsx", "lib/profile/department.ts"], calls: ["people.list"] },
+  { id: "emails", lane: "tools", stage: "anytime", title: "Every email", path: "/emails/", text: "Seven templates with full-height previews and the sample outbox.", files: ["components/emails/EmailsIndex.tsx"], calls: ["emails.outbox"] },
+  { id: "preview-guide", lane: "tools", stage: "anytime", title: "Preview guide", path: "/preview/", text: "Try every role, with thumbnails, in grid or list.", files: ["components/home/Overview.tsx"], calls: ["demo.signInAs", "auth.signOut"] },
+];
+const P_FLOW = [
+  ["home", "professionals", "Explore", "main"],
+  ["professionals", "call-sheet-dialog", "Get on the call sheet", "main"],
+  ["call-sheet-dialog", "email-welcome", "Welcome email", "mail"],
+  ["call-sheet-dialog", "owner-waitlist", "Joins the waitlist", "main"],
+  ["owner-waitlist", "email-invite", "Invite N people", "main"],
+  ["email-invite", "join-valid", "Create your profile", "main"],
+  ["join-valid", "builder-start", "Clerk email code", "main"],
+  ["login", "builder-start", "Signs back in", "alt"],
+  ["builder-start", "builder-steps", "Start my profile", "main"],
+  ["builder-steps", "builder-review", "Autosaved steps", "main"],
+  ["builder-review", "email-submitted", "Submitted email", "mail"],
+  ["builder-review", "owner-review-queue", "Lands in the queue", "main"],
+  ["owner-dashboard", "owner-dashboard-person", "Start reviewing", "alt"],
+  ["owner-review-queue", "owner-review", "Open a profile", "main"],
+  ["owner-review", "email-changes", "Suggest edits", "mail"],
+  ["email-changes", "builder-review", "Update and resubmit", "loop"],
+  ["owner-review", "email-approved", "Approve", "main"],
+  ["email-approved", "public-maya", "Goes live", "main"],
+  ["email-approved", "profile-approved", "My profile", "alt"],
+];
+const P_JOURNEY = ["home", "professionals", "call-sheet-dialog", "owner-waitlist", "email-invite", "join-valid", "builder-start", "builder-steps", "builder-review", "owner-review-queue", "owner-review", "email-approved", "public-maya"];
+
+// ——— The build timeline: who does what, in what order, until launch. ———
+const T_LANES = [
+  { id: "front", name: "Front end", sub: "Us", color: C.mint },
+  { id: "decide", name: "Decisions", sub: "Justin and the client", color: C.violet },
+  { id: "back", name: "Backend", sub: "Anu", color: C.amber },
+  { id: "launch", name: "Launch", sub: "Everyone", color: C.sky },
+];
+const T_STAGES = [{ id: "done", name: "Done" }, ...STEPS.map((s, i) => ({ id: `s${i + 1}`, name: s.title.replace(/ (and|with) .*/, "") })), { id: "test", name: "Test" }, { id: "go", name: "Launch" }];
+const T_ITEMS = [
+  { id: "t-pages", lane: "front", stage: "done", status: "done", title: "26 pages built", text: "Public site, Gigster journey and owner workspace, running on sample data.", who: "Us" },
+  { id: "t-emails", lane: "front", stage: "done", status: "done", title: "7 emails designed", text: "Light and dark, rendered by the same functions the Worker will use.", who: "Us" },
+  { id: "t-qa", lane: "front", stage: "done", status: "done", title: "Checks on every page", text: "Rules, accessibility, screens and the full flow run on each change.", who: "Us" },
+  { id: "t-q2", lane: "decide", stage: "s1", status: "decision", title: "New tables or form_responses?", text: "profile_drafts and profiles as their own tables, or rows in form_responses.", who: "Anu and Justin", blocks: 1 },
+  { id: "t-clerk", lane: "decide", stage: "s2", status: "decision", title: "Clerk set-up", text: "Production instance, invited emails only, owner role in publicMetadata.", who: "Justin", blocks: 2 },
+  { id: "t-q1", lane: "decide", stage: "s2", status: "decision", title: "Hosting", text: "Pages plus a separate Worker, or one Cloudflare project?", who: "Justin and Anu", blocks: 2 },
+  { id: "t-q4", lane: "decide", stage: "s3", status: "decision", title: "Invite waves", text: "All ~500 at once, or in waves by ZIP or interest?", who: "Client", blocks: 3 },
+  { id: "t-q6", lane: "decide", stage: "s4", status: "decision", title: "Photo storage", text: "R2 bucket, size limit, resize on upload or on read?", who: "Anu", blocks: 4 },
+  { id: "t-q3", lane: "decide", stage: "s4", status: "decision", title: "Resubmissions", text: "Does an approved page stay live while edits wait for review?", who: "Client", blocks: 4 },
+  { id: "t-q5", lane: "decide", stage: "s6", status: "decision", title: "Reminders", text: "Remind people who haven't opened their invite after N days?", who: "Client", blocks: 6 },
+  ...STEPS.map((s, i) => ({ id: `t-b${i + 1}`, lane: "back", stage: `s${i + 1}`, status: i === 0 ? "next" : "todo", title: `${i + 1} · ${s.title}`, text: s.sub, who: "Anu", step: i })),
+  { id: "t-api", lane: "front", stage: "s7", status: "todo", title: "Front end on the live API", text: "lib/data/api.ts swapped in. No page changes.", who: "Us and Anu" },
+  { id: "t-photos", lane: "front", stage: "test", status: "waiting", title: "Client's last photos", text: "8 service photos and 10 coming-soon badges, when the client sends them.", who: "Client, then us" },
+  { id: "t-e2e", lane: "launch", stage: "test", status: "todo", title: "End-to-end test", text: "Invite, join, build, submit, approve, live, with real emails.", who: "Everyone" },
+  { id: "t-wave", lane: "launch", stage: "go", status: "todo", title: "First invite wave", text: "Send the first invites from the Waitlist page.", who: "Owner" },
+  { id: "t-live", lane: "launch", stage: "go", status: "todo", title: "Live", text: "Gigsters build profiles; approved ones go public.", who: "Everyone" },
+];
+const T_FLOW = [
+  ...STEPS.slice(1).map((_, i) => [`t-b${i + 1}`, `t-b${i + 2}`, "then", "main"]),
+  ...T_ITEMS.filter((t) => t.blocks).map((t) => [t.id, `t-b${t.blocks}`, "Needed before", "alt"]),
+  ["t-pages", "t-api", "Ready to plug in", "alt"],
+  ["t-b7", "t-api", "Swap", "main"],
+  ["t-api", "t-e2e", "Test it all", "main"],
+  ["t-photos", "t-e2e", "Final art", "alt"],
+  ["t-e2e", "t-wave", "Go", "main"],
+  ["t-wave", "t-live", "Profiles roll in", "main"],
+];
+const T_JOURNEY = ["t-pages", "t-b1", "t-b2", "t-b3", "t-b4", "t-b5", "t-b6", "t-b7", "t-api", "t-e2e", "t-wave", "t-live"];
+const T_STATUS = { done: ["Done", C.mint], next: ["Next", C.amber], todo: ["To do", C.amber], decision: ["Decision", C.violet], waiting: ["Waiting", C.grey] };
+
+// The stack behind a screen, as it lives in Studio: the page's Design, Code, Data and API tools, front to back.
+// Each layer is the real Studio screen for that page (stack/<page>-<tab>.jpg), and opens it.
+const STUDIO_ID = (id) => ({ "builder-start": "builder-steps", "owner-dashboard-person": "owner-dashboard" }[id] ?? id);
+const studioUrl = (id, tab) => `${SITE}/studio/?site=${STUDIO_ID(id)}&tab=${tab}`;
+function toolsOf(s) {
+  const st = stackOf(s);
+  return [
+    { tab: "design", name: "Design", sub: "The page in Studio: structure and styles", state: "live", label: "Built" },
+    { tab: "code", name: "Code", sub: `${s.files.length} source file${s.files.length === 1 ? "" : "s"} in the code editor`, state: "live", label: "Built" },
+    { tab: "data", name: "Data", sub: "The CMS collection it reads", state: st[3].state, label: st[3].label },
+    { tab: "api", name: "API", sub: s.calls.length ? `${s.calls.length} call${s.calls.length === 1 ? "" : "s"} → routes → tables` : "No calls: a static page", state: st[2].state, label: st[2].label },
+  ];
+}
+// What each screen needs underneath, from what's built to what Anu builds (the detail panel and layer colours).
+function stackOf(s) {
+  const calls = s.calls.map((m) => ({ m, route: API[m][0], tables: API[m][1], state: API[m][2] }));
+  const tables = [...new Set(calls.flatMap((c) => c.tables))];
+  const states = new Set(calls.map((c) => c.state));
+  const apiState = states.has("build") ? "build" : states.has("live") ? "live" : states.has("clerk") ? "clerk" : calls.length ? "sample" : "none";
+  return [
+    { key: "code", name: "Code", state: "live", label: "Built", items: s.files },
+    { key: "data", name: "Data calls", state: calls.length ? "live" : "none", label: calls.length ? "Built · sample data" : "None: static page", items: calls.length ? s.calls : ["No data: a static page"] },
+    { key: "api", name: "API routes", state: apiState, label: STATE[apiState], items: calls.length ? calls.map((c) => c.route) : ["Nothing to build"] },
+    { key: "tables", name: "Tables", state: tables.some((t) => NEW_TABLES.has(t)) ? "build" : tables.length ? "live" : "none", label: tables.some((t) => NEW_TABLES.has(t)) ? "New tables" : tables.length ? "Existing" : "None", items: tables.length ? tables.map((t) => (NEW_TABLES.has(t) ? `+ ${t}` : t)) : ["No tables"] },
+  ];
+}
+const stateColor = (st) => (st === "build" ? C.amber : st === "live" ? C.mint : st === "clerk" ? C.sky : C.grey);
+
+// ——— Scene ———
+const stage = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(0x061510);
+stage.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 900);
+camera.position.set(0, 4, 40);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.08; controls.minDistance = 1.2; controls.maxDistance = 400; controls.screenSpacePanning = true;
+scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+const key = new THREE.DirectionalLight(0xffffff, 0.5); key.position.set(4, 10, 8); scene.add(key);
+const loader = new THREE.TextureLoader();
+const labelsEl = document.getElementById("labels");
+const pickables = [];
+
+function canvasTex(w, h, draw) {
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const t = new THREE.CanvasTexture(c); t.anisotropy = 4; t.userData = { c, draw };
+  draw(c.getContext("2d"), w, h); return t;
+}
+function redraw(t) { const { c, draw } = t.userData; const x = c.getContext("2d"); x.clearRect(0, 0, c.width, c.height); draw(x, c.width, c.height); t.needsUpdate = true; }
+function rr(x, X, Y, w, h, r) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); }
+function wrap(x, text, X, Y, maxW, lh, maxLines) {
+  const words = String(text).split(" "); let line = "", n = 0;
+  for (let i = 0; i < words.length; i++) {
+    const test = line ? `${line} ${words[i]}` : words[i];
+    if (x.measureText(test).width > maxW && line) {
+      if (n === maxLines - 1) { while (x.measureText(line + "…").width > maxW) line = line.slice(0, -1); x.fillText(line + "…", X, Y + n * lh); return n + 1; }
+      x.fillText(line, X, Y + n * lh); n++; line = words[i];
+    } else line = test;
+  }
+  if (line) { x.fillText(line, X, Y + n * lh); n++; }
+  return n;
+}
+function pill(x, text, X, Y, color, filled) {
+  x.font = "700 15px Figtree, sans-serif"; const w = x.measureText(text.toUpperCase()).width + 22;
+  rr(x, X - w, Y, w, 28, 14); if (filled) { x.fillStyle = color; x.fill(); } else { x.strokeStyle = color; x.lineWidth = 2; x.stroke(); }
+  x.fillStyle = filled ? "#062015" : color; x.fillText(text.toUpperCase(), X - w + 11, Y + 19);
+}
+
+// The back of each screen (and of its stack): what the page is, at a glance.
+function summaryTex(s, lane, n) {
+  return canvasTex(512, 320, (x, w, h) => {
+    x.fillStyle = "#0c2119"; x.fillRect(0, 0, w, h);
+    x.fillStyle = hex(lane.color); x.fillRect(0, 0, 10, h);
+    x.beginPath(); x.arc(70, 76, 36, 0, Math.PI * 2); x.fill();
+    x.fillStyle = "#062015"; x.font = "700 30px Sora, sans-serif"; x.textAlign = "center"; x.fillText(String(n), 70, 87); x.textAlign = "left";
+    x.fillStyle = hex(lane.color); x.font = "700 15px Figtree, sans-serif"; x.fillText(`${lane.name.toUpperCase()} · ${P_STAGES[n - 1].name.toUpperCase()}`, 124, 64);
+    x.fillStyle = "#eaf5ef"; x.font = "600 30px Sora, sans-serif"; wrap(x, s.title, 124, 102, 360, 36, 2);
+    x.fillStyle = "#a2b8ac"; x.font = "500 19px ui-monospace, Menlo, monospace"; wrap(x, s.path, 34, 200, 450, 24, 1);
+    const st = toolsOf(s); x.font = "600 17px Figtree, sans-serif"; let X = 34;
+    st.forEach((l) => { const t = l.name; const tw = x.measureText(t).width + 26; rr(x, X, 236, tw, 34, 10); x.strokeStyle = hex(stateColor(l.state)); x.lineWidth = 2; x.stroke(); x.fillStyle = "#eaf5ef"; x.fillText(t, X + 13, 259); X += tw + 8; });
+    x.fillStyle = "#7b9285"; x.font = "500 15px Figtree, sans-serif"; x.fillText("Behind it in Studio, front to back", 34, 296);
+  });
+}
+function cardTex(t, lane) {
+  return canvasTex(512, 320, (x, w, h) => {
+    const [label, color] = T_STATUS[t.status]; const col = hex(color);
+    x.fillStyle = t.status === "done" ? "#0f2a20" : "#0c2119"; x.fillRect(0, 0, w, h);
+    x.fillStyle = hex(lane.color); x.fillRect(0, 0, 10, h);
+    x.font = "700 15px Figtree, sans-serif"; x.fillStyle = hex(lane.color); x.fillText(lane.name.toUpperCase(), 34, 44);
+    pill(x, label, w - 22, 22, col, t.status === "done" || t.status === "next");
+    x.fillStyle = "#eaf5ef"; x.font = "600 40px Sora, sans-serif"; const n = wrap(x, t.title, 34, 108, 450, 46, 2);
+    x.fillStyle = "#a2b8ac"; x.font = "500 25px Figtree, sans-serif"; wrap(x, t.text, 34, 108 + n * 46 + 8, 450, 31, n > 1 ? 2 : 3);
+    x.fillStyle = "#7b9285"; x.font = "600 20px Figtree, sans-serif"; x.fillText(t.who, 34, 296);
+    if (t.step !== undefined) {
+      const done = STEPS[t.step].tasks.filter((_, j) => ticks[`${t.step}.${j}`]).length, all = STEPS[t.step].tasks.length;
+      x.textAlign = "right"; x.fillText(`${done} of ${all} tasks`, w - 24, 296); x.textAlign = "left";
+      x.fillStyle = "#1f3a2e"; x.fillRect(260, 304, 228, 4); x.fillStyle = "#f2c14e"; x.fillRect(260, 304, 228 * done / all, 4);
+    }
+  });
+}
+
+// ——— Boards: lanes as rows, stages as columns (or turned on their side), items placed in cells. ———
+function makeBoard(kind, lanes, stages, defs, flow, journey) {
+  const group = new THREE.Group(); scene.add(group);
+  const deco = new THREE.Group(); group.add(deco);
+  const b = { kind, lanes, stages, group, deco, items: {}, list: [], edges: [], labels: [], journey, decoLabels: [] };
+  const counts = {};
+  defs.forEach((d) => {
+    const k = `${d.stage}|${d.lane}`; d.slot = counts[k] = (counts[k] ?? -1) + 1;
+    const lane = lanes.find((l) => l.id === d.lane), n = stages.findIndex((s) => s.id === d.stage) + 1;
+    const it = kind === "product" ? makeScreen(d, lane, n) : makeCard(d, lane);
+    Object.assign(it, { def: d, lane, n, board: b, cur: new THREE.Vector3(), target: new THREE.Vector3(), pullCur: 0, spread: 0.075, dim: false });
+    b.items[d.id] = it; b.list.push(it); group.add(it.g);
+  });
+  b.counts = counts;
+  flow.forEach(([from, to, label, k]) => b.edges.push(makeEdge(b, b.items[from], b.items[to], label, k)));
+  // Spread several lines leaving or entering the same item.
+  b.list.forEach((it) => {
+    const out = b.edges.filter((e) => e.a === it), inn = b.edges.filter((e) => e.b === it);
+    out.forEach((e, i) => { e.aOff = (i - (out.length - 1) / 2) * 0.32; });
+    inn.forEach((e, i) => { e.bOff = (i - (inn.length - 1) / 2) * 0.32; });
+  });
+  return b;
+}
+function frameMesh(color) { return new THREE.Mesh(new THREE.BoxGeometry(W + 0.08, H + 0.08, 0.05), new THREE.MeshStandardMaterial({ color: 0x0c2119, emissive: color, emissiveIntensity: 0.12, roughness: 0.6 })); }
+function makeScreen(s, lane, n) {
+  const g = new THREE.Group();
+  const frame = frameMesh(lane.color);
+  const cardTexture = loader.load(`shots/${s.id}.jpg`); cardTexture.anisotropy = 4;
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(W, H), new THREE.MeshBasicMaterial({ map: cardTexture }));
+  face.position.z = 0.03;
+  const sum = summaryTex(s, lane, n);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(W, H), new THREE.MeshBasicMaterial({ map: sum }));
+  back.rotation.y = Math.PI; back.position.z = -0.03;
+  g.add(frame, face, back);
+  const layers = toolsOf(s).map((l, k, all) => {
+    const lg = new THREE.Group();
+    const front = new THREE.Mesh(new THREE.PlaneGeometry(W * 0.97, H * 0.97), new THREE.MeshBasicMaterial({ color: 0x0f2a20 }));
+    const bk = new THREE.Mesh(new THREE.PlaneGeometry(W * 0.97, H * 0.97), new THREE.MeshBasicMaterial(k === all.length - 1 ? { map: sum } : { color: 0x0a1b14 }));
+    bk.rotation.y = Math.PI; bk.position.z = -0.002;
+    const lineMat = l.state === "build" ? new THREE.LineDashedMaterial({ color: C.amber, dashSize: 0.08, gapSize: 0.05 }) : new THREE.LineBasicMaterial({ color: stateColor(l.state) });
+    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(W * 0.97, H * 0.97)), lineMat);
+    if (l.state === "build") edge.computeLineDistances();
+    lg.add(front, bk, edge); g.add(lg);
+    lg.userData = { layer: l, front, textured: false };
+    return lg;
+  });
+  const it = { g, frame, face, back, layers, cardTexture, w: W, h: H, hi: null };
+  [face, frame, back].forEach((m) => { m.userData.item = it; pickables.push(m); });
+  layers.forEach((lg, k) => lg.children.forEach((m) => { m.userData.item = it; m.userData.layer = k; pickables.push(m); }));
+  return it;
+}
+function makeCard(t, lane) {
+  const g = new THREE.Group();
+  const frame = frameMesh(T_STATUS[t.status][1]);
+  if (t.status === "decision" || t.status === "todo" || t.status === "waiting") frame.material.emissiveIntensity = 0.05;
+  const tex = cardTex(t, lane);
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(W, H), new THREE.MeshBasicMaterial({ map: tex }));
+  face.position.z = 0.03;
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(W, H), new THREE.MeshBasicMaterial({ map: tex }));
+  back.rotation.y = Math.PI; back.position.z = -0.03;
+  g.add(frame, face, back);
+  if (t.status !== "done") {
+    const mat = new THREE.LineDashedMaterial({ color: T_STATUS[t.status][1], dashSize: 0.1, gapSize: 0.06 });
+    const outline = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(W + 0.2, H + 0.2)), mat); outline.computeLineDistances(); outline.position.z = 0.04; g.add(outline);
+  }
+  const it = { g, frame, face, back, layers: [], tex, w: W, h: H };
+  [face, frame, back].forEach((m) => { m.userData.item = it; pickables.push(m); });
+  return it;
+}
+
+// The window's shape for a page mode: a card, or the page at its real height (desktop or mobile). Anchored at the top.
+let pageMode = "desktop";
+const tallCache = {};
+function tallTex(id, kind) { const k = `${id}-${kind}`; if (!tallCache[k]) { tallCache[k] = loader.load(`tall/${k}.jpg`); tallCache[k].anisotropy = 4; } return tallCache[k]; }
+function shapeOf(it, mode = pageMode) {
+  if (!it.layers.length || mode === "card" || !SIZES[it.def.id]) return { w: W, h: H };
+  const [dw, dh, mw, mh] = SIZES[it.def.id];
+  return mode === "mobile" ? { w: MW, h: MW * mh / mw } : { w: W, h: W * dh / dw };
+}
+function applyShape(it, mode = pageMode, map = null) {
+  const { w, h } = shapeOf(it, mode);
+  it.w = w; it.h = h;
+  if (!it.layers.length) return;
+  it.face.geometry.dispose(); it.face.geometry = new THREE.PlaneGeometry(w, h);
+  it.face.position.y = H / 2 - h / 2;
+  it.face.material.map = map ?? (mode === "card" || !SIZES[it.def.id] ? it.cardTexture : tallTex(it.def.id, mode === "mobile" ? "m" : "d"));
+  it.face.material.needsUpdate = true;
+  it.frame.scale.set((w + 0.08) / (W + 0.08), (h + 0.08) / (H + 0.08), 1); it.frame.position.y = H / 2 - h / 2;
+}
+
+const EDGE = { main: [C.mint, 0.032, 0], mail: [C.sky, 0.022, 1], alt: [0x5f9f80, 0.018, 2], loop: [C.amber, 0.026, 3] };
+function makeEdge(b, a, z, label, kind) {
+  const [color, radius, track] = EDGE[kind];
+  const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: kind === "alt" ? 0.75 : 0.95 });
+  const tube = new THREE.Mesh(new THREE.BufferGeometry(), mat);
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(radius * 3.2, radius * 9, 14), mat);
+  const pulse = new THREE.Mesh(new THREE.SphereGeometry(radius * 2.6, 12, 12), new THREE.MeshBasicMaterial({ color: kind === "main" ? 0xeafff4 : color }));
+  const line = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.9 }));
+  b.group.add(tube, cone, pulse, line);
+  const el = document.createElement("div"); el.className = "lab lab-edge"; el.textContent = label; el.style.color = hex(color); el.hidden = true; labelsEl.appendChild(el);
+  return { a, b: z, label, kind, radius, track, tube, cone, pulse, line, mat, el, aOff: 0, bOff: 0, mid: new THREE.Vector3(), phase: Math.random() };
+}
+function rounded(pts, r) {
+  const p = pts.filter((v, i) => i === 0 || v.distanceTo(pts[i - 1]) > 1e-3);
+  const path = new THREE.CurvePath(); let cur = p[0].clone();
+  for (let i = 1; i < p.length - 1; i++) {
+    const d1 = p[i].clone().sub(p[i - 1]), d2 = p[i + 1].clone().sub(p[i]);
+    const r2 = Math.min(r, d1.length() / 2, d2.length() / 2); d1.normalize(); d2.normalize();
+    if (r2 < 1e-3 || d1.dot(d2) > 0.999) continue;
+    const s = p[i].clone().addScaledVector(d1, -r2), e = p[i].clone().addScaledVector(d2, r2);
+    if (cur.distanceTo(s) > 1e-4) path.add(new THREE.LineCurve3(cur, s));
+    path.add(new THREE.QuadraticBezierCurve3(s, p[i].clone(), e)); cur = e;
+  }
+  path.add(new THREE.LineCurve3(cur, p[p.length - 1].clone()));
+  return path;
+}
+// Flow-chart routing through the gaps between rows. Tops in a row line up, so lines within a row run above it;
+// lines to a later row leave from the bottom of the page and enter the next page at its top (and the reverse going back).
+function routeEdge(e) {
+  const A = e.a.g.position, B = e.b.g.position, a = e.a, t = e.b;
+  const z = 0.3 + e.track * 0.16, lift = (e.track - 1.5) * 0.18;
+  const ax = A.x + e.aOff, bx = B.x + e.bOff, aTop = A.y + H / 2, bTop = B.y + H / 2;
+  let sy, gy, ty, ey;
+  if (a.row === t.row) { sy = aTop; gy = a.rowTop + GAP / 2 + lift; ty = gy; ey = bTop; }
+  else if (t.row > a.row) { sy = aTop - a.h; gy = a.rowBottom - GAP / 2 + lift; ey = bTop; ty = t.rowTop + GAP / 2 + lift; }
+  else { sy = aTop; gy = a.rowTop + GAP / 2 + lift; ey = bTop - t.h; ty = t.rowBottom - GAP / 2 + lift; }
+  const pts = [new THREE.Vector3(ax, sy, A.z + 0.06), new THREE.Vector3(ax, gy, A.z + z), new THREE.Vector3(bx, gy, A.z + z), new THREE.Vector3(bx, ty, B.z + z), new THREE.Vector3(bx, ey, B.z + 0.06)];
+  e.curve = rounded(pts, 0.35);
+  e.mid.set((ax + bx) / 2, gy, A.z + z);
+  if (Math.abs(ax - bx) < 0.1) e.mid.set(ax, (gy + ty) / 2, (A.z + B.z) / 2 + z);
+  e.tube.geometry.dispose();
+  e.tube.geometry = new THREE.TubeGeometry(e.curve, 120, e.radius, 6, false);
+  e.line.geometry.dispose(); e.line.geometry = new THREE.BufferGeometry().setFromPoints(e.curve.getPoints(160));
+  const end = e.curve.getPointAt(1), tan = e.curve.getTangentAt(0.999).normalize();
+  e.cone.position.copy(end).addScaledVector(tan, -e.radius * 4.5);
+  e.cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tan);
+}
+
+function layoutBoard(b, dir) {
+  b.dir = dir;
+  const h = dir === "h", rowsOf = h ? b.lanes : b.stages, colsOf = h ? b.stages : b.lanes;
+  const rowIx = (it) => (h ? b.lanes : b.stages).findIndex((t) => t.id === (h ? it.def.lane : it.def.stage));
+  const colIx = (it) => (h ? b.stages : b.lanes).findIndex((t) => t.id === (h ? it.def.stage : it.def.lane));
+  const cnt = (c, r) => b.list.filter((it) => colIx(it) === c && rowIx(it) === r).length;
+  // Columns: as wide as their busiest cell. Rows: as tall as their tallest page.
+  const colW = colsOf.map((_, c) => Math.max(1, ...rowsOf.map((_, r) => cnt(c, r))) * CW), cg = h ? SG : LG;
+  const x0 = []; let x = 0; colW.forEach((w, c) => { x0[c] = x; x += w + cg; });
+  const total = x - cg;
+  const rowH = rowsOf.map((_, r) => Math.max(H, ...b.list.filter((it) => rowIx(it) === r).map((it) => it.h)));
+  const height = rowH.reduce((a, v) => a + v, 0) + GAP * (rowsOf.length - 1);
+  b.rows = []; let y = height / 2; rowH.forEach((rh) => { b.rows.push({ top: y, bottom: y - rh }); y -= rh + GAP; });
+  b.list.forEach((it) => {
+    const r = rowIx(it), c = colIx(it);
+    it.row = r; it.rowTop = b.rows[r].top; it.rowBottom = b.rows[r].bottom;
+    it.target.set(x0[c] + (it.def.slot + 0.5) * CW - total / 2, b.rows[r].top - H / 2, 0);
+  });
+  b.cols = colsOf.map((_, c) => ({ a: x0[c] - total / 2, b: x0[c] + colW[c] - total / 2 }));
+  b.size = { w: total, h: height }; b.top = height / 2; b.bottom = -height / 2;
+  if (h) {
+    b.laneAt = (l) => new THREE.Vector3(-total / 2 - 0.5, b.rows[l].top - 0.7, 0);
+    b.stageAt = (s) => new THREE.Vector3((b.cols[s].a + b.cols[s].b) / 2, b.top + 0.55, 0);
+  } else {
+    b.laneAt = (l) => new THREE.Vector3((b.cols[l].a + b.cols[l].b) / 2, b.top + 0.55, 0);
+    b.stageAt = (s) => new THREE.Vector3(-total / 2 - 0.5, b.rows[s].top - 0.7, 0);
+  }
+  buildDeco(b);
+}
+// The backdrop: a lane band per row, a divider per stage, a timeline arrow from start to finish.
+function buildDeco(b) {
+  b.deco.children.slice().forEach((c) => { b.deco.remove(c); c.geometry?.dispose(); });
+  b.decoLabels.forEach((l) => l.el.remove()); b.decoLabels = [];
+  const h = b.dir === "h", Z = -3.4;
+  const add = (m) => { b.deco.add(m); return m; };
+  b.lanes.forEach((lane, l) => {
+    const p = b.laneAt(l);
+    const rh = h ? b.rows[l].top - b.rows[l].bottom : 0;
+    const band = h ? new THREE.PlaneGeometry(b.size.w + 1.2, rh + GAP * 0.8) : new THREE.PlaneGeometry(b.cols[l].b - b.cols[l].a + 0.6, b.size.h + 0.4);
+    const m = add(new THREE.Mesh(band, new THREE.MeshBasicMaterial({ color: lane.color, transparent: true, opacity: 0.06, depthWrite: false })));
+    m.position.set(h ? 0 : p.x, h ? (b.rows[l].top + b.rows[l].bottom) / 2 : 0, Z);
+    const el = document.createElement("div"); el.className = `lab lab-lane${h ? "" : " v"}`; el.style.borderColor = hex(lane.color);
+    el.innerHTML = `<b style="color:${hex(lane.color)}">${esc(lane.name)}</b><span>${esc(lane.sub)}</span>`; labelsEl.appendChild(el);
+    b.decoLabels.push({ el, pos: h ? p : p.clone().add(new THREE.Vector3(0, 0.25, 0)), w: h ? 0 : b.cols[l].b - b.cols[l].a });
+  });
+  b.stages.forEach((st, s) => {
+    const p = b.stageAt(s);
+    const el = document.createElement("div"); el.className = "lab lab-stage"; el.innerHTML = `<b>${s + 1}</b>${esc(st.name)}`;
+    if (!h) el.style.transform = "translate(-100%, -50%)";
+    labelsEl.appendChild(el); b.decoLabels.push({ el, pos: p, w: h ? b.cols[s].b - b.cols[s].a + SG * 0.6 : 0 });
+    if (s > 0) {
+      const g = h ? new THREE.PlaneGeometry(0.02, b.size.h) : new THREE.PlaneGeometry(b.size.w + 1.2, 0.02);
+      const m = add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: 0x1f5a40, transparent: true, opacity: 0.35 })));
+      if (h) m.position.set(b.cols[s].a - SG / 2, 0, Z + 0.01); else m.position.set(0, b.rows[s].top + GAP / 2, Z + 0.01);
+    }
+  });
+  // Start → finish arrow under the board.
+  const len = h ? b.size.w : b.size.h, arrow = add(new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, len, 8), new THREE.MeshBasicMaterial({ color: C.mint, transparent: true, opacity: 0.5 })));
+  const tipM = add(new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.4, 16), new THREE.MeshBasicMaterial({ color: C.mint })));
+  if (h) { arrow.rotation.z = Math.PI / 2; arrow.position.set(0, -b.size.h / 2 - 0.25, 0); tipM.rotation.z = -Math.PI / 2; tipM.position.set(len / 2 + 0.2, -b.size.h / 2 - 0.25, 0); }
+  else { arrow.position.set(-b.size.w / 2 - 0.35, 0, 0); tipM.rotation.z = Math.PI; tipM.position.set(-b.size.w / 2 - 0.35, -len / 2 - 0.2, 0); }
+  [["Start", 0], [b.kind === "product" ? "Live" : "Launched", 1]].forEach(([t, k]) => {
+    const el = document.createElement("div"); el.className = "lab lab-stage"; el.innerHTML = `<b>${k ? "→" : "●"}</b>${t}`; labelsEl.appendChild(el);
+    const pos = h ? new THREE.Vector3(-len / 2 + k * len, -b.size.h / 2 - 0.4, 0) : new THREE.Vector3(-b.size.w / 2 - 0.35, len / 2 - k * len - (k ? 0.5 : -0.6), 0);
+    if (h) el.style.transform = "translate(-50%, 0)"; b.decoLabels.push({ el, pos });
+  });
+  // The timeline's "we are here" line, between Done and step 1.
+  if (b.kind === "plan") {
+    const m = add(new THREE.Mesh(h ? new THREE.PlaneGeometry(0.06, b.size.h + 0.6) : new THREE.PlaneGeometry(b.size.w + 1.2, 0.06), new THREE.MeshBasicMaterial({ color: C.mint })));
+    const at = h ? b.cols[1].a - SG / 2 : b.rows[1].top + GAP / 2;
+    if (h) m.position.set(at, 0, -0.5); else m.position.set(0, at, -0.5);
+    const el = document.createElement("div"); el.className = "lab lab-now"; el.textContent = "We are here · 23 Oct"; labelsEl.appendChild(el);
+    b.decoLabels.push({ el, pos: h ? new THREE.Vector3(at, -b.size.h / 2 - 0.55, -0.5) : new THREE.Vector3(b.size.w / 2 + 0.4, at, -0.5) });
+    el.style.transform = h ? "translate(-50%, 0)" : "translate(0, -50%)";
+  }
+  b.decoLabels.forEach((l) => { l.el.hidden = b !== active; });
+}
+
+// ——— State ———
+let product, planBoard, active, selected = null, hovered = null, stacksAll = false, full = null, tour = null, fly = null, moving = 0;
+let dir = innerWidth < 700 ? "v" : "h";
+
+function fitBox(box, angle = 0) {
+  const c = box.getCenter(new THREE.Vector3()), s = box.getSize(new THREE.Vector3());
+  const vf = THREE.MathUtils.degToRad(camera.fov) / 2, hf = Math.atan(Math.tan(vf) * camera.aspect);
+  const dist = Math.max(s.x / 2 / Math.tan(hf), s.y / 2 / Math.tan(vf)) * 1.08 + 0.6;
+  const to = c.clone().add(new THREE.Vector3(Math.sin(angle) * dist, dist * 0.1, Math.cos(angle) * dist));
+  flyTo(to, c);
+}
+function flyTo(to, target) { fly = { from: camera.position.clone(), to, tf: controls.target.clone(), tt: target.clone(), t: 0 }; }
+function boxOf(items, pad = 0.6) { const b = new THREE.Box3(); items.forEach((it) => { b.expandByPoint(it.target.clone().add(new THREE.Vector3(-W / 2 - pad, H / 2 - it.h - pad, 0))); b.expandByPoint(it.target.clone().add(new THREE.Vector3(W / 2 + pad, H / 2 + pad, 0))); }); return b; }
+function overview() {
+  const b = boxOf(active.list, 1.2);
+  b.expandByPoint(active.laneAt(0).clone().add(new THREE.Vector3(dir === "h" ? -6 : 0, 0, 0)));
+  if (dir === "v") { b.expandByPoint(active.stageAt(0).clone().add(new THREE.Vector3(-6.5, 1.6, 0))); }
+  b.expandByPoint(new THREE.Vector3(0, active.top + 2.2, 0)); b.expandByPoint(new THREE.Vector3(0, active.bottom - 1.2, 0));
+  fitBox(b, -0.16);
+}
+function focusItem(it) {
+  // Screens come forward with their stack fanned out behind them; timeline cards are read face on.
+  if (it.layers.length) { const p = it.target.clone().add(new THREE.Vector3(0, 0, 1)); flyTo(p.clone().add(new THREE.Vector3(-2.3, 0.7, 4.3)), p.clone().add(new THREE.Vector3(-0.75, 0.1, -1.0))); }
+  else flyTo(it.target.clone().add(new THREE.Vector3(0, 0.15, 3.0)), it.target.clone());
+}
+
+function setBoard(b) {
+  clearFull(); active = b; selected = null; tour = null; setTourBtn(false);
+  [product, planBoard].forEach((x) => { x.group.visible = x === b; x.decoLabels.forEach((l) => { l.el.hidden = x !== b; }); x.edges.forEach((e) => { e.el.hidden = true; }); });
+  document.getElementById("view-product").setAttribute("aria-pressed", String(b === product));
+  document.getElementById("view-plan").setAttribute("aria-pressed", String(b === planBoard));
+  document.getElementById("stacks").disabled = b !== product;
+  document.querySelectorAll("[data-page]").forEach((x) => { x.disabled = b !== product; });
+  setLabel(document.getElementById("tour"), "play", b === product ? "Play the journey" : "Play the plan");
+  document.getElementById("hud-title").textContent = b === product ? "From first visit to live profile" : "From built front end to launch";
+  document.getElementById("hud-text").textContent = b === product
+    ? "Start on the left, finished on the right. Rows are who does it; lines are the order of operations. Every page hangs at its real height, with its Studio stack behind it: design, code, data and API."
+    : "The order of operations to get it done. Rows are who owns the work; decisions sit above the step they unblock.";
+  const bar = document.getElementById("stagebar"); bar.innerHTML = "";
+  b.stages.forEach((st, s) => {
+    const btn = document.createElement("button"); btn.type = "button"; btn.innerHTML = `<b>${s + 1}</b>${esc(st.name)}`;
+    btn.onclick = () => { const its = b.list.filter((it) => it.def.stage === st.id); if (its.length) fitBox(boxOf(its, 0.9), 0); };
+    bar.appendChild(btn);
+  });
+  renderIndex(); renderLegend(); renderIntro(); applyFind(); overview();
+}
+function relayout() {
+  [product, planBoard].forEach((b) => layoutBoard(b, dir));
+  moving = 1;
+}
+function setPageMode(m) {
+  clearFull(); pageMode = m;
+  product.list.forEach((it) => { dropHi(it); applyShape(it); });
+  if (selected) loadHi(selected);
+  relayout();
+  document.querySelectorAll("[data-page]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.page === m)));
+  setTimeout(() => (selected ? focusItem(selected) : overview()), 30);
+}
+// The selected window gets the sharp, full-resolution page; the others keep the light one.
+function loadHi(it) {
+  if (!it.layers.length || pageMode === "card" || it.hi) return;
+  const kind = pageMode;
+  it.hi = { kind, tex: null };
+  loader.load(`full/${it.def.id}-${kind}.jpg`, (tex) => {
+    if (it.hi?.kind !== kind || selected !== it || pageMode !== kind || full?.it === it) { tex.dispose(); if (it.hi?.kind === kind && !it.hi.tex) it.hi = null; return; }
+    tex.anisotropy = 8; it.hi.tex = tex; it.face.material.map = tex; it.face.material.needsUpdate = true;
+  });
+}
+function dropHi(it) { if (!it.hi) return; it.hi.tex?.dispose(); it.hi = null; if (full?.it !== it) applyShape(it); }
+function setDir(d) {
+  dir = d; clearFull();
+  [product, planBoard].forEach((b) => layoutBoard(b, d));
+  moving = 1;
+  setLabel(document.getElementById("dir"), d === "h" ? "arrowDown" : "arrowRight", d === "h" ? "Top to bottom" : "Left to right");
+  setTimeout(() => (selected ? focusItem(selected) : overview()), 30);
+}
+
+// ——— Reading a page at full height in the scene: it comes forward, sharp, and the wheel scrolls down it. ———
+function setSceneMode(mode) {
+  const it = selected; if (!it || active !== product) return;
+  clearFull();
+  document.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === mode)));
+  if (mode === "card") { focusItem(it); return; }
+  loader.load(`full/${it.def.id}-${mode}.jpg`, (tex) => {
+    if (selected !== it) { tex.dispose(); return; }
+    tex.anisotropy = 8;
+    dropHi(it);
+    const w = mode === "desktop" ? W * 1.25 : MW * 1.3, h = w * tex.image.height / tex.image.width;
+    it.face.geometry.dispose(); it.face.geometry = new THREE.PlaneGeometry(w, h);
+    it.face.material.map = tex; it.face.material.needsUpdate = true;
+    it.face.position.y = H / 2 - h / 2;
+    it.frame.scale.set((w + 0.08) / (W + 0.08), (h + 0.08) / (H + 0.08), 1); it.frame.position.y = H / 2 - h / 2;
+    it.layers.forEach((l) => { l.visible = false; }); it.back.visible = false;
+    const vf = THREE.MathUtils.degToRad(camera.fov) / 2, hf = Math.atan(Math.tan(vf) * camera.aspect);
+    const dist = Math.max((w * 0.62) / Math.tan(hf), mode === "mobile" ? 1.6 : 0);
+    const visH = 2 * dist * Math.tan(vf), topY = it.target.y + H / 2;
+    const top = topY - visH / 2 + 0.15, bottom = Math.min(top, topY - h + visH / 2 - 0.15);
+    full = { it, mode, tex, top, bottom, z: it.target.z + 1.8 };
+    flyTo(new THREE.Vector3(it.target.x, top, full.z + dist), new THREE.Vector3(it.target.x, top, full.z));
+    controls.enableZoom = false; controls.enableRotate = false;
+    document.getElementById("hint").hidden = false; document.querySelector(".hud").hidden = true;
+  });
+}
+function clearFull() {
+  if (!full) return;
+  const it = full.it;
+  full.tex.dispose(); full = null;
+  applyShape(it);
+  it.layers.forEach((l) => { l.visible = true; }); it.back.visible = true;
+  controls.enableZoom = true; controls.enableRotate = true;
+  document.getElementById("hint").hidden = true; document.querySelector(".hud").hidden = false;
+  document.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === "card")));
+  if (selected === it) loadHi(it);
+}
+renderer.domElement.addEventListener("wheel", (e) => {
+  if (!full) return; e.preventDefault();
+  const y = Math.max(full.bottom, Math.min(full.top, controls.target.y - e.deltaY * 0.0035));
+  const d = y - controls.target.y; controls.target.y += d; camera.position.y += d; fly = null;
+}, { passive: false });
+
+// ——— Stacks: the layers get their writing the first time they open. ———
+function texturize(it) {
+  it.layers.forEach((lg) => {
+    if (lg.userData.textured) return;
+    const t = loader.load(`stack/${STUDIO_ID(it.def.id)}-${lg.userData.layer.tab}.jpg`); t.anisotropy = 4;
+    lg.userData.front.material.map = t; lg.userData.front.material.color.set(0xffffff); lg.userData.front.material.needsUpdate = true;
+    lg.userData.textured = true;
+  });
+}
+document.getElementById("stacks").onclick = (e) => {
+  stacksAll = !stacksAll; e.currentTarget.setAttribute("aria-pressed", String(stacksAll));
+  setLabel(e.currentTarget, "layers", stacksAll ? "Fold the stacks" : "Show all stacks");
+  if (stacksAll) { product.list.forEach(texturize); const b = boxOf(product.list, 1.5); fitBox(b, -0.5); }
+  else overview();
+};
+
+// ——— Selection, panel ———
+function select(it, move = true) {
+  if (full && full.it !== it) clearFull();
+  if (selected && selected !== it) dropHi(selected);
+  selected = it; loadHi(it);
+  if (it.layers.length) texturize(it);
+  if (move) focusItem(it);
+  renderDetail(); markIndex();
+  try { history.replaceState(null, "", `#${it.def.id}`); } catch { /* not allowed here */ }
+  if (matchMedia("(min-width: 861px)").matches) document.getElementById("detail").scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
+}
+const detail = document.getElementById("detail");
+function renderIntro() {
+  detail.innerHTML = active === product ? `
+    <div class="howto"><span class="eyebrow">How to read it</span><h2>One board, start to finish</h2>
+    <ul>
+      <li><b>Columns</b> are the order of operations: land, explore, join, get invited, sign up, build, submit, review, live.</li>
+      <li><b>Rows</b> are who does it: visitor, Gigster, owner, the emails the system sends, and team tools.</li>
+      <li><b>Lines</b> are the flow. Green is the main journey, blue an email, amber the loop back for edits.</li>
+      <li><b>Behind every screen</b> is its stack in Studio, the editor that makes it: Design, Code, Data and API. Click a screen, or Show all stacks; each layer opens in Studio.</li>
+      <li>Every page <b>hangs at its real height</b>. Switch between desktop and mobile height under the scene, or read any page full size.</li>
+    </ul>
+    <div class="row"><button type="button" class="btn-mint" id="intro-play" data-icon="play">Play the journey</button><button type="button" id="intro-first" data-icon="target">Start with the first screen</button></div></div>` : `
+    <div class="howto"><span class="eyebrow">How to read it</span><h2>Who does what, in what order</h2>
+    <ul>
+      <li><b>Columns</b> run from what's done, through Anu's seven backend steps, to test and launch.</li>
+      <li><b>Decisions</b> sit above the step they unblock. Answer them before that step starts.</li>
+      <li><b>Backend</b> cards count the ticks from Anu's plan and open it at that step.</li>
+    </ul>
+    <div class="row"><button type="button" class="btn-mint" id="intro-play" data-icon="play">Play the plan</button><button type="button" id="intro-first" data-icon="target">Start with what's next</button></div></div>`;
+  decorate(detail);
+  document.getElementById("intro-play").onclick = () => startTour();
+  document.getElementById("intro-first").onclick = () => select(active === product ? product.items.home : planBoard.items["t-b1"]);
+}
+function renderDetail() {
+  const it = selected; if (!it) return renderIntro();
+  const d = it.def, col = hex(it.lane.color);
+  if (active === product) {
+    const st = stackOf(d);
+    const calls = d.calls.map((m) => { const [route, tables, state] = API[m]; return `<div class="call"><div class="row"><button type="button" class="chip-btn" data-find="${esc(m)}">${esc(m)}</button><span class="pill ${state}">${STATE[state]}</span></div><span class="path">→ ${esc(route)}</span></div>`; }).join("");
+    const tables = [...new Set(d.calls.flatMap((m) => API[m][1]))];
+    detail.innerHTML = `
+      <span class="eyebrow" style="color:${col}">${esc(it.lane.name)} · ${it.n} ${esc(P_STAGES[it.n - 1].name)}</span>
+      <img src="shots/${d.id}.jpg" alt="">
+      <h2>${esc(d.title)}</h2><p>${esc(d.text)}</p><span class="path">${esc(d.path)}</span>
+      <div class="row"><button type="button" class="btn-mint" id="d-full" data-icon="expand">Full page, desktop and mobile</button><a class="open" data-icon="external" style="background:transparent;color:var(--ink);border:1px solid var(--line)" href="${SITE}${esc(d.path)}" target="_blank" rel="noreferrer">Open it live</a></div>
+      <div class="find"><span class="small">Read it in the scene, scrolling down the page</span><div class="seg" role="group" aria-label="Read it in the scene">
+        <button type="button" data-mode="card" data-icon="board" aria-pressed="${!full}">On the board</button><button type="button" data-mode="desktop" data-icon="monitor" aria-pressed="${full?.mode === "desktop"}">Desktop</button><button type="button" data-mode="mobile" data-icon="smartphone" aria-pressed="${full?.mode === "mobile"}">Mobile</button></div></div>
+      ${SIZES[d.id] ? `<p class="small">Page height: ${Math.round(SIZES[d.id][1] * 1440 / SIZES[d.id][0]).toLocaleString()}px on desktop, ${Math.round(SIZES[d.id][3] * 390 / SIZES[d.id][2]).toLocaleString()}px on mobile.</p>` : ""}
+      <span class="eyebrow">Behind it in Studio, front to back</span>
+      <div class="tools">${toolsOf(d).map((l) => `<a class="tool" href="${studioUrl(d.id, l.tab)}" target="_blank" rel="noreferrer"><img src="stack/${STUDIO_ID(d.id)}-${l.tab}.jpg" alt="" loading="lazy"><b>${esc(l.name)}<i class="pill ${l.state === "build" ? "new" : l.state === "none" ? "none" : "live"}">${esc(l.label)}</i></b><small>${esc(l.sub)}</small></a>`).join("")}</div>
+      <span class="eyebrow">Its stack, in detail</span>
+      <div class="specs">
+        <div class="layer"><header><b>1 · Code</b><span class="pill live">Built</span></header><div class="chips">${d.files.map((f) => `<button type="button" class="chip-btn" data-find="${esc(f.split(" ")[0])}">${esc(f)}</button>`).join("")}</div></div>
+        <div class="layer ${d.calls.length ? "" : "none"}"><header><b>2 · Data calls → 3 · API routes</b><span class="pill ${st[2].state}">${esc(st[2].label)}</span></header>${calls || `<span class="small">A static page: no data, nothing to build.</span>`}</div>
+        <div class="layer ${st[3].state === "build" ? "todo" : st[3].state === "none" ? "none" : ""}"><header><b>4 · Tables</b><span class="pill ${st[3].state === "build" ? "new" : "exist"}">${esc(st[3].label)}</span></header>${tables.length ? `<div class="chips">${tables.map((t) => `<button type="button" class="chip-btn" data-find="${esc(t)}">${esc(t)}${NEW_TABLES.has(t) ? " · new" : ""}</button>`).join("")}</div>` : `<span class="small">No tables.</span>`}</div>
+        ${d.emails?.length ? `<div class="layer" style="border-left-color:var(--sky)"><header><b>Emails it sends</b><span class="pill clerk">Outbox</span></header><div class="chips">${d.emails.map((m) => `<button type="button" class="chip-btn" data-find="${esc(m)}">${esc(m)}</button>`).join("")}</div></div>` : ""}
+      </div>
+      <div class="row"><button type="button" id="d-copy" data-icon="copy">Copy specs</button>${st[2].state === "build" ? `<button type="button" class="btn-amber" id="d-anu" data-icon="book">Anu's plan for this</button>` : ""}</div>`;
+    document.getElementById("d-full").onclick = () => openViewer(d.id);
+    detail.querySelectorAll("[data-mode]").forEach((b) => { b.onclick = () => setSceneMode(b.dataset.mode); });
+    document.getElementById("d-copy").onclick = () => copyText(specsMd(d), "Specs copied as Markdown");
+    const anu = document.getElementById("d-anu"); if (anu) anu.onclick = () => openPlan(planStepFor(d));
+  } else {
+    const s = d.step !== undefined ? STEPS[d.step] : null; const [label] = T_STATUS[d.status];
+    const blocks = d.blocks ? `<p>Needed before <b>step ${d.blocks} · ${esc(STEPS[d.blocks - 1].title)}</b>.</p>` : "";
+    detail.innerHTML = `
+      <span class="eyebrow" style="color:${col}">${esc(it.lane.name)} · ${esc(planBoard.stages[it.n - 1].name)} · ${label}</span>
+      <h2>${esc(d.title)}</h2><p>${esc(d.text)}</p><p class="small">Owner: ${esc(d.who)}</p>${blocks}
+      ${s ? `<span class="eyebrow">Tasks</span><ul>${s.tasks.map((t, j) => `<li>${ticks[`${d.step}.${j}`] ? "✓ " : ""}${esc(t)}</li>`).join("")}</ul><p class="check">Check: ${esc(s.check)}</p>
+        <div class="row"><button type="button" class="btn-amber" id="d-plan" data-icon="book">Open step ${d.step + 1} in Anu's plan</button></div>` : ""}
+      ${d.id === "t-pages" ? `<div class="row"><button type="button" class="btn-mint" id="d-product" data-icon="workflow">See the pages on the product board</button></div>` : ""}`;
+    const p = document.getElementById("d-plan"); if (p) p.onclick = () => openPlan(`step-${d.step + 1}`);
+    const q = document.getElementById("d-product"); if (q) q.onclick = () => setBoard(product);
+  }
+  decorate(detail);
+  detail.querySelectorAll("[data-find]").forEach((b) => { b.onclick = () => { findEl.value = b.dataset.find; applyFind(); findEl.scrollIntoView({ block: "nearest" }); }; });
+}
+function planStepFor(d) {
+  const routes = d.calls.map((m) => API[m][0]).join(" ");
+  if (/session|invites\/:token/.test(routes)) return "step-2";
+  if (/owners\/invite/.test(routes)) return "step-3";
+  if (/owners|people\b|\/api\/people/.test(routes)) return "step-5";
+  if (/profile|\/p\//.test(routes)) return "step-4";
+  if (/drain/.test(routes)) return "step-6";
+  return "p-endpoints";
+}
+function specsMd(d) {
+  const lines = [`## ${d.title} (${P_LANES.find((l) => l.id === d.lane).name} · ${P_STAGES.find((s) => s.id === d.stage).name})`, "", `Route: ${d.path} · live preview: ${SITE}${d.path}`, "", "Code:", ...d.files.map((f) => `- ${f}`), "", "Data calls → API:"];
+  if (!d.calls.length) lines.push("- none (static page)");
+  d.calls.forEach((m) => { const [route, tables, state] = API[m]; lines.push(`- [${state === "build" ? " " : "x"}] \`${m}\` → ${route} (${STATE[state]})${tables.length ? `; tables: ${tables.join(", ")}` : ""}`); });
+  if (d.emails?.length) lines.push("", `Emails: ${d.emails.join(", ")}`);
+  return lines.join("\n");
+}
+async function copyText(text, msg) {
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch { const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast(msg); } catch { toast("Couldn't copy here"); } ta.remove(); }
+}
+
+// ——— Find: dims everything that doesn't match, across titles, routes, files, tables and emails. ———
+const findEl = document.getElementById("find");
+const hay = (it) => {
+  const d = it.def;
+  if (it.board.kind === "plan") return [d.title, d.text, d.who, ...(d.step !== undefined ? STEPS[d.step].tasks : [])].join(" ").toLowerCase();
+  return [d.title, d.path, d.text, it.lane.name, P_STAGES[it.n - 1].name, ...d.files, ...d.calls, ...d.calls.flatMap((m) => [API[m][0], ...API[m][1]]), ...(d.emails ?? [])].join(" ").toLowerCase();
+};
+function applyFind() {
+  const q = findEl.value.trim().toLowerCase(); let n = 0;
+  active.list.forEach((it) => { it.dim = !!q && !hay(it).includes(q); if (!it.dim) n++; });
+  document.querySelectorAll("#index button[data-id]").forEach((b) => { b.hidden = !!q && active.items[b.dataset.id].dim; });
+  document.querySelectorAll("#index .lane-group").forEach((g) => { g.hidden = !g.querySelector("button:not([hidden])"); });
+  document.getElementById("find-count").textContent = q ? `${n} of ${active.list.length} match “${findEl.value.trim()}”` : `${active.list.length} ${active === product ? "screens" : "cards"}. Try “people”, “invites”, “POST”, “approved” or a file name.`;
+}
+findEl.addEventListener("input", applyFind);
+function renderIndex() {
+  const el = document.getElementById("index"); el.innerHTML = "";
+  active.lanes.forEach((lane) => {
+    const its = active.list.filter((it) => it.def.lane === lane.id).sort((a, b) => a.n - b.n); if (!its.length) return;
+    const g = document.createElement("div"); g.className = "lane-group";
+    g.innerHTML = `<span style="color:${hex(lane.color)}"><i style="background:${hex(lane.color)}"></i>${esc(lane.name)}</span><div></div>`;
+    its.forEach((it) => { const b = document.createElement("button"); b.type = "button"; b.dataset.id = it.def.id; b.textContent = it.def.title; b.onclick = () => select(it); g.lastChild.appendChild(b); });
+    el.appendChild(g);
+  });
+  markIndex();
+}
+function markIndex() { document.querySelectorAll("#index button[data-id]").forEach((b) => b.setAttribute("aria-current", String(selected?.def.id === b.dataset.id))); }
+function renderLegend() {
+  const el = document.getElementById("legend");
+  el.innerHTML = active === product ? `
+    <span><i class="sw" style="background:var(--mint)"></i>Main journey</span>
+    <span><i class="sw" style="background:var(--sky)"></i>An email goes out</span>
+    <span><i class="sw" style="background:var(--amber)"></i>Loop back: edits requested</span>
+    <span><i class="sw" style="background:#5f9f80"></i>Another way in</span>
+    <span><i class="box-sw" style="border-color:var(--mint)"></i>Stack layer built, or live today</span>
+    <span><i class="box-sw" style="border-color:var(--amber);border-style:dashed"></i>Stack layer Anu builds</span>` : `
+    <span><i class="box-sw" style="border-color:var(--mint);background:#2ee08e33"></i>Done</span>
+    <span><i class="box-sw" style="border-color:var(--amber);border-style:dashed"></i>Next, then to do</span>
+    <span><i class="box-sw" style="border-color:var(--violet);border-style:dashed"></i>A decision to make</span>
+    <span><i class="sw" style="background:var(--mint)"></i>Order of work</span>
+    <span><i class="sw" style="background:#5f9f80"></i>Needed before</span>`;
+}
+
+// ——— The full-page viewer ———
+const viewer = document.getElementById("viewer");
+const order = () => SCREENS.slice().sort((a, b) => P_STAGES.findIndex((s) => s.id === a.stage) - P_STAGES.findIndex((s) => s.id === b.stage) || P_LANES.findIndex((l) => l.id === a.lane) - P_LANES.findIndex((l) => l.id === b.lane));
+let vwId = null, vwMode = "both", vwOpener = null;
+function openViewer(id) {
+  vwId = id; const d = SCREENS.find((s) => s.id === id);
+  document.getElementById("vw-title").textContent = d.title;
+  document.getElementById("vw-path").textContent = d.path;
+  document.getElementById("vw-live").href = SITE + d.path;
+  const dImg = document.getElementById("vw-d"), mImg = document.getElementById("vw-m");
+  dImg.src = `full/${id}-desktop.jpg`; dImg.alt = `${d.title}, desktop, full height`;
+  mImg.src = `full/${id}-mobile.jpg`; mImg.alt = `${d.title}, mobile, full height`;
+  viewer.querySelectorAll(".vw-scroll").forEach((s) => { s.scrollTop = 0; });
+  setVw(vwMode);
+  if (!viewer.open) { vwOpener = document.activeElement; viewer.showModal(); }
+}
+function setVw(m) {
+  vwMode = m;
+  viewer.querySelectorAll("[data-vw]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.vw === m)));
+  viewer.querySelector(".vw-col.desktop").hidden = m === "mobile";
+  viewer.querySelector(".vw-col.mobile").hidden = m === "desktop";
+}
+viewer.querySelectorAll("[data-vw]").forEach((b) => { b.onclick = () => setVw(b.dataset.vw); });
+const step = (k) => { const o = order(), i = o.findIndex((s) => s.id === vwId); const n = o[(i + k + o.length) % o.length]; openViewer(n.id); if (product.items[n.id]) select(product.items[n.id], false); };
+document.getElementById("vw-prev").onclick = () => step(-1);
+document.getElementById("vw-next").onclick = () => step(1);
+document.getElementById("vw-close").onclick = () => viewer.close();
+viewer.addEventListener("click", (e) => { if (e.target === viewer) viewer.close(); });
+viewer.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") step(-1); if (e.key === "ArrowRight") step(1); });
+viewer.addEventListener("close", () => { if (vwOpener?.focus) vwOpener.focus(); if (selected) focusItem(selected); });
+
+// ——— Picking and controls ———
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(), tip = document.getElementById("tip");
+function pick(e) {
+  const r = renderer.domElement.getBoundingClientRect();
+  mouse.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(mouse, camera);
+  const hit = ray.intersectObjects(pickables.filter((m) => m.userData.item.board === active && m.visible && m.parent.visible)).find(Boolean);
+  return hit ? { it: hit.object.userData.item, layer: hit.object.userData.layer } : null;
+}
+// ——— The 3D pointer: a spotlit viewfinder, the site's cursor, framing whatever is under the mouse (a screen, a layer of
+// its stack, or the back wall). Faint lines run back to a camera in front, and a dashed depth line runs to the wall,
+// so you can see how deep you are. It takes the colour of what it frames; over anything you can click the corners
+// close in and the red REC dot lights, as on the site. Mouse only; touch keeps its own pointer.
+const fine = matchMedia("(pointer: fine)").matches;
+const REC = 0xff5a5a;
+const spot = new THREE.Group(); spot.visible = false; scene.add(spot);
+const face3d = new THREE.Group(); spot.add(face3d);
+const onTop = (m, o = 999) => { m.renderOrder = o; m.material.depthTest = false; m.material.depthWrite = false; m.material.transparent = true; return m; };
+// Four corners, each two short bars, with a dark halo behind so they read on light screens too.
+const ARM = 0.075, BAR = 0.018;
+const cornerMat = new THREE.MeshBasicMaterial({ color: C.mint }), haloMat = new THREE.MeshBasicMaterial({ color: 0x062015, opacity: 0.55 });
+const corners = [[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([sx, sy]) => {
+  const g = new THREE.Group();
+  for (const [mat, pad, order] of [[haloMat, 0.012, 997], [cornerMat, 0, 998]]) {
+    const h = onTop(new THREE.Mesh(new THREE.PlaneGeometry(ARM + pad, BAR + pad), mat), order); h.position.set(-sx * (ARM / 2 - BAR / 2), 0, 0);
+    const v = onTop(new THREE.Mesh(new THREE.PlaneGeometry(BAR + pad, ARM + pad), mat), order); v.position.set(0, -sy * (ARM / 2 - BAR / 2), 0);
+    g.add(h, v);
+  }
+  g.userData = { sx, sy };
+  face3d.add(g);
+  return g;
+});
+const dotRim = onTop(new THREE.Mesh(new THREE.CircleGeometry(0.03, 32), new THREE.MeshBasicMaterial({ color: 0x062015, opacity: 0.9 })), 998);
+const dot = onTop(new THREE.Mesh(new THREE.CircleGeometry(0.021, 32), new THREE.MeshBasicMaterial({ color: C.mint })), 999);
+// The spotlight inside the frame: a soft pool of light that brightens over anything you can click.
+const poolTex = canvasTex(128, 128, (x, w, h) => { const g = x.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); g.addColorStop(0, "rgba(255,255,255,.7)"); g.addColorStop(0.55, "rgba(255,255,255,.18)"); g.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = g; x.fillRect(0, 0, w, h); });
+const pool = onTop(new THREE.Mesh(new THREE.PlaneGeometry(0.36, 0.36), new THREE.MeshBasicMaterial({ map: poolTex, color: C.mint, opacity: 0.35, blending: THREE.AdditiveBlending })), 996);
+face3d.add(pool, dotRim, dot);
+const frustum = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 8 }, () => new THREE.Vector3())), new THREE.LineBasicMaterial({ color: C.mint, transparent: true, opacity: 0.28 }));
+const depthLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, -1)]), new THREE.LineDashedMaterial({ color: C.mint, dashSize: 0.08, gapSize: 0.06, transparent: true, opacity: 0.6 }));
+const wallMark = onTop(new THREE.Mesh(new THREE.RingGeometry(0.03, 0.045, 24), new THREE.MeshBasicMaterial({ color: C.mint, opacity: 0.7 })), 995);
+scene.add(frustum, wallMark); spot.add(depthLine);
+// An invisible back wall, so the viewfinder has somewhere to land between screens.
+const wall = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), new THREE.MeshBasicMaterial({ visible: false }));
+wall.position.z = -3.42; scene.add(wall);
+const pointer = { in: false, x: 0, y: 0 };
+const nrm = new THREE.Vector3(), up3 = new THREE.Vector3(), apex = new THREE.Vector3(), cw = new THREE.Vector3();
+let frameHalf = 0.13;
+function placeSpot() {
+  if (!pointer.in || !fine) { spot.visible = frustum.visible = wallMark.visible = false; return; }
+  mouse.set(pointer.x, pointer.y); ray.setFromCamera(mouse, camera);
+  const cands = pickables.filter((m) => m.userData.item.board === active && m.visible && m.parent.visible);
+  const hit = ray.intersectObjects(cands)[0] ?? ray.intersectObject(wall)[0];
+  if (!hit) { spot.visible = frustum.visible = wallMark.visible = false; return; }
+  const onWall = hit.object === wall, item = hit.object.userData.item, layer = hit.object.userData.layer;
+  nrm.copy(hit.face ? hit.face.normal : new THREE.Vector3(0, 0, 1)).transformDirection(hit.object.matrixWorld);
+  if (nrm.dot(tmp.copy(camera.position).sub(hit.point)) < 0) nrm.negate();
+  const color = onWall ? C.grey : layer !== undefined ? stateColor(item.layers[layer].userData.layer.state) : item.board === planBoard ? T_STATUS[item.def.status][1] : C.mint;
+  [cornerMat, pool.material, frustum.material, depthLine.material, wallMark.material].forEach((m) => m.color.setHex(color));
+  pool.material.opacity += ((onWall ? 0.18 : 0.6) - pool.material.opacity) * 0.25;
+  pool.scale.setScalar(frameHalf / 0.13 * 1.05);
+  dot.material.color.setHex(onWall ? color : REC);
+  // Over something you can click the corners close in (eased), like the site cursor.
+  frameHalf += ((onWall ? 0.13 : 0.085) - frameHalf) * (reduced ? 1 : 0.25);
+  corners.forEach((g) => g.position.set(g.userData.sx * frameHalf, g.userData.sy * frameHalf, 0));
+  const scale = camera.position.distanceTo(hit.point) * 0.12 * (onWall ? 0.85 : 1);
+  spot.visible = true;
+  spot.position.copy(hit.point);
+  face3d.position.copy(nrm).multiplyScalar(0.012 * scale);
+  face3d.lookAt(tmp.copy(hit.point).add(nrm));
+  face3d.scale.setScalar(scale);
+  face3d.updateMatrixWorld(true);
+  // The camera it frames for: in front of the surface and a little above; faint lines to the four corners.
+  up3.set(0, 1, 0).applyQuaternion(camera.quaternion);
+  apex.copy(hit.point).addScaledVector(nrm, 2.4 * scale).addScaledVector(up3, 0.7 * scale);
+  frustum.visible = !onWall;
+  if (frustum.visible) {
+    const pos = frustum.geometry.attributes.position;
+    corners.forEach((g, i) => { g.getWorldPosition(cw); pos.setXYZ(i * 2, apex.x, apex.y, apex.z); pos.setXYZ(i * 2 + 1, cw.x, cw.y, cw.z); });
+    pos.needsUpdate = true; frustum.geometry.computeBoundingSphere();
+  }
+  // Depth: a dashed line straight back to the wall, and a small mark where it lands.
+  const back = wall.position.z - hit.point.z;
+  depthLine.visible = wallMark.visible = !onWall && back < -0.05;
+  if (depthLine.visible) {
+    depthLine.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, back)]); depthLine.computeLineDistances();
+    wallMark.position.set(hit.point.x, hit.point.y, wall.position.z + 0.01); wallMark.scale.setScalar(scale);
+  }
+  // The REC dot breathes while it's lit.
+  if (!reduced && !onWall) dot.material.opacity = 0.65 + Math.sin(clock.getElapsedTime() * 4) * 0.35; else dot.material.opacity = 1;
+}
+if (fine) renderer.domElement.style.cursor = "none";
+renderer.domElement.addEventListener("pointerleave", () => { pointer.in = false; tip.hidden = true; });
+renderer.domElement.addEventListener("pointermove", (e) => {
+  const rr = renderer.domElement.getBoundingClientRect();
+  pointer.in = e.pointerType === "mouse"; pointer.x = ((e.clientX - rr.left) / rr.width) * 2 - 1; pointer.y = -((e.clientY - rr.top) / rr.height) * 2 + 1;
+  const h = pick(e); hovered = h?.it ?? null;
+  if (h) {
+    const layer = h.layer !== undefined ? ` · Studio ${h.it.layers[h.layer].userData.layer.name}` : "";
+    tip.hidden = false; tip.textContent = h.it.def.title + layer;
+    const r = stage.getBoundingClientRect(); tip.style.left = `${e.clientX - r.left}px`; tip.style.top = `${e.clientY - r.top}px`; stage.style.cursor = "pointer";
+  } else { tip.hidden = true; stage.style.cursor = ""; }
+});
+let down = null;
+renderer.domElement.addEventListener("pointerdown", (e) => { down = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener("pointerup", (e) => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+  const h = pick(e); if (!h) return;
+  tour = null; setTourBtn(false);
+  if (full && full.it === h.it) return;
+  select(h.it);
+});
+function setTourBtn(on) { document.getElementById("tour").setAttribute("aria-pressed", String(on)); }
+function startTour() { clearFull(); tour = { i: 0, next: 0 }; setTourBtn(true); }
+document.getElementById("tour").onclick = (e) => { if (e.currentTarget.getAttribute("aria-pressed") === "true") { tour = null; setTourBtn(false); } else startTour(); };
+document.getElementById("overview").onclick = () => { clearFull(); tour = null; setTourBtn(false); if (selected) dropHi(selected); selected = null; renderIntro(); markIndex(); overview(); };
+document.getElementById("dir").onclick = () => setDir(dir === "h" ? "v" : "h");
+document.querySelectorAll("[data-page]").forEach((b) => { b.onclick = () => setPageMode(b.dataset.page); });
+document.getElementById("view-product").onclick = () => setBoard(product);
+document.getElementById("view-plan").onclick = () => setBoard(planBoard);
+document.addEventListener("plan-progress", () => { planBoard?.list.forEach((it) => { if (it.def.step !== undefined) redraw(it.tex); }); if (selected && active === planBoard) renderDetail(); });
+
+function resize() { const r = stage.getBoundingClientRect(); renderer.setSize(r.width, r.height); camera.aspect = r.width / r.height; camera.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+
+// ——— Frame loop ———
+const clock = new THREE.Clock(), tmp = new THREE.Vector3(), white = new THREE.Color(0xffffff), dimC = new THREE.Color(0x2a3a33);
+function frame() {
+  const t = clock.getElapsedTime();
+  if (tour && t > tour.next) { const j = active.journey; select(active.items[j[tour.i]]); tour.i++; tour.next = t + 3.2; if (tour.i >= j.length) { tour = null; setTourBtn(false); } }
+  if (fly) { fly.t = Math.min(1, fly.t + (reduced ? 1 : 0.03)); const k = 1 - Math.pow(1 - fly.t, 3); camera.position.lerpVectors(fly.from, fly.to, k); controls.target.lerpVectors(fly.tf, fly.tt, k); if (fly.t >= 1) fly = null; }
+  let still = true;
+  for (const b of [product, planBoard]) for (const it of b.list) {
+    if (it.cur.distanceToSquared(it.target) > 1e-6) { it.cur.lerp(it.target, reduced ? 1 : 0.12); still = false; }
+    const pg = full?.it === it ? 1.8 : it === selected && it.layers.length ? 1 : 0;
+    if (Math.abs(pg - it.pullCur) > 1e-3) { it.pullCur += (pg - it.pullCur) * (reduced ? 1 : 0.12); still = false; } else it.pullCur = pg;
+    it.g.position.set(it.cur.x, it.cur.y, it.cur.z + it.pullCur);
+    if (b !== active) continue;
+    const on = it === hovered || it === selected;
+    it.frame.material.emissiveIntensity = on ? 0.7 : it.dim ? 0.02 : 0.12;
+    it.face.material.color.copy(it.dim ? dimC : white);
+    const goal = it.layers.length && (stacksAll || it === selected) ? 0.62 : 0.075;
+    it.spread += (goal - it.spread) * (reduced ? 1 : 0.12);
+    const f = Math.max(0, Math.min(1, (it.spread - 0.075) / 0.545));
+    it.layers.forEach((lg, k) => { lg.position.z = -it.spread * (k + 1) - 0.04; lg.position.x = -(k + 1) * 0.42 * f; lg.position.y = (k + 1) * 0.08 * f; });
+    const s = on && !full ? 1.04 : 1; it.g.scale.lerp(tmp.set(s, s, s), 0.15);
+  }
+  if (!still || moving) { [product, planBoard].forEach((b) => b.edges.forEach((e) => routeEdge(e))); moving = still ? 0 : 1; }
+  for (const e of active.edges) {
+    const off = e.a.dim || e.b.dim; e.mat.opacity = off ? 0.08 : e.kind === "alt" ? 0.75 : 0.95; e.line.material.opacity = off ? 0.06 : 0.9; e.pulse.visible = !off && !reduced;
+    if (!reduced) e.pulse.position.copy(e.curve.getPointAt((t * 0.22 + e.phase) % 1));
+    e.el.hidden = !(selected && (e.a === selected || e.b === selected)) && !(hovered && (e.a === hovered || e.b === hovered));
+  }
+  controls.update(); placeSpot(); renderer.render(scene, camera);
+  const r = stage.getBoundingClientRect();
+  const place = (el, pos) => { tmp.copy(pos).project(camera); const hide = tmp.z > 1 || tmp.x < -1.3 || tmp.x > 1.3 || tmp.y < -1.3 || tmp.y > 1.3; if (hide) { el.style.visibility = "hidden"; return; } el.style.visibility = ""; el.style.left = `${(tmp.x * 0.5 + 0.5) * r.width}px`; el.style.top = `${(-tmp.y * 0.5 + 0.5) * r.height}px`; };
+  active.decoLabels.forEach((l) => {
+    place(l.el, l.pos);
+    if (l.w) { const a = tmp.copy(l.pos).add(new THREE.Vector3(-l.w / 2, 0, 0)).project(camera).x, c = tmp.copy(l.pos).add(new THREE.Vector3(l.w / 2, 0, 0)).project(camera).x; l.el.style.maxWidth = `${Math.max(28, ((c - a) / 2) * r.width - 6)}px`; }
+  });
+  active.edges.forEach((e) => { if (!e.el.hidden) place(e.el, e.mid); });
+  requestAnimationFrame(frame);
+}
+
+// ——— Start once the fonts are in, so the writing on the stacks uses them. ———
+Promise.race([Promise.all(["600 30px Sora", "700 15px Figtree", "500 20px Figtree"].map((f) => document.fonts.load(f))), new Promise((r) => setTimeout(r, 2500))]).then(() => {
+  product = makeBoard("product", P_LANES, P_STAGES, SCREENS, P_FLOW, P_JOURNEY);
+  planBoard = makeBoard("plan", T_LANES, T_STAGES, T_ITEMS, T_FLOW, T_JOURNEY);
+  [product, planBoard].forEach((b) => b.list.forEach((it) => applyShape(it)));
+  [product, planBoard].forEach((b) => { layoutBoard(b, dir); b.list.forEach((it) => { it.cur.copy(it.target); it.g.position.copy(it.target); }); b.edges.forEach((e) => routeEdge(e)); });
+  moving = 1;
+  setLabel(document.getElementById("dir"), dir === "h" ? "arrowDown" : "arrowRight", dir === "h" ? "Top to bottom" : "Left to right");
+  decorate(); active = product; setBoard(product);
+  let first = null; try { first = decodeURIComponent(location.hash.slice(1)); } catch { /* no hash */ }
+  if (first && product.items[first]) select(product.items[first]);
+  frame();
+});
+
+</script>
+
+</body></html>

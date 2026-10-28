@@ -1,0 +1,35 @@
+<!-- @dsCard group="Navigation" height=120 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>CommandPalette</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { CommandPalette, useCommandShortcut, Button, Kbd } = BG;
+  const [open, setOpen] = useState(false);
+  useCommandShortcut(React.useCallback(() => setOpen(true), []));
+  const go = () => {};
+  return html`<div className="flex flex-wrap items-center gap-3 p-6">
+    <${Button} variant="secondary" iconStart=${html`<${I.Search}/>`} onClick=${() => setOpen(true)}>Search everything<//>
+    <span className="flex items-center gap-2 text-body-sm text-ink-muted">or press <${Kbd} keys=${["⌘", "K"]} /></span>
+    <${CommandPalette} open=${open} onClose=${() => setOpen(false)} commands=${[
+      { id: "1", group: "Modules", label: "Funnel Studio", icon: html`<${I.Filter}/>`, onRun: go },
+      { id: "2", group: "Modules", label: "Profile review", icon: html`<${I.Users}/>`, onRun: go },
+      { id: "3", group: "Modules", label: "Design system", icon: html`<${I.Palette}/>`, onRun: go },
+      { id: "4", group: "Companies", label: "Hoy Wellness Club", icon: html`<${I.Building2}/>`, onRun: go },
+      { id: "5", group: "Actions", label: "New module", icon: html`<${I.Plus}/>`, shortcut: ["⌘", "N"], onRun: go },
+      { id: "6", group: "Actions", label: "Switch to dark theme", icon: html`<${I.Moon}/>`, keywords: "appearance", onRun: go },
+    ]} />
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

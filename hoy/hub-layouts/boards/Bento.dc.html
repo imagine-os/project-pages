@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hub · Bento overview</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap">
+<style>
+body{margin:0;background:#EDE4D4}
+a{color:#35597D}a:hover{color:#1C2E42}
+</style>
+</helmet>
+<div style="min-height: 1180px; background: #EDE4D4; color: #1C2E42; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.5;">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 28px 40px 48px; display: flex; flex-direction: column; gap: 16px;">
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+      <section style="grid-column: span 3; position: relative; overflow: hidden; border-radius: 32px; background: #35597D; color: #FBF7EF; padding: 36px 40px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; min-height: 300px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 34px; line-height: 1;">hoy</span>
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; opacity: .78;">Testing hub · Medellín</span>
+        </div>
+        <h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 66px; line-height: .96; letter-spacing: -.015em;">One system,<br><em>every seat</em> at the <span style="display: inline-block; padding: 0 .12em; border-radius: .08em; background: #F7F3B2; color: #1C2E42; transform: rotate(-1.2deg);">studio</span>.</h1>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+          <label style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 8px 0 18px; border-radius: 999px; background: rgba(251,247,239,.14); font-size: 14px;">Testing as
+            <select aria-label="Testing as" style="height: 36px; border: 0; border-radius: 999px; padding: 0 14px; background: #FBF7EF; color: #1C2E42; font: 600 14px 'DM Sans', sans-serif;"><option>Camilo · Front desk</option><option>Juliana · Member</option><option>Mateo · Admin</option></select>
+          </label>
+          <a href="#" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 999px; background: #F7F3B2; color: #1C2E42; font-weight: 700; text-decoration: none;">Open Camilo's home →</a>
+        </div>
+      </section>
+      <section style="border-radius: 32px; background: #F7F3B2; color: #1C2E42; padding: 26px; display: flex; flex-direction: column; justify-content: space-between;">
+        <span style="font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; opacity: .75;">Opening day</span>
+        <div><span style="font-size: 96px; font-weight: 700; letter-spacing: -.045em; line-height: .82;">30</span> <em style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px;">October</em></div>
+        <span style="font-size: 13px;">v0.25 · 127 routes · 109 pages</span>
+      </section>
+    </div>
+
+    <div style="display: flex; align-items: baseline; gap: 12px; padding: 12px 4px 0;"><h2 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 32px;">What a member sees</h2><span style="color: #4C5D70;">outside the studio</span></div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+      <sc-for list="{{outside}}" as="x" hint-placeholder-count="4">
+        <a href="#" style="display: flex; flex-direction: column; justify-content: space-between; gap: 18px; min-height: 230px; padding: 22px; border-radius: 28px; background: {{x.bg}}; color: {{x.ink}}; text-decoration: none;">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; opacity: .8;">{{x.kind}}</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <b style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 30px; line-height: 1;">{{x.name}}</b>
+            <span style="font-size: 14px;">{{x.desc}}</span>
+            <span style="margin-top: 8px; display: inline-flex; align-self: flex-start; padding: 6px 12px; border-radius: 999px; background: rgba(251,247,239,.4); font-size: 13px; font-weight: 600;">{{x.cta}}</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; align-items: baseline; gap: 12px; padding: 12px 4px 0;"><h2 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 32px;">Every seat at the studio</h2><span style="color: #4C5D70;">the team's tools, one tap to enter</span></div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;">
+      <sc-for list="{{seats}}" as="s" hint-placeholder-count="8">
+        <a href="#" style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 24px; background: #FBF7EF; color: #1C2E42; text-decoration: none;">
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: {{s.dot}};"></span><span style="font-size: 12px; color: #4C5D70;">{{s.code}}</span><span style="flex-grow: 1;"></span><sc-if value="{{s.beta}}" hint-placeholder-val="{{false}}"><span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #F7F3B2;">Beta</span></sc-if></div>
+          <b style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 24px; line-height: 1.05;">{{s.name}}</b>
+          <span style="font-size: 13px; color: #4C5D70;">{{s.desc}}</span>
+          <span style="font-size: 13px; font-weight: 600; color: #35597D;">Enter as {{s.as}} →</span>
+        </a>
+      </sc-for>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-top: 12px;">
+      <section style="grid-column: span 2; border-radius: 28px; background: #1C2E42; color: #FBF7EF; padding: 26px; display: flex; flex-direction: column; gap: 14px;">
+        <h2 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 30px;">How it is run, how it is built</h2>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px;">
+          <sc-for list="{{built}}" as="b" hint-placeholder-count="5">
+            <a href="#" style="display: flex; justify-content: space-between; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(251,247,239,.16); color: #FBF7EF; text-decoration: none;"><span>{{b.name}}</span><span style="opacity: .7; font-size: 13px;">{{b.hint}}</span></a>
+          </sc-for>
+        </div>
+      </section>
+      <section style="border-radius: 28px; background: #FBF7EF; padding: 26px; display: flex; flex-direction: column; gap: 12px;">
+        <h2 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 26px;">The whole system</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <sc-for list="{{tools}}" as="t" hint-placeholder-count="9">
+            <a href="#" style="display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; background: #F5EEE1; color: #1C2E42; font-size: 13px; font-weight: 600; text-decoration: none;">{{t}}</a>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = '#0E1721';
+    return {
+      outside: [
+        { kind: 'Phone app', name: 'Member app', desc: 'Book, pay, classes left, history.', cta: 'Enter as Juliana', bg: '#5F85B1', ink },
+        { kind: 'Public', name: 'Website', desc: 'Philosophy, classes, plans, contact.', cta: 'Open the site', bg: '#D8C24A', ink },
+        { kind: 'Public', name: 'Coming soon', desc: 'The page live until 30 October.', cta: 'Open', bg: '#C4704F', ink },
+        { kind: 'Phone app', name: 'Teacher app', desc: 'Classes, roster, attendance, payroll.', cta: 'Enter as Carolina', bg: '#5A7355', ink: '#FBF7EF' },
+      ],
+      seats: [
+        { name: 'Front desk', code: 'S-02', desc: 'Check-in, walk-ins, the door.', as: 'Camilo', dot: '#5F85B1', beta: false },
+        { name: 'Inbox', code: 'S-06', desc: 'WhatsApp and email in one thread.', as: 'Camilo', dot: '#7E9C88', beta: false },
+        { name: 'Point of sale', code: 'S-04', desc: 'Sell plans, take payment.', as: 'Camilo', dot: '#D8C24A', beta: false },
+        { name: 'Admin dashboard', code: 'M-01', desc: 'Occupancy, revenue, today.', as: 'Mateo', dot: '#C4704F', beta: false },
+        { name: 'CRM', code: 'M-06', desc: 'Every member, one record.', as: 'Valentina', dot: '#9E6E8F', beta: false },
+        { name: 'Messages', code: 'M-04', desc: 'Email and WhatsApp templates.', as: 'Valentina', dot: '#848F9B', beta: false },
+        { name: 'Finance', code: 'M-09', desc: 'Revenue, payroll, expenses.', as: 'Laura', dot: '#5A7355', beta: false },
+        { name: 'Marketing', code: 'M-13', desc: 'Campaign drafts.', as: 'Camila', dot: '#9E6E8F', beta: true },
+      ],
+      built: [
+        { name: 'Operations manual', hint: '28 chapters' },
+        { name: 'Source documents', hint: 'brand, pricing' },
+        { name: 'Documentation & changelog', hint: 'every prompt' },
+        { name: 'Kanban & knowledgebase', hint: 'what is next' },
+        { name: 'Dev tools', hint: 'specs, tokens' },
+        { name: 'Promotions practice', hint: 'training' },
+      ],
+      tools: ['Page canvas', 'Simulator', 'Page specs', 'Layout editor', 'Tables', 'Components', 'Design tokens', 'Decisions pending', 'Screenshots'],
+    };
+  }
+}
+</script>
+</body>
+</html>

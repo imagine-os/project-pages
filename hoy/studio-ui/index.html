@@ -1,0 +1,548 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>HoyOS Studio UI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* The staff workspace in Pulso, the language of the coming-soon page: cream ground, rounded tiles, the river-blue hero
+   with breathing rings, the sun for the one action, class tones as whole tiles, Cormorant for headings, DM Sans for work.
+   Values are the D-01 tokens Pulso already uses (brand-deepBlue, brand-yellow, hoy-c20 ground, tone-*-dot). */
+:root {
+  --ground: #EDE4D4; --paper: #FBF7EF; --paper-2: #F5EEE1; --line: rgba(28,46,66,.12); --line-strong: rgba(53,89,125,.28);
+  --ink: #1C2E42; --ink-deep: #0E1721; --muted: #4C5D70; --faint: #66727F;
+  --river: #35597D; --river-hi: #4A6E93; --on-river: #FBF7EF; --sun: #F7F3B2; --on-sun: #1C2E42;
+  --t-moss: #5A7355; --t-river: #5F85B1; --t-clay: #C4704F; --t-sun: #D8C24A; --t-sage: #7E9C88; --t-slate: #848F9B; --t-plum: #9E6E8F;
+  --ok: #3F6B4A; --ok-soft: rgba(90,115,85,.20); --warn: #7A5B12; --warn-soft: rgba(216,194,74,.30); --danger: #8E3F2A; --danger-soft: rgba(196,112,79,.22);
+  --focus: #5F85B1; --shadow: 0 10px 24px -14px rgba(28,46,66,.45); --shadow-lg: 0 24px 60px -24px rgba(28,46,66,.55);
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif; --sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ground: #101C29; --paper: #1B2E44; --paper-2: #22384F; --line: rgba(241,231,210,.12); --line-strong: #31506E;
+  --ink: #F1E7D2; --muted: #A9B8C8; --faint: #93A3B5; --river: #24425F; --river-hi: #2E5274; --on-river: #F1E7D2;
+  --ok: #8FC49B; --ok-soft: rgba(143,196,155,.16); --warn: #E0C25A; --warn-soft: rgba(224,194,90,.16); --danger: #EE9A85; --danger-soft: rgba(238,154,133,.16);
+  --focus: #9BC0E4; --shadow: 0 10px 24px -14px rgba(0,0,0,.7); --shadow-lg: 0 24px 60px -24px rgba(0,0,0,.8);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --ground: #101C29; --paper: #1B2E44; --paper-2: #22384F; --line: rgba(241,231,210,.12); --line-strong: #31506E;
+  --ink: #F1E7D2; --muted: #A9B8C8; --faint: #93A3B5; --river: #24425F; --river-hi: #2E5274; --on-river: #F1E7D2;
+  --ok: #8FC49B; --ok-soft: rgba(143,196,155,.16); --warn: #E0C25A; --warn-soft: rgba(224,194,90,.16); --danger: #EE9A85; --danger-soft: rgba(238,154,133,.16);
+  --focus: #9BC0E4; --shadow: 0 10px 24px -14px rgba(0,0,0,.7); --shadow-lg: 0 24px 60px -24px rgba(0,0,0,.8);
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); font: 400 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.wrap { max-width: 1280px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.ic { display: inline-flex; width: 16px; height: 16px; flex: 0 0 auto; }
+.ic svg { width: 100%; height: 100%; display: block; }
+.serif { font-family: var(--serif); }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.mono { font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
+.spacer { flex: 1; }
+
+/* page chrome */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--ground) 90%, transparent); backdrop-filter: blur(8px); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--ground); }
+.top .wrap { display: flex; align-items: center; gap: 12px; padding-block: 12px; }
+.wm { font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1; color: var(--river); }
+:root[data-theme="dark"] .wm { color: #9BC0E4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wm { color: #9BC0E4; } }
+.top nav { display: flex; gap: 4px; margin-left: 8px; overflow-x: auto; scrollbar-width: none; }
+.top nav a { color: var(--muted); text-decoration: none; padding: 7px 12px; border-radius: 999px; white-space: nowrap; font-weight: 500; }
+.top nav a:hover { background: var(--paper); color: var(--ink); }
+.seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--paper); gap: 2px; flex: 0 0 auto; }
+.seg button { border: 0; background: none; padding: 6px 12px; border-radius: 999px; color: var(--muted); font-weight: 500; font-size: 13px; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* hero band, in the coming-soon language */
+.bento-hero { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; padding-block: 24px 8px; }
+.tile { border-radius: 2rem; padding: 28px; position: relative; overflow: hidden; min-width: 0; }
+.blue { background: var(--river); color: var(--on-river); isolation: isolate; }
+.blue::after { content: ""; position: absolute; z-index: -1; right: -90px; top: -90px; width: 300px; height: 300px; border-radius: 50%; border: 1.5px solid rgba(251,247,239,.22); box-shadow: 0 0 0 36px rgba(251,247,239,.05), 0 0 0 72px rgba(251,247,239,.035); animation: breathe 7s ease-in-out infinite alternate; pointer-events: none; }
+@keyframes breathe { to { transform: scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { .blue::after { animation: none; } }
+.sun-t { background: var(--sun); color: var(--on-sun); }
+.paper { background: var(--paper); }
+h1 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: .98; letter-spacing: -.02em; text-wrap: balance; }
+h1 em { font-style: italic; }
+.mark { display: inline-block; padding: 0 .12em .03em; border-radius: .08em; background: var(--sun); color: #1C2E42; transform: rotate(-1.2deg); }
+.lede { font-size: 17px; max-width: 54ch; margin: 18px 0 0; opacity: .92; }
+.big-day { font-size: clamp(4rem, 8vw, 6.5rem); font-weight: 700; letter-spacing: -.045em; line-height: .82; font-variant-numeric: tabular-nums; }
+.big-day + em { font-family: var(--serif); font-size: 28px; }
+section.band { padding-block: 40px; display: grid; gap: 20px; }
+h2 { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(2rem, 3.6vw, 2.6rem); line-height: 1.05; letter-spacing: -.01em; }
+h2 + p { margin: 6px 0 0; color: var(--muted); max-width: 70ch; font-size: 15px; }
+.grid { display: grid; gap: 16px; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+.spec { background: var(--paper); border-radius: 1.5rem; padding: 22px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.spec h3 { margin: 0; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.note { font-size: 12.5px; color: var(--muted); }
+
+/* foundations */
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 10px; }
+.sw { border-radius: 1.1rem; overflow: hidden; background: var(--paper-2); }
+.sw i { display: block; height: 60px; }
+.sw div { padding: 8px 12px 10px; display: grid; }
+.sw b { font-weight: 600; font-size: 12.5px; } .sw span { font: 11px var(--mono); color: var(--faint); }
+.tones { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.tone-t { border-radius: 1.25rem; min-height: 120px; padding: 12px; display: flex; flex-direction: column; justify-content: flex-end; color: var(--ink-deep); }
+.tone-t b { font-family: var(--serif); font-weight: 500; font-size: 20px; line-height: 1; }
+.tone-t span { font-size: 11px; opacity: .85; }
+.tone-t.on-dark { color: #FBF7EF; }
+@media (max-width: 760px) { .tones { grid-template-columns: repeat(4, minmax(0, 1fr)); } .bento-hero { grid-template-columns: minmax(0, 1fr); } }
+.type-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: baseline; padding-block: 9px; border-bottom: 1px solid var(--line); }
+.type-row:last-child { border-bottom: 0; }
+
+/* components */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line-strong); background: transparent; color: var(--ink); font-weight: 600; font-size: 14px; white-space: nowrap; transition: transform .2s, box-shadow .2s; }
+.btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn.ink { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.btn.sun { background: var(--sun); border-color: var(--sun); color: #1C2E42; }
+.btn.river { background: var(--river); border-color: var(--river); color: var(--on-river); }
+.btn.ghost { border-color: transparent; color: var(--muted); }
+.btn.ghost:hover { background: var(--paper-2); box-shadow: none; }
+.btn.danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, transparent); }
+.btn.sm { height: 32px; padding: 0 14px; font-size: 13px; }
+.btn.lg { height: 48px; padding: 0 24px; font-size: 15px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn.loading::before { content: ""; width: 13px; height: 13px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn .arrow { width: 22px; height: 1px; background: currentColor; position: relative; }
+.btn .arrow::after { content: ""; position: absolute; right: 0; top: -3px; width: 6px; height: 6px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; transform: rotate(45deg); }
+kbd { font: 500 10.5px var(--mono); padding: 1px 6px; border-radius: 6px; border: 1px solid currentColor; opacity: .65; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.input { height: 44px; padding: 0 16px; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--paper-2); width: 100%; min-width: 0; color: var(--ink); }
+.input:focus { outline: none; border-color: var(--focus); box-shadow: 0 0 0 4px rgba(95,133,177,.18); background: var(--paper); }
+.input.err { border-color: var(--danger); }
+.help.err { font-size: 12.5px; color: var(--danger); }
+.search { display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px; border-radius: 999px; background: var(--paper-2); color: var(--muted); min-width: 0; }
+.search span.t { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--paper-2); color: var(--muted); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.pill.on { background: var(--ink); color: var(--paper); }
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; }
+.tag { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.tag .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.tag.ok { background: var(--ok-soft); color: var(--ok); }
+.tag.warn { background: var(--warn-soft); color: var(--warn); }
+.tag.danger { background: var(--danger-soft); color: var(--danger); }
+.tag.neutral { background: var(--paper-2); color: var(--muted); }
+.tag.beta { background: rgba(95,133,177,.2); color: var(--river); }
+:root[data-theme="dark"] .tag.beta { color: #9BC0E4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag.beta { color: #9BC0E4; } }
+.tag.demo { background: var(--sun); color: #4A4212; }
+.tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--paper-2); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.tab { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 7px 14px; border-radius: 999px; color: var(--muted); font-weight: 600; font-size: 13px; white-space: nowrap; }
+.tab .n { font-size: 11.5px; font-weight: 600; padding: 0 7px; border-radius: 999px; background: var(--line); }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--paper); }
+.tab[aria-selected="true"] .n { background: rgba(251,247,239,.2); }
+.av { width: 30px; height: 30px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 11px; font-weight: 700; color: #FBF7EF; flex: 0 0 auto; }
+.av.lg { width: 52px; height: 52px; font-size: 16px; }
+.avs { display: inline-flex; } .avs .av { border: 2px solid var(--paper); } .avs .av + .av { margin-left: -9px; }
+.stat-t { border-radius: 1.5rem; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; min-height: 140px; color: var(--ink-deep); min-width: 0; }
+.stat-t .k { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; opacity: .8; }
+.stat-t .v { font-size: 44px; font-weight: 700; letter-spacing: -.04em; line-height: .9; font-variant-numeric: tabular-nums; }
+.stat-t .d { font-family: var(--serif); font-style: italic; font-size: 17px; }
+.stat-t.paper-t { background: var(--paper); color: var(--ink); }
+.toggle { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; }
+.toggle i { width: 40px; height: 24px; border-radius: 999px; background: var(--line-strong); position: relative; flex: 0 0 auto; }
+.toggle i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: left .2s; }
+.toggle.on i { background: var(--river); } .toggle.on i::after { left: 19px; }
+.notice { display: flex; gap: 12px; padding: 14px 16px; border-radius: 1.1rem; background: var(--sun); color: #1C2E42; }
+.notice b { font-family: var(--serif); font-size: 18px; font-weight: 500; }
+.toast { display: inline-flex; align-items: center; gap: 14px; padding: 10px 10px 10px 18px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 13.5px; box-shadow: var(--shadow-lg); }
+.toast button { border: 0; border-radius: 999px; background: var(--sun); color: #1C2E42; font-weight: 600; padding: 6px 12px; }
+.empty { border-radius: 1.5rem; padding: 26px; display: grid; gap: 6px; justify-items: center; text-align: center; background: var(--paper-2); color: var(--muted); }
+.empty b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 26px; color: var(--ink); }
+.meter { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; border-radius: 999px; background: var(--t-river); }
+.meter.full i { background: var(--t-clay); }
+
+/* class index row, as on the coming-soon "And also" tile */
+.idx { display: grid; grid-template-columns: 74px 12px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 4px; border-bottom: 1px solid var(--line); }
+.idx:last-child { border-bottom: 0; }
+.idx .time { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.idx .time small { display: block; font-weight: 400; color: var(--faint); font-size: 12px; }
+.idx .dot { width: 12px; height: 12px; border-radius: 50%; }
+.idx .what { min-width: 0; }
+.idx .what b { display: block; font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.idx .what span { color: var(--muted); font-size: 13px; }
+.idx .cap { display: grid; gap: 5px; justify-items: end; font-size: 12.5px; color: var(--muted); min-width: 96px; }
+.idx .cap .meter { width: 96px; }
+.idx.past { opacity: .5; }
+
+/* app frame */
+.screen { border-radius: 2rem; overflow: hidden; background: var(--ground); box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+.screen-scroll { overflow-x: auto; }
+.app { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 14px; min-width: 1120px; height: 780px; padding: 14px; }
+.side { background: var(--river); color: var(--on-river); border-radius: 1.6rem; padding: 18px 12px 14px; display: flex; flex-direction: column; gap: 12px; min-height: 0; position: relative; overflow: hidden; isolation: isolate; }
+.side::after { content: ""; position: absolute; z-index: -1; left: -120px; bottom: -120px; width: 260px; height: 260px; border-radius: 50%; border: 1.5px solid rgba(251,247,239,.14); box-shadow: 0 0 0 30px rgba(251,247,239,.04), 0 0 0 60px rgba(251,247,239,.025); }
+.side .brand { display: flex; align-items: baseline; gap: 10px; padding: 0 10px 4px; }
+.side .brand .wm { color: var(--on-river); font-size: 30px; }
+.side .brand span { font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; opacity: .7; }
+.ws { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; border-radius: 999px; background: rgba(251,247,239,.12); }
+.ws span { text-align: center; padding: 6px; border-radius: 999px; font-size: 12px; font-weight: 600; opacity: .8; }
+.ws span.on { background: var(--sun); color: #1C2E42; opacity: 1; }
+.nav { display: grid; gap: 2px; overflow: hidden; }
+.nav .g { font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; opacity: .62; padding: 12px 12px 4px; }
+.nav a { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 999px; color: inherit; text-decoration: none; font-size: 14px; min-height: 36px; opacity: .88; }
+.nav a:hover { background: rgba(251,247,239,.1); opacity: 1; }
+.nav a.on { background: var(--sun); color: #1C2E42; font-weight: 600; opacity: 1; }
+.nav a .tag { margin-left: auto; height: 20px; font-size: 10.5px; padding: 0 8px; }
+.nav a .n { margin-left: auto; min-width: 20px; height: 20px; border-radius: 999px; background: rgba(251,247,239,.18); font-size: 11px; font-weight: 700; display: grid; place-items: center; padding: 0 6px; }
+.nav a.on .n { background: rgba(28,46,66,.15); }
+.side .me { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px 8px 0; border-top: 1px solid rgba(251,247,239,.16); }
+.side .me b { font-size: 13px; display: block; } .side .me span { font-size: 12px; opacity: .7; }
+.main { display: flex; flex-direction: column; gap: 14px; min-width: 0; min-height: 0; }
+.bar-top { display: flex; align-items: center; gap: 10px; }
+.bar-top .crumb { font-family: var(--serif); font-size: 26px; font-weight: 500; }
+.bar-top .search { width: 300px; background: var(--paper); }
+.iconbtn { width: 42px; height: 42px; border-radius: 50%; display: inline-grid; place-items: center; border: 0; background: var(--paper); color: var(--ink); position: relative; }
+.iconbtn .dot { position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; border-radius: 999px; background: var(--t-clay); color: #0E1721; font-size: 10.5px; font-weight: 700; display: grid; place-items: center; padding: 0 4px; border: 2px solid var(--ground); }
+.demo-strip { display: flex; align-items: center; gap: 10px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding: 0 6px; }
+.demo-strip a { color: var(--river); text-decoration: none; letter-spacing: 0; text-transform: none; font-size: 12px; }
+.content { flex: 1; min-height: 0; overflow: auto; display: grid; gap: 14px; align-content: start; }
+.desk { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, auto); gap: 14px; }
+.desk .hero { grid-column: span 3; display: flex; flex-direction: column; gap: 18px; min-height: 260px; }
+.desk .hero h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 46px; line-height: .98; letter-spacing: -.015em; }
+.next { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 1.2rem; background: rgba(251,247,239,.1); flex-wrap: wrap; }
+.next .time { font-size: 30px; font-weight: 700; letter-spacing: -.03em; }
+.next b { font-family: var(--serif); font-weight: 500; font-size: 22px; display: block; }
+.next span { font-size: 13px; opacity: .8; }
+.desk .date-t { display: flex; flex-direction: column; justify-content: space-between; }
+.desk .classes { grid-column: span 2; }
+.desk .msgs { grid-column: span 2; }
+.t-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+.t-title h4 { margin: 0; font-family: var(--serif); font-weight: 500; font-size: 26px; }
+.t-title a { margin-left: auto; font-size: 13px; color: var(--river); text-decoration: none; font-weight: 600; }
+:root[data-theme="dark"] .t-title a, :root[data-theme="dark"] .demo-strip a { color: #9BC0E4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) :is(.t-title a, .demo-strip a) { color: #9BC0E4; } }
+.msg { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 11px 2px; border-bottom: 1px solid var(--line); }
+.msg:last-child { border-bottom: 0; }
+.msg .av { width: 38px; height: 38px; }
+.msg b { font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.msg p { margin: 0; color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg .meta { display: grid; justify-items: end; gap: 4px; font-size: 12px; color: var(--faint); }
+.msg .unread { min-width: 20px; height: 20px; border-radius: 999px; background: var(--river); color: var(--on-river); font-size: 11px; font-weight: 700; display: grid; place-items: center; padding: 0 6px; }
+.wa { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 5px; background: #25D366; color: #fff; font-size: 9.5px; font-weight: 700; }
+
+/* CRM */
+.crm { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 14px; min-height: 0; }
+.list { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.people { background: var(--paper); border-radius: 1.6rem; padding: 6px 18px; }
+.person { display: grid; grid-template-columns: 40px minmax(0, 1fr) 90px 110px 130px; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.person:last-child { border-bottom: 0; }
+.person .av { width: 40px; height: 40px; }
+.person b { font-weight: 600; display: block; } .person span.e { color: var(--faint); font-size: 12.5px; }
+.person .num { font-size: 22px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.person .num small { font-size: 12px; font-weight: 400; color: var(--faint); letter-spacing: 0; margin-left: 2px; }
+.person.sel { margin: 0 -18px; padding-inline: 18px; background: rgba(95,133,177,.12); border-radius: 1.1rem; border-bottom-color: transparent; }
+.drawer { background: var(--paper); border-radius: 1.6rem; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+.drawer-h { background: color-mix(in srgb, var(--t-plum) 72%, #000); color: #FBF7EF; padding: 22px; display: grid; gap: 12px; position: relative; isolation: isolate; overflow: hidden; }
+.drawer-h::after { content: ""; position: absolute; z-index: -1; right: -60px; top: -60px; width: 180px; height: 180px; border-radius: 50%; border: 1.5px solid rgba(251,247,239,.22); box-shadow: 0 0 0 24px rgba(251,247,239,.05); }
+.drawer-h h4 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 34px; line-height: 1; }
+.drawer-h p { margin: 0; font-size: 13px; opacity: .85; }
+.drawer-b { padding: 18px 20px; display: grid; gap: 16px; overflow: auto; }
+.pkg { border-radius: 1.3rem; padding: 16px; background: var(--sun); color: #1C2E42; display: grid; gap: 8px; }
+.pkg .big { font-size: 40px; font-weight: 700; letter-spacing: -.04em; line-height: .9; }
+.pkg em { font-family: var(--serif); font-size: 18px; }
+.pkg .meter { background: rgba(28,46,66,.15); } .pkg .meter i { background: #1C2E42; }
+.props { display: grid; }
+.prop { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 10px; align-items: center; min-height: 36px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.prop:last-child { border-bottom: 0; }
+.prop span:first-child { color: var(--faint); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.feed { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font-size: 13px; color: var(--muted); }
+.feed li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; }
+.feed li i { width: 8px; height: 8px; border-radius: 50%; }
+.feed b { color: var(--ink); font-weight: 600; } .feed time { color: var(--faint); white-space: nowrap; font-family: var(--serif); font-style: italic; font-size: 15px; }
+
+.rules { margin: 0; padding-left: 20px; display: grid; gap: 8px; color: var(--muted); }
+.rules b { color: var(--ink); font-weight: 600; }
+footer { padding-block: 28px 56px; color: var(--muted); font-size: 13px; }
+@media (max-width: 720px) { .top nav { display: none; } .type-row { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+</style>
+
+<div class="top"><div class="wrap">
+  <span class="wm" aria-hidden="true">hoy</span><b>Studio UI · Pulso</b>
+  <nav aria-label="Sections"><a href="#foundations">Foundations</a><a href="#components">Components</a><a href="#desk">Front desk</a><a href="#crm">Members</a><a href="#rules">Rules</a></nav>
+  <span class="spacer"></span>
+  <div class="seg" role="group" aria-label="Theme"><button type="button" id="th-light" aria-pressed="false">Light</button><button type="button" id="th-dark" aria-pressed="false">Dark</button></div>
+</div></div>
+
+<div class="wrap">
+  <div class="bento-hero">
+    <div class="tile blue">
+      <span class="eyebrow" style="color:inherit;opacity:.75">Visual reference · staff workspace · v0.2</span>
+      <h1 style="margin-top:14px">Run the studio.<br><em>Feel the</em> <span class="mark">pulse</span>.</h1>
+      <p class="lede">The back of house in the same language as the front door: cream ground, rounded tiles, the blue hero with its breathing rings, the sun for the one thing to do now, and the seven classes in their own colours.</p>
+    </div>
+    <div class="grid" style="gap:16px">
+      <div class="tile sun-t" style="display:flex;flex-direction:column;justify-content:space-between;min-height:180px"><span class="eyebrow" style="color:inherit;opacity:.7">Opening day</span><div><span class="big-day">30</span> <em>October</em></div></div>
+      <div class="tile paper"><span class="eyebrow">Built from</span><p style="margin:8px 0 0;font-family:var(--serif);font-size:22px;line-height:1.2">Pulso tokens already in D-01: <em>deepBlue, yellow, the seven tone dots</em>, Cormorant and DM Sans.</p></div>
+    </div>
+  </div>
+
+  <section class="band" id="foundations">
+    <div><h2>Foundations</h2><p>Cream ground, paper tiles, one blue and one sun per screen. Class tones fill whole tiles with deep ink text, as on the coming-soon page.</p></div>
+    <div class="spec" style="padding:16px"><div class="tones">
+      <div class="tone-t" style="background:var(--t-river)"><b>Ligereza</b><span>river</span></div>
+      <div class="tone-t" style="background:var(--t-clay)"><b>Fuego</b><span>clay</span></div>
+      <div class="tone-t on-dark" style="background:var(--t-moss)"><b>Centro</b><span>moss</span></div>
+      <div class="tone-t" style="background:var(--t-sun)"><b>Pulso</b><span>sun</span></div>
+      <div class="tone-t" style="background:var(--t-plum)"><b>Híbrido</b><span>plum</span></div>
+      <div class="tone-t" style="background:var(--t-slate)"><b>Sólido</b><span>slate</span></div>
+      <div class="tone-t" style="background:var(--t-sage)"><b>Alineación</b><span>sage</span></div>
+    </div></div>
+    <div class="grid g2">
+      <div class="spec"><span class="eyebrow">Surfaces</span>
+        <div class="swatches">
+          <div class="sw"><i style="background:var(--ground)"></i><div><b>Ground</b><span>hoy-c20</span></div></div>
+          <div class="sw"><i style="background:var(--paper)"></i><div><b>Paper tile</b><span>brand-white</span></div></div>
+          <div class="sw"><i style="background:#35597D"></i><div><b>River hero</b><span>brand-deepBlue</span></div></div>
+          <div class="sw"><i style="background:#F7F3B2"></i><div><b>Sun · action</b><span>brand-yellow</span></div></div>
+          <div class="sw"><i style="background:var(--ink)"></i><div><b>Ink</b><span>brand-ink</span></div></div>
+          <div class="sw"><i style="background:var(--muted)"></i><div><b>Muted</b><span>text-muted</span></div></div>
+        </div>
+      </div>
+      <div class="spec"><span class="eyebrow">Type</span>
+        <div>
+          <div class="type-row"><span class="mono">Display · serif</span><div class="serif" style="font-size:40px;line-height:1">Hola, <em>Camilo</em>.</div></div>
+          <div class="type-row"><span class="mono">Tile title · serif</span><div class="serif" style="font-size:26px;font-weight:500">Clases de hoy</div></div>
+          <div class="type-row"><span class="mono">Number · sans 700</span><div style="font-size:40px;font-weight:700;letter-spacing:-.04em;line-height:1">$ 1,2 M</div></div>
+          <div class="type-row"><span class="mono">Body · sans</span><div>Juliana tiene 13 clases hasta el 1 de enero.</div></div>
+          <div class="type-row"><span class="mono">Label · caps</span><div class="eyebrow">Llegadas hoy</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="components">
+    <div><h2>Components</h2><p>The same D-02 atoms and molecules, now pills, tiles and serif titles.</p></div>
+    <div class="grid g3">
+      <div class="spec"><span class="eyebrow">Button</span>
+        <div class="row"><button class="btn sun" type="button">Abrir check-in <span class="arrow"></span></button><button class="btn ink" type="button"><span class="ic" data-i="plus"></span>Nueva reserva</button></div>
+        <div class="row"><button class="btn" type="button">Cobrar</button><button class="btn ghost" type="button">Cancelar</button><button class="btn sm river" type="button">Pequeño</button></div>
+        <div class="row"><button class="btn danger" type="button">Anular pago</button><button class="btn loading" type="button">Guardando</button><button class="btn" type="button" disabled>Sin cupos</button></div>
+        <p class="note">Sun = the one action per screen. Ink = primary everywhere else.</p>
+      </div>
+      <div class="spec"><span class="eyebrow">Fields</span>
+        <div class="field"><label for="f1">Nombre del miembro</label><input class="input" id="f1" value="Juliana Ospina"></div>
+        <div class="field"><label for="f2">Correo</label><input class="input err" id="f2" value="juliana@"><span class="help err">Falta el dominio, por ejemplo @gmail.com</span></div>
+        <div class="search"><span class="ic" data-i="search"></span><span class="t">Buscar personas y páginas…</span><kbd>Ctrl K</kbd></div>
+      </div>
+      <div class="spec"><span class="eyebrow">Filters and tabs</span>
+        <div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" type="button">Todos <span class="n">312</span></button><button class="tab" role="tab" aria-selected="false" type="button">Activos <span class="n">248</span></button><button class="tab" role="tab" aria-selected="false" type="button">En riesgo <span class="n">19</span></button></div>
+        <div class="row"><span class="pill on">Paquete 12</span><span class="pill"><span class="dot" style="background:var(--t-clay)"></span>Fuego</span><span class="pill"><span class="dot" style="background:var(--t-sun)"></span>Pulso</span><span class="pill">Vence pronto</span></div>
+      </div>
+      <div class="spec"><span class="eyebrow">Status</span>
+        <div class="row"><span class="tag ok"><span class="dot"></span>Llegó</span><span class="tag neutral"><span class="dot"></span>Reservada</span><span class="tag warn"><span class="dot"></span>Pendiente</span><span class="tag danger"><span class="dot"></span>No vino</span></div>
+        <div class="row"><span class="tag ok">Pagado</span><span class="tag warn">Por cobrar</span><span class="tag danger">Rechazado</span><span class="tag neutral">Cortesía</span></div>
+        <div class="row"><span class="tag beta">Beta</span><span class="tag demo">Demo</span><span class="note">page status, in the menu</span></div>
+      </div>
+      <div class="spec"><span class="eyebrow">Stat tiles</span>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+          <div class="stat-t" style="background:var(--t-river)"><span class="k">Llegadas</span><span class="v">14</span><span class="d">de 31 reservas</span></div>
+          <div class="stat-t" style="background:var(--t-sun)"><span class="k">Cobrado</span><span class="v">1,2M</span><span class="d">2 por cobrar</span></div>
+        </div>
+      </div>
+      <div class="spec"><span class="eyebrow">People, switches, capacity</span>
+        <div class="row"><span class="av lg" style="background:var(--t-plum)">JO</span><span class="avs"><span class="av" style="background:#35597D">CD</span><span class="av" style="background:var(--t-moss)">MC</span><span class="av" style="background:var(--t-clay)">CG</span><span class="av" style="background:var(--t-slate)">+4</span></span></div>
+        <div class="row" style="gap:18px"><span class="toggle on"><i></i>Reservas en línea</span><span class="toggle"><i></i>Lista de espera</span></div>
+        <div style="display:grid;gap:6px"><div class="row note" style="justify-content:space-between"><span>Pulso · Barre</span><span>10 / 16</span></div><div class="meter"><i style="width:62%;background:var(--t-sun)"></i></div><div class="row note" style="justify-content:space-between"><span>Fuego · Pilates</span><span>16 / 16 · llena</span></div><div class="meter full"><i style="width:100%"></i></div></div>
+      </div>
+      <div class="spec"><span class="eyebrow">Notice and toast</span>
+        <div class="notice"><span class="ic" data-i="info"></span><span><b>Horario festivo.</b><br>El lunes 2 de noviembre abrimos 8:00 – 14:00.</span></div>
+        <div><span class="toast">Check-in de Juliana registrado <button type="button">Deshacer</button></span></div>
+      </div>
+      <div class="spec"><span class="eyebrow">Empty state</span>
+        <div class="empty"><b>Todo al día.</b><span>Los mensajes nuevos de WhatsApp y correo aparecen aquí.</span></div>
+      </div>
+      <div class="spec"><span class="eyebrow">Class index row</span>
+        <div>
+          <div class="idx"><span class="time">8:00<small>a. m. · 50 min</small></span><span class="dot" style="background:var(--t-clay)"></span><span class="what"><b>Fuego</b><span>Pilates Full Body · María Camila</span></span><span class="cap"><span>16 / 16</span><span class="meter full"><i style="width:100%"></i></span></span></div>
+          <div class="idx"><span class="time">9:00<small>a. m. · 50 min</small></span><span class="dot" style="background:var(--t-sun)"></span><span class="what"><b>Pulso</b><span>Barre Lower Body · María Camila</span></span><span class="cap"><span>10 / 16</span><span class="meter"><i style="width:62%;background:var(--t-sun)"></i></span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="desk">
+    <div><h2>Hoy en recepción</h2><p>The front desk home as a bento: the blue hero says what's next and offers the one action, the sun tile counts down, tone tiles carry the numbers, paper tiles hold the lists.</p></div>
+    <div class="screen"><div class="screen-scroll"><div class="app">
+      <aside class="side" aria-label="Sidebar mockup">
+        <div class="brand"><span class="wm">hoy</span><span>Estudio</span></div>
+        <nav class="nav" aria-label="Menu mockup">
+          <a class="on" href="#desk"><span class="ic" data-i="home"></span>Inicio</a>
+          <span class="g">Hoy en el estudio</span>
+          <a href="#desk"><span class="ic" data-i="check"></span>Check-in</a>
+          <a href="#desk"><span class="ic" data-i="register"></span>Registrar y cobrar</a>
+          <a href="#desk"><span class="ic" data-i="bank"></span>Pagos pendientes<span class="tag demo">Demo</span></a>
+          <a href="#desk"><span class="ic" data-i="gift"></span>Bonos en recepción</a>
+          <span class="g">Personas</span>
+          <a href="#desk"><span class="ic" data-i="inbox"></span>Bandeja<span class="n">6</span></a>
+          <a href="#desk"><span class="ic" data-i="chat"></span>WhatsApp</a>
+          <a href="#crm"><span class="ic" data-i="users"></span>CRM</a>
+          <span class="g">Estudio</span>
+          <a href="#desk"><span class="ic" data-i="door"></span>Salas</a>
+        </nav>
+        <div class="me"><span class="av" style="background:var(--t-sun);color:#1C2E42">CD</span><div><b>Camilo Duque</b><span>Recepción</span></div></div>
+      </aside>
+      <div class="main">
+        <div class="demo-strip"><span>● Demo · datos ficticios</span><span class="spacer"></span><a href="#desk">Hub</a></div>
+        <div class="bar-top"><span class="crumb">Inicio</span><span class="spacer"></span><div class="search"><span class="ic" data-i="search"></span><span class="t">Buscar personas y páginas…</span><kbd>Ctrl K</kbd></div><button class="iconbtn" type="button" aria-label="Messages"><span class="ic" data-i="bell"></span><span class="dot">6</span></button></div>
+        <div class="content">
+          <div class="desk">
+            <div class="tile blue hero">
+              <span class="eyebrow" style="color:inherit;opacity:.75">Domingo 25 de octubre</span>
+              <h3>Buenos días,<br><em>Camilo</em>.</h3>
+              <div class="next"><span class="time">8:00</span><div style="min-width:0"><b>Fuego · Pilates Full Body</b><span>en 12 min · María Camila · 16 / 16, 6 llegaron</span></div><span class="spacer"></span><button class="btn sun lg" type="button">Abrir check-in <span class="arrow"></span></button></div>
+            </div>
+            <div class="tile sun-t date-t" style="padding:22px"><span class="eyebrow" style="color:inherit;opacity:.7">Abrimos en</span><div><span class="big-day" style="font-size:84px">5</span> <em>días</em></div><span style="font-family:var(--serif);font-style:italic;font-size:17px">viernes 30 de octubre</span></div>
+            <div class="stat-t" style="background:var(--t-river)"><span class="k">Llegadas</span><span class="v">14</span><span class="d">de 31 reservas</span></div>
+            <div class="stat-t" style="background:var(--t-sun)"><span class="k">Cobrado hoy</span><span class="v">1,2M</span><span class="d">2 por cobrar</span></div>
+            <div class="stat-t" style="background:var(--t-clay)"><span class="k">Sin leer</span><span class="v">6</span><span class="d">en 5 conversaciones</span></div>
+            <div class="stat-t" style="background:var(--t-moss);color:#FBF7EF"><span class="k">Clases restantes</span><span class="v">3</span><span class="d">de 6 hoy</span></div>
+            <div class="tile paper classes" style="padding:22px">
+              <div class="t-title"><h4>Clases de hoy</h4><span class="tag neutral">6</span><a href="#desk">Horario →</a></div>
+              <div class="idx past"><span class="time">6:00<small>terminó</small></span><span class="dot" style="background:var(--t-plum)"></span><span class="what"><b>Híbrido</b><span>Pilates / Yoga · Raghu</span></span><span class="cap"><span class="tag ok">8 llegaron</span></span></div>
+              <div class="idx"><span class="time">8:00<small>en 12 min</small></span><span class="dot" style="background:var(--t-clay)"></span><span class="what"><b>Fuego</b><span>Pilates Full Body · María Camila</span></span><span class="cap"><span>16 / 16</span><span class="meter full"><i style="width:100%"></i></span></span></div>
+              <div class="idx"><span class="time">9:00<small>50 min</small></span><span class="dot" style="background:var(--t-sun)"></span><span class="what"><b>Pulso</b><span>Barre Lower Body · María Camila</span></span><span class="cap"><span>10 / 16</span><span class="meter"><i style="width:62%;background:var(--t-sun)"></i></span></span></div>
+              <div class="idx"><span class="time">5:00<small>p. m.</small></span><span class="dot" style="background:var(--t-river)"></span><span class="what"><b>Ligereza</b><span>Stretching · Carolina</span></span><span class="cap"><span>6 / 16</span><span class="meter"><i style="width:38%"></i></span></span></div>
+            </div>
+            <div class="tile paper msgs" style="padding:22px">
+              <div class="t-title"><h4>Mensajes</h4><span class="tag beta">6 sin leer</span><a href="#desk">Bandeja →</a></div>
+              <div class="msg"><span class="av" style="background:var(--t-clay)">CG</span><div style="min-width:0"><b>Camila García <span class="wa">W</span></b><p>¡Gracias! ¿Me pueden mandar la factura electrónica?</p></div><div class="meta"><span>18 min</span><span class="unread">1</span></div></div>
+              <div class="msg"><span class="av" style="background:var(--t-plum)">JO</span><div style="min-width:0"><b>Juliana Ospina <span class="wa">W</span></b><p>Camilo, ¿me puedes cambiar la reserva de mañana?</p></div><div class="meta"><span>3 h</span><span class="unread">2</span></div></div>
+              <div class="msg"><span class="av" style="background:var(--t-moss)">SM</span><div style="min-width:0"><b>Sara Mejía</b><p>Transferencia del paquete de 12 · $ 480.000</p></div><div class="meta"><span class="tag warn">Por cobrar</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></div></div>
+  </section>
+
+  <section class="band" id="crm">
+    <div><h2>Miembros</h2><p>Lists stay on paper tiles with tone avatars and big numbers; opening a person brings a profile tile in their own class colour, with the package as a sun tile.</p></div>
+    <div class="screen"><div class="screen-scroll"><div class="app">
+      <aside class="side" aria-label="Sidebar mockup">
+        <div class="brand"><span class="wm">hoy</span><span>Estudio</span></div>
+        <div class="ws"><span class="on">Estudio</span><span>Desarrollo</span></div>
+        <nav class="nav" aria-label="Menu mockup">
+          <a href="#crm"><span class="ic" data-i="home"></span>Inicio</a>
+          <span class="g">Hoy en el estudio</span>
+          <a href="#crm"><span class="ic" data-i="check"></span>Check-in</a>
+          <a href="#crm"><span class="ic" data-i="cal"></span>Horario de clases</a>
+          <span class="g">Personas</span>
+          <a href="#crm"><span class="ic" data-i="inbox"></span>Bandeja<span class="n">6</span></a>
+          <a class="on" href="#crm"><span class="ic" data-i="users"></span>CRM</a>
+          <a href="#crm"><span class="ic" data-i="trash"></span>Eliminaciones</a>
+          <span class="g">Ventas</span>
+          <a href="#crm"><span class="ic" data-i="gift"></span>Invitaciones y bonos</a>
+          <span class="g">Estudio</span>
+          <a href="#crm"><span class="ic" data-i="spark"></span>Marketing<span class="tag beta" style="background:rgba(251,247,239,.18);color:inherit">Beta</span></a>
+        </nav>
+        <div class="me"><span class="av" style="background:var(--t-moss)">MS</span><div><b>Mateo Salazar</b><span>Administración</span></div></div>
+      </aside>
+      <div class="main">
+        <div class="bar-top"><span class="crumb">Miembros</span><span class="spacer"></span><div class="search"><span class="ic" data-i="search"></span><span class="t">Nombre, correo o teléfono…</span><kbd>/</kbd></div><button class="btn ink" type="button"><span class="ic" data-i="plus"></span>Nuevo miembro</button></div>
+        <div class="crm">
+          <div class="list">
+            <div class="toolbar"><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" type="button">Todos <span class="n">312</span></button><button class="tab" role="tab" aria-selected="false" type="button">Activos <span class="n">248</span></button><button class="tab" role="tab" aria-selected="false" type="button">En riesgo <span class="n">19</span></button><button class="tab" role="tab" aria-selected="false" type="button">Prospectos <span class="n">45</span></button></div></div>
+            <div class="toolbar"><span class="pill on">Paquete 12 clases</span><span class="pill">Vence pronto</span><span class="pill"><span class="dot" style="background:var(--t-clay)"></span>Fuego</span><button class="btn ghost sm" type="button">Limpiar</button><span class="spacer"></span><span class="note">86 miembros</span></div>
+            <div class="people">
+              <div class="person sel"><span class="av" style="background:var(--t-plum)">JO</span><span style="min-width:0"><b>Juliana Ospina</b><span class="e">juliana.o@correo.co</span></span><span class="num">13<small>clases</small></span><span class="note">ayer</span><span class="tag ok"><span class="dot"></span>Activa</span></div>
+              <div class="person"><span class="av" style="background:var(--t-clay)">CG</span><span style="min-width:0"><b>Camila García</b><span class="e">camila.garcia@correo.co</span></span><span class="num">4<small>clases</small></span><span class="note">hace 3 días</span><span class="tag ok"><span class="dot"></span>Activa</span></div>
+              <div class="person"><span class="av" style="background:var(--t-moss)">SM</span><span style="min-width:0"><b>Sara Mejía</b><span class="e">sara.mejia@correo.co</span></span><span class="num">12<small>clases</small></span><span class="note">—</span><span class="tag warn"><span class="dot"></span>Por cobrar</span></div>
+              <div class="person"><span class="av" style="background:var(--t-slate)">DV</span><span style="min-width:0"><b>Daniel Vélez</b><span class="e">daniel.v@correo.co</span></span><span class="num">1<small>clase</small></span><span class="note">hace 34 días</span><span class="tag danger"><span class="dot"></span>En riesgo</span></div>
+              <div class="person"><span class="av" style="background:var(--t-river)">AR</span><span style="min-width:0"><b>Andrés Restrepo</b><span class="e">andres.r@correo.co</span></span><span class="num">9<small>clases</small></span><span class="note">hoy</span><span class="tag ok"><span class="dot"></span>Activo</span></div>
+            </div>
+          </div>
+          <aside class="drawer" aria-label="Member panel mockup">
+            <div class="drawer-h">
+              <div class="row" style="align-items:center"><span class="av lg" style="background:rgba(251,247,239,.2)">JO</span><span class="spacer"></span><button class="iconbtn" type="button" aria-label="Close" style="background:rgba(251,247,239,.16);color:inherit"><span class="ic" data-i="x"></span></button></div>
+              <h4>Juliana<br><em>Ospina</em></h4>
+              <p>Miembro desde marzo 2026 · le gusta Híbrido</p>
+              <div class="row"><button class="btn sun sm" type="button">Reservar</button><button class="btn sm" type="button" style="border-color:rgba(251,247,239,.4);color:inherit"><span class="wa">W</span>WhatsApp</button></div>
+            </div>
+            <div class="drawer-b">
+              <div class="pkg"><span class="eyebrow" style="color:inherit;opacity:.7">Paquete de 12 clases</span><div><span class="big">13</span> <em>disponibles</em></div><div class="meter"><i style="width:72%"></i></div><span style="font-size:12.5px">Vence el 1 de enero · 1 congelamiento libre</span></div>
+              <div class="props">
+                <div class="prop"><span>Teléfono</span><span>+57 300 555 0142</span></div>
+                <div class="prop"><span>Próxima</span><span>Lun 6:00 · Híbrido</span></div>
+                <div class="prop"><span>Racha</span><span>7 semanas · meta 2</span></div>
+              </div>
+              <ul class="feed">
+                <li><i style="background:var(--t-clay)"></i><span><b>Llegó</b> a Fuego · Pilates</span><time>ayer</time></li>
+                <li><i style="background:var(--t-river)"></i><span><b>Camilo</b> respondió por WhatsApp</span><time>hace 2 días</time></li>
+                <li><i style="background:var(--t-sun)"></i><span><b>Pagó</b> paquete · $ 480.000</span><time>12 oct</time></li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div></div></div>
+  </section>
+
+  <section class="band" id="rules">
+    <div><h2>How it lands in HoyOS</h2></div>
+    <div class="grid g2">
+      <div class="spec"><span class="eyebrow">Rules</span><ol class="rules">
+        <li><b>One blue hero and one sun action per screen;</b> everything else sits on paper.</li>
+        <li><b>Class tones fill whole tiles</b> (stats, a person's profile) with deep ink text; never pale tints behind small text.</li>
+        <li><b>Serif for names and titles</b> (pages, tiles, classes, people); sans for every number, label and control.</li>
+        <li><b>Status is a dot + word pill,</b> readable in both themes.</li>
+        <li><b>Rounded everything:</b> 2rem tiles, 1.5rem cards, pill controls.</li>
+      </ol></div>
+      <div class="spec"><span class="eyebrow">Build order</span><ol class="rules">
+        <li><b>Studio Pulso tokens</b> scoped to the staff shell (<span class="mono">.deskshell</span>), so the member app and website are untouched.</li>
+        <li><b>Shared components</b> in that scope: Button, Input, Chip, Badge, Tabs, StatTile, Card, ClassRow, Notice, Toast, EmptyState, DataTable, Drawer, Avatar.</li>
+        <li><b>DesktopShell:</b> the river sidebar tile, sun active pill, serif page title, paper top controls.</li>
+        <li><b>Checks:</b> contrast ≥ 4.5:1 light and dark, spacing lint, ES/EN screenshots.</li>
+      </ol></div>
+    </div>
+  </section>
+  <footer>A visual reference for review; nothing is built yet. People, classes and amounts are fictional HoyOS seed data.</footer>
+</div>
+
+<script>
+(() => {
+  const I = {
+    plus: '<path d="M8 3v10M3 8h10" stroke-linecap="round"/>',
+    trash: '<path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5" stroke-linecap="round" stroke-linejoin="round"/>',
+    search: '<circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14" stroke-linecap="round"/>',
+    info: '<circle cx="8" cy="8" r="6"/><path d="M8 7.2v3.6M8 5v.1" stroke-linecap="round" stroke-width="1.7"/>',
+    inbox: '<path d="M2 9.5 4 3h8l2 6.5V13H2z" stroke-linejoin="round"/><path d="M2 9.5h3.5l1 1.5h3l1-1.5H14" stroke-linejoin="round"/>',
+    home: '<path d="M2.5 7 8 2.5 13.5 7v6.5h-4v-4h-3v4h-4z" stroke-linejoin="round"/>',
+    check: '<rect x="3" y="2.5" width="10" height="11.5" rx="1.5"/><path d="m5.5 8.5 1.8 1.8 3.2-3.6" stroke-linecap="round" stroke-linejoin="round"/>',
+    register: '<rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 7h12M5 10.5h2" stroke-linecap="round"/>',
+    bank: '<path d="M2 6 8 2.5 14 6M3 13.5h10M4 7v5M8 7v5M12 7v5" stroke-linecap="round" stroke-linejoin="round"/>',
+    gift: '<rect x="2.5" y="6" width="11" height="7.5" rx="1"/><path d="M2 6h12M8 6v7.5M8 6S6.5 2.5 5 3.5 6 6 8 6zm0 0s1.5-3.5 3-2.5S10 6 8 6z" stroke-linejoin="round"/>',
+    chat: '<path d="M2.5 3.5h11v7.5H7l-3 2.5V11H2.5z" stroke-linejoin="round"/>',
+    users: '<circle cx="6" cy="5.5" r="2.3"/><path d="M1.8 13c.5-2.4 2.2-3.6 4.2-3.6s3.7 1.2 4.2 3.6" stroke-linecap="round"/><path d="M10.5 3.6a2.2 2.2 0 0 1 0 4.2M12 9.6c1.2.5 2 1.6 2.3 3.2" stroke-linecap="round"/>',
+    door: '<path d="M3.5 14V2.5h9V14M2 14h12" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="8.5" r=".7" fill="currentColor"/>',
+    bell: '<path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3z" stroke-linejoin="round"/><path d="M6.5 14a1.5 1.5 0 0 0 3 0"/>',
+    cal: '<rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3" stroke-linecap="round"/>',
+    spark: '<path d="M8 2v3M8 11v3M2 8h3M11 8h3M4 4l2 2M10 10l2 2M12 4l-2 2M6 10l-2 2" stroke-linecap="round"/>',
+    x: '<path d="m4 4 8 8M12 4l-8 8" stroke-linecap="round"/>',
+  };
+  for (const n of document.querySelectorAll('[data-i]')) n.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">${I[n.dataset.i] || ''}</svg>`;
+  const root = document.documentElement;
+  const set = (t) => { root.setAttribute('data-theme', t); document.getElementById('th-light').setAttribute('aria-pressed', String(t === 'light')); document.getElementById('th-dark').setAttribute('aria-pressed', String(t === 'dark')); try { localStorage.setItem('studio-ui-theme', t); } catch {} };
+  let initial = null; try { initial = localStorage.getItem('studio-ui-theme'); } catch {}
+  if (initial === 'light' || initial === 'dark') set(initial);
+  else document.getElementById(matchMedia('(prefers-color-scheme: dark)').matches ? 'th-dark' : 'th-light').setAttribute('aria-pressed', 'true');
+  document.getElementById('th-light').onclick = () => set('light');
+  document.getElementById('th-dark').onclick = () => set('dark');
+  for (const list of document.querySelectorAll('.tabs')) list.addEventListener('click', (e) => { const t = e.target.closest('.tab'); if (!t) return; for (const b of list.querySelectorAll('.tab')) b.setAttribute('aria-selected', String(b === t)); });
+  for (const tg of document.querySelectorAll('.toggle')) { tg.setAttribute('role', 'switch'); tg.tabIndex = 0; tg.setAttribute('aria-checked', String(tg.classList.contains('on'))); const flip = () => { tg.classList.toggle('on'); tg.setAttribute('aria-checked', String(tg.classList.contains('on'))); }; tg.addEventListener('click', flip); tg.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); } }); }
+})();
+</script>
+
+</body></html>

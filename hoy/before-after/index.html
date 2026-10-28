@@ -1,0 +1,186 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Hoy Before and After</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap">
+<style>
+/* Layout: one column of before/after pairs, each pair two framed screenshots side by side (stacked on phones). */
+:root {
+  --ground: #EDE4D4; --paper: #FBF7EF; --ink: #1C2E42; --muted: #4C5D70;
+  --brand: #35597D; --sun: #F7F3B2; --on-sun: #4A4212; --line: rgba(28,46,66,.14);
+  --before: #EFE7DA; --after: #35597D; --on-after: #FBF7EF;
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ground: #16263A; --paper: #22384F; --ink: #F1E7D2; --muted: #A3B3C5; --brand: #9BC0E4;
+  --sun: #F7F3B2; --on-sun: #3A3410; --line: rgba(241,231,210,.14); --before: #2A4159; --after: #9BC0E4; --on-after: #1C2E42;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --ground: #16263A; --paper: #22384F; --ink: #F1E7D2; --muted: #A3B3C5; --brand: #9BC0E4;
+  --sun: #F7F3B2; --on-sun: #3A3410; --line: rgba(241,231,210,.14); --before: #2A4159; --after: #9BC0E4; --on-after: #1C2E42;
+  color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font: 400 16px/1.55 var(--sans); }
+.wrap { max-width: 82rem; margin: 0 auto; padding-block: 48px 96px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 56px; }
+h1, h2 { margin: 0; text-wrap: balance; font-weight: 400; font-family: var(--serif); }
+h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1; }
+h1 em { font-style: italic; background: var(--sun); color: var(--on-sun); padding: 0 .1em; border-radius: .08em; }
+h2 { font-size: clamp(1.8rem, 3.2vw, 2.4rem); line-height: 1.05; }
+p { margin: 0; max-width: 68ch; }
+.eyebrow { font-size: .74rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.intro { display: grid; gap: 16px; }
+.intro .lede { font-size: 1.1rem; color: var(--muted); }
+.links { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .9rem; }
+.links a { color: var(--brand); }
+.toc { display: flex; flex-wrap: wrap; gap: 8px; }
+.toc a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-size: .9rem; }
+.toc a:hover { background: var(--sun); color: var(--on-sun); }
+.pair { display: grid; gap: 18px; padding: 28px; border-radius: 32px; background: var(--paper); scroll-margin-top: 16px; }
+.pair-head { display: grid; gap: 10px; }
+.changes { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; color: var(--muted); max-width: 80ch; }
+.changes strong { color: var(--ink); font-weight: 600; }
+.shots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+.shots.phone { grid-template-columns: repeat(2, minmax(0, 320px)); justify-content: start; }
+figure { margin: 0; display: grid; gap: 10px; min-width: 0; }
+figcaption { display: flex; align-items: center; gap: 8px; }
+.tag { display: inline-flex; padding: 5px 12px; border-radius: 999px; font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.tag.before { background: var(--before); color: var(--muted); }
+.tag.after { background: var(--after); color: var(--on-after); }
+figcaption span:last-child { font-size: .85rem; color: var(--muted); }
+.frame { display: block; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--ground); }
+.frame img { display: block; width: 100%; height: auto; }
+.phone .frame { max-height: 1100px; overflow-y: auto; }
+a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.note { font-size: .85rem; color: var(--muted); }
+@media (max-width: 760px) {
+  .pair { padding: 18px; border-radius: 24px; }
+  .shots, .shots.phone { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <span class="eyebrow">HoyOS · UI polish · 23 Oct 2026</span>
+    <h1>Hoy, before and <em>after</em>.</h1>
+    <p class="lede">The same pages, at the same size, as the same demo user and in Spanish: the original site on the left, the polished site on the right.</p>
+    <div class="links">
+      <span>Before: <a href="https://imagine-os.github.io/hoy/" target="_blank" rel="noopener">imagine-os.github.io/hoy</a></span>
+      <span>After: <a href="https://hoy-human-club.github.io/Hoy-2.0/" target="_blank" rel="noopener">hoy-human-club.github.io/Hoy-2.0</a></span>
+    </div>
+    <nav class="toc" aria-label="Pages">
+      <a href="#coming-soon">Coming soon</a>
+      <a href="#member-phone">Member app · phone</a>
+      <a href="#member-desktop">Member app · desktop</a>
+      <a href="#checkin">Check-in</a>
+      <a href="#crm">CRM</a>
+      <a href="#admin">Admin panel</a>
+    </nav>
+  </header>
+
+  <section class="pair" id="coming-soon" aria-labelledby="h-cs">
+    <div class="pair-head">
+      <span class="eyebrow">Public front door · root URL</span>
+      <h2 id="h-cs">Coming soon</h2>
+      <ul class="changes">
+        <li><strong>New layout:</strong> one photo with text on the left becomes a set of rounded tiles (Direction C, Pulso).</li>
+        <li><strong>Opening date:</strong> "Próximamente" becomes a large "30 de octubre" tile.</li>
+        <li><strong>Brand moment:</strong> "Vive el <em>presente</em>." is set in italic, with the sun-yellow highlight on the last word.</li>
+        <li><strong>The seven classes:</strong> Ligereza, Híbrido, Fuego, Sólido, Centro, Alineación and Pulso now appear, each in its own colour.</li>
+        <li><strong>Calmer controls:</strong> "Entrar" is a quiet link instead of a second button, and the logo lockup is fixed.</li>
+      </ul>
+    </div>
+    <div class="shots">
+      <figure><figcaption><span class="tag before">Before</span><span>Desktop · 1440</span></figcaption><a class="frame" href="shots/coming-soon-desktop-before.jpg" target="_blank" rel="noopener"><img src="shots/coming-soon-desktop-before.jpg" alt="Before: coming-soon page with the red studio photo full screen and the headline on the left" loading="lazy"></a></figure>
+      <figure><figcaption><span class="tag after">After</span><span>Desktop · 1440</span></figcaption><a class="frame" href="shots/coming-soon-desktop-after.jpg" target="_blank" rel="noopener"><img src="shots/coming-soon-desktop-after.jpg" alt="After: coming-soon page as rounded tiles with a blue headline tile, a yellow date tile, the studio photo and colour class tiles" loading="lazy"></a></figure>
+    </div>
+    <div class="shots phone">
+      <figure><figcaption><span class="tag before">Before</span><span>Phone · 390</span></figcaption><div class="frame" tabindex="0" aria-label="Before, phone, scrollable"><img src="shots/coming-soon-phone-before.jpg" alt="Before: coming-soon page on a phone" loading="lazy"></div></figure>
+      <figure><figcaption><span class="tag after">After</span><span>Phone · 390</span></figcaption><div class="frame" tabindex="0" aria-label="After, phone, scrollable"><img src="shots/coming-soon-phone-after.jpg" alt="After: coming-soon tiles stacked on a phone" loading="lazy"></div></figure>
+    </div>
+  </section>
+
+  <section class="pair" id="member-phone" aria-labelledby="h-mp">
+    <div class="pair-head">
+      <span class="eyebrow">Member app · Juliana · phone</span>
+      <h2 id="h-mp">Member home on a phone</h2>
+      <ul class="changes">
+        <li><strong>Greeting:</strong> "Hola, Juliana" in the brand serif.</li>
+        <li><strong>Next class:</strong> the blue tile gets breathing rings and a sun-yellow "Ver" button.</li>
+        <li><strong>Quick actions:</strong> Horario, Reservar, Planes and Invitar are now colour tiles instead of four identical grey buttons.</li>
+        <li><strong>Practice:</strong> the streak sits on clay and the classes-left count on yellow. All text passes 4.5:1 contrast in light and dark mode.</li>
+      </ul>
+    </div>
+    <div class="shots phone">
+      <figure><figcaption><span class="tag before">Before</span><span>Phone · scroll inside</span></figcaption><div class="frame" tabindex="0" aria-label="Before, phone, scrollable"><img src="shots/member-home-phone-before.jpg" alt="Before: member home on a phone with beige cards" loading="lazy"></div></figure>
+      <figure><figcaption><span class="tag after">After</span><span>Phone · scroll inside</span></figcaption><div class="frame" tabindex="0" aria-label="After, phone, scrollable"><img src="shots/member-home-phone-after.jpg" alt="After: member home on a phone with colour tiles" loading="lazy"></div></figure>
+    </div>
+  </section>
+
+  <section class="pair" id="member-desktop" aria-labelledby="h-md">
+    <div class="pair-head">
+      <span class="eyebrow">Member app · Juliana · desktop</span>
+      <h2 id="h-md">Member home on desktop</h2>
+      <ul class="changes">
+        <li><strong>Same tiles:</strong> the two-column desktop layout gets the same look as the phone, with the same content and data.</li>
+      </ul>
+    </div>
+    <div class="shots">
+      <figure><figcaption><span class="tag before">Before</span><span>Desktop · 1280</span></figcaption><a class="frame" href="shots/member-home-desktop-before.jpg" target="_blank" rel="noopener"><img src="shots/member-home-desktop-before.jpg" alt="Before: member home on desktop" loading="lazy"></a></figure>
+      <figure><figcaption><span class="tag after">After</span><span>Desktop · 1280</span></figcaption><a class="frame" href="shots/member-home-desktop-after.jpg" target="_blank" rel="noopener"><img src="shots/member-home-desktop-after.jpg" alt="After: member home on desktop with colour tiles" loading="lazy"></a></figure>
+    </div>
+  </section>
+
+  <section class="pair" id="checkin" aria-labelledby="h-ci">
+    <div class="pair-head">
+      <span class="eyebrow">Front desk · Sofía · desktop</span>
+      <h2 id="h-ci">Check-in</h2>
+      <ul class="changes">
+        <li><strong>Class picker:</strong> it was a plain dropdown of every future class. It's now searchable, with classes grouped by day, the teacher and spots shown, and "120 más · sigue escribiendo" at the bottom. It's open in the After shot.</li>
+        <li><strong>Teacher times:</strong> "7:00 a. m." no longer breaks over two lines.</li>
+        <li><strong>Testing tools:</strong> the demo-user switcher, "Ver como" and "Modo dev" moved into their own "Demo · datos ficticios" strip above the product bar.</li>
+      </ul>
+    </div>
+    <div class="shots">
+      <figure><figcaption><span class="tag before">Before</span><span>Desktop · 1280</span></figcaption><a class="frame" href="shots/checkin-desktop-before.jpg" target="_blank" rel="noopener"><img src="shots/checkin-desktop-before.jpg" alt="Before: check-in page with a native class select" loading="lazy"></a></figure>
+      <figure><figcaption><span class="tag after">After</span><span>Desktop · 1280</span></figcaption><a class="frame" href="shots/checkin-desktop-after.jpg" target="_blank" rel="noopener"><img src="shots/checkin-desktop-after.jpg" alt="After: check-in page with the searchable class picker open, grouped by day" loading="lazy"></a></figure>
+    </div>
+  </section>
+
+  <section class="pair" id="crm" aria-labelledby="h-crm">
+    <div class="pair-head">
+      <span class="eyebrow">Administration · desktop</span>
+      <h2 id="h-crm">CRM</h2>
+      <ul class="changes">
+        <li><strong>Segments:</strong> the pill buttons ("Todos · 31") become underline tabs with count badges, and they work with the keyboard arrows.</li>
+        <li><strong>Testing tools:</strong> they move out of the top bar here too.</li>
+      </ul>
+    </div>
+    <div class="shots">
+      <figure><figcaption><span class="tag before">Before</span><span>Desktop · 1280</span></figcaption><a class="frame" href="shots/crm-desktop-before.jpg" target="_blank" rel="noopener"><img src="shots/crm-desktop-before.jpg" alt="Before: CRM with pill segment filters" loading="lazy"></a></figure>
+      <figure><figcaption><span class="tag after">After</span><span>Desktop · 1280</span></figcaption><a class="frame" href="shots/crm-desktop-after.jpg" target="_blank" rel="noopener"><img src="shots/crm-desktop-after.jpg" alt="After: CRM with underline tabs and counts" loading="lazy"></a></figure>
+    </div>
+  </section>
+
+  <section class="pair" id="admin" aria-labelledby="h-adm">
+    <div class="pair-head">
+      <span class="eyebrow">Administration · desktop</span>
+      <h2 id="h-adm">Admin panel</h2>
+      <ul class="changes">
+        <li><strong>Revenue card:</strong> it shows "$8 M", with the full "$ 8.020.000" on hover. It used to cut off as "$ 8.020.0…" on smaller screens.</li>
+        <li><strong>Today's classes:</strong> the times in "Hoy en un vistazo" stay on one line.</li>
+      </ul>
+      <p class="note">At this width the original revenue figure still fits, so the card difference shows mostly as the compact format.</p>
+    </div>
+    <div class="shots">
+      <figure><figcaption><span class="tag before">Before</span><span>Desktop · 1280</span></figcaption><a class="frame" href="shots/admin-desktop-before.jpg" target="_blank" rel="noopener"><img src="shots/admin-desktop-before.jpg" alt="Before: admin panel" loading="lazy"></a></figure>
+      <figure><figcaption><span class="tag after">After</span><span>Desktop · 1280</span></figcaption><a class="frame" href="shots/admin-desktop-after.jpg" target="_blank" rel="noopener"><img src="shots/admin-desktop-after.jpg" alt="After: admin panel with the compact revenue figure" loading="lazy"></a></figure>
+    </div>
+  </section>
+
+  <p class="note">Captured 23 Oct 2026 with fictional demo data in Spanish, light theme. Select a desktop screenshot to open it full size, and scroll inside the phone frames.</p>
+</div>
+
+</body></html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hub · Journey map</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap">
+<style>
+body{margin:0;background:#EDE4D4}
+a{color:#35597D}a:hover{color:#1C2E42}
+</style>
+</helmet>
+<div style="min-height: 900px; background: #EDE4D4; color: #1C2E42; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.5;">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 28px 40px 44px; display: flex; flex-direction: column; gap: 22px;">
+    <header style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;">
+      <div style="flex: 999 1 480px; min-width: 0;">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 30px; color: #35597D;">hoy</span>
+        <h1 style="margin: 4px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 56px; line-height: 1;">Follow a member <em>through the studio</em></h1>
+        <p style="margin: 8px 0 0; color: #4C5D70; max-width: 62ch;">Each step shows what the member sees on top and which seat on the team handles it below. Test a step from either side.</p>
+      </div>
+      <label style="flex: 1 1 280px; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px; border-radius: 999px; background: #FBF7EF; color: #4C5D70;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5 14 14" stroke-linecap="round"></path></svg>
+        <input type="search" placeholder="Jump to a page or role" aria-label="Search" style="flex: 1; min-width: 0; border: 0; background: transparent; font: 14px 'DM Sans', sans-serif; outline: none; color: #1C2E42;">
+      </label>
+    </header>
+
+    <div style="overflow-x: auto;">
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(170px, 1fr)); gap: 12px; min-width: 1060px;">
+        <sc-for list="{{steps}}" as="s" hint-placeholder-count="6">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="#" style="display: flex; flex-direction: column; justify-content: space-between; gap: 12px; min-height: 210px; padding: 18px; border-radius: 26px; background: {{s.bg}}; color: {{s.ink}}; text-decoration: none;">
+              <span style="font-size: 44px; font-weight: 700; letter-spacing: -.04em; line-height: .9;">{{s.n}}</span>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <b style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 26px; line-height: 1;">{{s.title}}</b>
+                <span style="font-size: 13px;">{{s.member}}</span>
+              </div>
+            </a>
+            <div style="display: flex; align-items: center; gap: 6px; padding: 0 6px; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #4C5D70;"><span style="flex-grow: 1; height: 1px; background: rgba(28,46,66,.2);"></span>handled by<span style="flex-grow: 1; height: 1px; background: rgba(28,46,66,.2);"></span></div>
+            <sc-for list="{{s.seats}}" as="t" hint-placeholder-count="2">
+              <a href="#" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 18px; background: #FBF7EF; color: #1C2E42; text-decoration: none;">
+                <span style="display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #1C2E42; color: #F7F3B2; font-size: 11px; font-weight: 700; flex: 0 0 auto;">{{t.initials}}</span>
+                <span style="min-width: 0;"><b style="display: block; font-weight: 600; font-size: 14px;">{{t.seat}}</b><span style="font-size: 12px; color: #4C5D70;">as {{t.who}}</span></span>
+              </a>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+      <section style="flex: 2 1 520px; min-width: 0; border-radius: 28px; background: #35597D; color: #FBF7EF; padding: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+        <b style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 26px; flex: 1 1 100%;">Behind the scenes</b>
+        <sc-for list="{{behind}}" as="b" hint-placeholder-count="5">
+          <a href="#" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 999px; background: rgba(251,247,239,.14); color: #FBF7EF; font-size: 13px; font-weight: 600; text-decoration: none;">{{b}}</a>
+        </sc-for>
+      </section>
+      <section style="flex: 1 1 320px; min-width: 0; border-radius: 28px; background: #1C2E42; color: #FBF7EF; padding: 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+        <sc-for list="{{stats}}" as="s" hint-placeholder-count="6">
+          <div><b style="display: block; font-size: 24px; font-weight: 700; letter-spacing: -.03em;">{{s.v}}</b><span style="font-size: 12px; opacity: .78;">{{s.k}}</span></div>
+        </sc-for>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = '#0E1721';
+    return {
+      steps: [
+        { n: '1', title: 'Discover', member: 'Website and the coming-soon page', bg: '#D8C24A', ink, seats: [{ seat: 'Marketing', who: 'Camila', initials: 'CA' }] },
+        { n: '2', title: 'Sign up', member: 'Trial class, account, consent', bg: '#5F85B1', ink, seats: [{ seat: 'Inbox', who: 'Camilo', initials: 'CD' }, { seat: 'CRM', who: 'Valentina', initials: 'VA' }] },
+        { n: '3', title: 'Book and pay', member: 'Schedule, checkout, the booking card', bg: '#C4704F', ink, seats: [{ seat: 'Point of sale', who: 'Camilo', initials: 'CD' }] },
+        { n: '4', title: 'Arrive', member: 'Next class, check-in at the door', bg: '#7E9C88', ink, seats: [{ seat: 'Front desk', who: 'Camilo', initials: 'CD' }, { seat: 'Teacher app', who: 'Carolina', initials: 'CC' }] },
+        { n: '5', title: 'Practise', member: 'History, streak, member card', bg: '#9E6E8F', ink, seats: [{ seat: 'Admin dashboard', who: 'Mateo', initials: 'MS' }] },
+        { n: '6', title: 'Renew', member: 'Plans, gift cards, invitations', bg: '#5A7355', ink: '#FBF7EF', seats: [{ seat: 'Finance', who: 'Laura', initials: 'LA' }, { seat: 'Messages', who: 'Valentina', initials: 'VA' }] },
+      ],
+      behind: ['Operations manual', 'Source documents', 'Docs & changelog', 'Kanban', 'Dev tools', 'Page canvas', 'Simulator', 'Design tokens', 'Decisions pending'],
+      stats: [
+        { v: '127', k: 'routes' }, { v: '109', k: 'page codes' }, { v: '69', k: 'tables' },
+        { v: '124', k: 'components' }, { v: '60', k: 'actions' }, { v: '28', k: 'chapters' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

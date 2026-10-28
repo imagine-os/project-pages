@@ -1,0 +1,35 @@
+<!-- @dsCard group="Actions" height=200 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Button</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Button } = BG;
+  return html`<div className="grid gap-5 p-6">
+    <div className="flex flex-wrap items-center gap-3">
+      <${Button} variant="primary" iconEnd=${html`<${I.ArrowUpRight}/>`}>Claim a card<//>
+      <${Button} variant="strong">Approve profile<//>
+      <${Button} variant="secondary" iconStart=${html`<${I.Download}/>`}>Export<//>
+      <${Button} variant="ghost" iconStart=${html`<${I.Undo2}/>`}>Undo<//>
+      <${Button} variant="danger" iconStart=${html`<${I.Trash2}/>`}>Remove access<//>
+    </div>
+    <div className="flex flex-wrap items-center gap-3">
+      <${Button} variant="primary" size="lg">Search<//>
+      <${Button} variant="primary" size="md" loading>Save changes<//>
+      <${Button} variant="secondary" size="sm">How it works<//>
+      <${Button} variant="primary" disabled>Submit for review<//>
+    </div>
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

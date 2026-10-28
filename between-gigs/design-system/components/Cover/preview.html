@@ -1,0 +1,58 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Between Gigs</title>
+<style>
+  html, body { margin:0; height:100%; }
+  body { background:var(--bg); color:var(--ink); font-family:var(--font-sans); overflow:hidden; }
+  .cover { position:relative; height:288px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:288px; overflow:hidden; }
+  .art svg { display:block; width:480px; height:288px; }
+  .slab  { fill:var(--action-strong); }
+  .mint  { fill:var(--action); }
+  .tint  { fill:var(--forest-200); }
+  .lime  { fill:var(--lime-300); }
+  .deep  { fill:var(--forest-800); }
+  .ink   { fill:var(--on-action); }
+  .r-xl  { rx:var(--radius-xl); }
+  .r-lg  { rx:var(--radius-lg); }
+  .pill  { rx:8px; }
+  .words { position:absolute; left:var(--space-6); bottom:var(--space-6); max-width:440px; }
+  .name { margin:0; font-family:var(--font-display); font-size:96px; line-height:.92; font-weight:600; letter-spacing:-.035em; color:var(--ink); }
+  .tag { margin:var(--space-2) 0 0 4px; font-size:14px; line-height:20px; color:var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 288" width="480" height="288">
+<!--
+  blocks      action-strong slab 168×288 bled off the top (brand forest in light) · action mint 128×192 · forest-200 tint 176×144 bleeding off the right · lime-300 pill 64×16 once (celebration only) — about 30% of 960×288
+  arrangement one tall slab with two satellites stepping down to the right, bottoms on one line space-6 above the edge, space-4 gutters
+  pattern     quarter discs, from the BG monogram's G bowl and the arcs on the brand wall: one quarter disc cut into each block's corner, one loose on the ground
+  scales      gutters space-4; bottom line space-6; disc radii space-24 and space-16; corners radius-xl (slab), radius-lg (satellites), pill rx half of 16
+-->
+<defs>
+  <clipPath id="slabClip"><rect x="0" y="-24" width="168" height="288" rx="22"/></clipPath>
+  <clipPath id="mintClip"><rect x="184" y="72" width="128" height="192" rx="16"/></clipPath>
+  <clipPath id="tintClip"><rect x="328" y="120" width="176" height="144" rx="16"/></clipPath>
+</defs>
+<rect class="slab r-xl" x="0" y="-24" width="168" height="288" rx="22"/>
+<path class="mint" clip-path="url(#slabClip)" d="M168 264 L72 264 A96 96 0 0 1 168 168 Z"/>
+<rect class="mint r-lg" x="184" y="72" width="128" height="192" rx="16"/>
+<path class="ink" clip-path="url(#mintClip)" d="M312 72 L248 72 A64 64 0 0 0 312 136 Z"/>
+<rect class="tint r-lg" x="328" y="120" width="176" height="144" rx="16"/>
+<path class="deep" clip-path="url(#tintClip)" d="M328 264 L328 168 A96 96 0 0 1 424 264 Z"/>
+<rect class="lime pill" x="328" y="88" width="64" height="16" rx="8"/>
+<path class="mint" d="M480 0 L416 0 A64 64 0 0 0 480 64 Z"/>
+</svg>
+</div>
+<div class="words">
+  <h1 class="name">Between<br>Gigs</h1>
+  <p class="tag">Extraordinary talent. Everyday solutions.</p>
+</div>
+</div>
+</body>
+</html>

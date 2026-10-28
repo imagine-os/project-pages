@@ -1,0 +1,24 @@
+<!-- @dsCard group="Patterns" height=150 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>FlowConnector</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { FlowConnector, Card } = BG;
+  const box = (t) => html`<${Card} padding="sm" className="w-40 shrink-0 text-label-md">${t}<//>`;
+  return html`<div className="flex items-stretch p-6">
+    ${box("Founding 20 landing")}<${FlowConnector} label="Claims a card" />${box("Claim your card")}<${FlowConnector} label="Books" variant="dashed" />${box("Book a professional")}
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

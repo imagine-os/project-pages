@@ -1,0 +1,26 @@
+<!-- @dsCard group="Patterns" height=170 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>StageStats</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { StageStats } = BG;
+  return html`<div className="grid gap-4 p-6">
+    <${StageStats} title="Stage statistics" stages=${[
+      { label: "Invited", value: 120 }, { label: "Signed in", value: 64 }, { label: "Draft", value: 31 },
+      { label: "Submitted", value: 12, attention: true }, { label: "Changes requested", value: 4 }, { label: "Approved", value: 18 }, { label: "In gallery", value: null },
+    ]} />
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

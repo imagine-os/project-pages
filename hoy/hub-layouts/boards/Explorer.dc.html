@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hub · Explorer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap">
+<style>
+body{margin:0;background:#EDE4D4}
+a{color:#35597D}a:hover{color:#1C2E42}
+</style>
+</helmet>
+<div style="min-height: 900px; background: #EDE4D4; color: #1C2E42; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.5; padding: 16px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch;">
+  <aside style="flex: 1 1 260px; max-width: 300px; min-width: 0; border-radius: 28px; background: #35597D; color: #FBF7EF; padding: 22px 14px; display: flex; flex-direction: column; gap: 14px;">
+    <div style="display: flex; align-items: baseline; gap: 10px; padding: 0 8px;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 30px; line-height: 1;">hoy</span><span style="font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; opacity: .75;">Testing hub</span></div>
+    <label style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 999px; background: rgba(251,247,239,.14);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5 14 14" stroke-linecap="round"></path></svg>
+      <input type="search" placeholder="Search 109 pages" aria-label="Search pages" style="flex: 1; min-width: 0; border: 0; background: transparent; color: #FBF7EF; font: 14px 'DM Sans', sans-serif; outline: none;">
+    </label>
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; opacity: .62; padding: 4px 10px;">{{g.label}}</span>
+        <sc-for list="{{g.items}}" as="i" hint-placeholder-count="3">
+          <a href="#" style="display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 999px; background: {{i.bg}}; color: {{i.ink}}; font-weight: {{i.weight}}; text-decoration: none; font-size: 14px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: {{i.dot}};"></span>{{i.name}}</a>
+        </sc-for>
+      </div>
+    </sc-for>
+  </aside>
+
+  <main style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px;">
+      <div style="flex-grow: 1;"><span style="font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #4C5D70;">What a member sees · C-01</span><h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 48px; line-height: 1;">Member app</h1></div>
+      <div style="display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: #FBF7EF;" role="group" aria-label="Device">
+        <button type="button" style="border: 0; border-radius: 999px; padding: 7px 14px; background: #1C2E42; color: #FBF7EF; font: 600 13px 'DM Sans', sans-serif;">Phone</button>
+        <button type="button" style="border: 0; border-radius: 999px; padding: 7px 14px; background: transparent; color: #4C5D70; font: 600 13px 'DM Sans', sans-serif;">Tablet</button>
+        <button type="button" style="border: 0; border-radius: 999px; padding: 7px 14px; background: transparent; color: #4C5D70; font: 600 13px 'DM Sans', sans-serif;">Desktop</button>
+      </div>
+    </div>
+    <div style="flex-grow: 1; border-radius: 28px; background: #F5EEE1; display: grid; place-items: center; padding: 24px; min-height: 640px;">
+      <div style="width: 300px; height: 600px; border-radius: 40px; background: #FBF7EF; box-shadow: 0 24px 60px -24px rgba(28,46,66,.45); padding: 18px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; overflow: hidden;">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 13px; color: #4C5D70;">domingo 25 de octubre</span>
+        <b style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 34px; line-height: 1;">Hola, <em>Juliana</em>.</b>
+        <div style="border-radius: 22px; background: #35597D; color: #FBF7EF; padding: 16px; display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 10px; letter-spacing: .14em; text-transform: uppercase; opacity: .8;">Tu próxima clase</span><b style="font-size: 30px; letter-spacing: -.03em;">6:00</b><span style="font-size: 13px;">Híbrido · Pilates / Yoga</span><span style="align-self: flex-start; margin-top: 4px; padding: 6px 12px; border-radius: 999px; background: #F7F3B2; color: #1C2E42; font-size: 12px; font-weight: 700;">Ver clase</span></div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
+          <span style="border-radius: 16px; background: #5F85B1; color: #0E1721; padding: 12px; font-size: 12px; font-weight: 600;">Reservar</span>
+          <span style="border-radius: 16px; background: #D8C24A; color: #0E1721; padding: 12px; font-size: 12px; font-weight: 600;">Planes</span>
+          <span style="border-radius: 16px; background: #C4704F; color: #0E1721; padding: 12px; font-size: 12px; font-weight: 600;">13 clases</span>
+          <span style="border-radius: 16px; background: #5A7355; color: #FBF7EF; padding: 12px; font-size: 12px; font-weight: 600;">7 semanas</span>
+        </div>
+        <span style="margin-top: auto; text-align: center; font-size: 11px; color: #4C5D70;">Live preview · 390 px · ES</span>
+      </div>
+    </div>
+  </main>
+
+  <aside style="flex: 1 1 280px; max-width: 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+    <section style="border-radius: 28px; background: #FBF7EF; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #4C5D70;">Test it as</span>
+      <sc-for list="{{asRoles}}" as="r" hint-placeholder-count="3">
+        <a href="#" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 18px; background: #F5EEE1; color: #1C2E42; text-decoration: none;"><span style="display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: {{r.dot}}; color: #0E1721; font-size: 12px; font-weight: 700;">{{r.initials}}</span><span style="flex-grow: 1;"><b style="font-weight: 600; display: block;">{{r.name}}</b><span style="font-size: 12px; color: #4C5D70;">{{r.note}}</span></span><span aria-hidden="true">→</span></a>
+      </sc-for>
+      <a href="#" style="display: inline-flex; align-items: center; justify-content: center; height: 46px; border-radius: 999px; background: #F7F3B2; color: #1C2E42; font-weight: 700; text-decoration: none;">Open full screen</a>
+    </section>
+    <section style="border-radius: 28px; background: #FBF7EF; padding: 22px; display: flex; flex-direction: column; gap: 6px;">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #4C5D70;">Pages in this app · 28</span>
+      <sc-for list="{{pages}}" as="p" hint-placeholder-count="6">
+        <a href="#" style="display: flex; justify-content: space-between; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(28,46,66,.1); color: #1C2E42; text-decoration: none; font-size: 14px;"><span>{{p.name}}</span><span style="font-size: 12px; color: #4C5D70;">{{p.code}}</span></a>
+      </sc-for>
+    </section>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const on = { bg: '#F7F3B2', ink: '#1C2E42', weight: 600 };
+    const off = { bg: 'transparent', ink: '#FBF7EF', weight: 400 };
+    const it = (name, dot, sel) => ({ name, dot, ...(sel ? on : off) });
+    return {
+      groups: [
+        { label: 'Members see', items: [it('Member app', '#5F85B1', true), it('Website', '#D8C24A'), it('Coming soon', '#C4704F'), it('Teacher app', '#5A7355')] },
+        { label: 'The team', items: [it('Front desk', '#5F85B1'), it('Inbox', '#7E9C88'), it('Point of sale', '#D8C24A'), it('Admin dashboard', '#C4704F'), it('CRM', '#9E6E8F'), it('Finance', '#5A7355')] },
+        { label: 'Run and build', items: [it('Operations manual', '#848F9B'), it('Docs & changelog', '#848F9B'), it('Dev tools', '#848F9B')] },
+      ],
+      asRoles: [
+        { name: 'Juliana', note: 'Member · 13 classes left', initials: 'JO', dot: '#5F85B1' },
+        { name: 'New visitor', note: 'Signing up for a trial', initials: 'NV', dot: '#D8C24A' },
+        { name: 'Carolina', note: 'Teacher view of /app', initials: 'CC', dot: '#C4704F' },
+      ],
+      pages: [
+        { name: 'Inicio', code: 'C-01' }, { name: 'Horario', code: 'C-02' }, { name: 'Clase', code: 'C-03' },
+        { name: 'Pago', code: 'C-04' }, { name: 'Reserva confirmada', code: 'C-08' }, { name: 'Tarjeta de miembro', code: 'C-28' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

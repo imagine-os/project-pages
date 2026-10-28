@@ -1,0 +1,73 @@
+<!-- @dsCard group="Layout" height=720 width=1440 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>AppShell</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { AppShell, TopBar, ToolbarDivider, ModuleBar, Sidebar, Inspector, InspectorSection, PromptBar, NavSection, NavItem,
+    IconButton, Button, Avatar, PageHeader, FilterBar, Input, Select, SegmentedControl, ModuleCard, Pager, StatusBadge, Banner } = BG;
+  const [mod, setMod] = useState("hub");
+  const [view, setView] = useState("gallery");
+  const [prompt, setPrompt] = useState("");
+  const open = html`<${Button} size="sm" variant="secondary" fullWidth iconEnd=${html`<${I.ArrowUpRight}/>`}>Open<//>`;
+  return html`<div style=${{ height: "720px" }}><${AppShell}
+    topBar=${html`<${TopBar}
+      brand=${html`<${BG.ShellMenuButton} /><${Button} variant="ghost" size="sm" iconStart=${html`<${Avatar} name="Between Gigs" shape="square" size="sm" />`}>Between Gigs<//><span className="font-mono text-data-sm text-ink-subtle">v3.64</span>`}
+      start=${html`<${ToolbarDivider} /><span className="font-mono text-data-sm text-ink-muted">109%</span><${IconButton} size="sm" label="Undo" icon=${html`<${I.Undo2}/>`} /><${IconButton} size="sm" label="Redo" icon=${html`<${I.Redo2}/>`} /><${ToolbarDivider} /><${Button} size="sm" variant="ghost" iconStart=${html`<${I.Pencil}/>`}>Sketch<//>`}
+      end=${html`<${IconButton} size="sm" label="Single pane" pressed icon=${html`<${I.Monitor}/>`} /><${IconButton} size="sm" label="Two panes" icon=${html`<${I.Columns2}/>`} /><${ToolbarDivider} /><${IconButton} size="sm" label="Appearance" icon=${html`<${I.Sun}/>`} /><${IconButton} size="sm" label="Notifications" icon=${html`<${I.Bell}/>`} /><${Avatar} name="Justin Massion" size="md" />`} />`}
+    moduleBar=${html`<${ModuleBar} activeId=${mod} onSelect=${setMod} items=${[
+      { id: "hub", label: "Hub", icon: html`<${I.Home}/>` }, { id: "ds", label: "Design system", icon: html`<${I.Palette}/>` },
+      { id: "email", label: "Email previews", icon: html`<${I.Mail}/>` }, { id: "journal", label: "The Journal", icon: html`<${I.BookOpen}/>` },
+      { id: "lib", label: "Component library", icon: html`<${I.Layers}/>` }, { id: "funnel", label: "Funnel Studio", icon: html`<${I.Filter}/>` },
+    ]} />`}
+    sidebar=${html`<${Sidebar} title="Workspace" headerAction=${html`<${IconButton} size="sm" label="Collapse sidebar" icon=${html`<${I.PanelLeft}/>`} />`}
+      footer=${html`<${NavItem} href="#" label="Version history" icon=${html`<${I.Clock}/>`} /><${NavItem} href="#" label="Team workspace" icon=${html`<${I.Users}/>`} />`}>
+      <${NavSection}>
+        <${NavItem} href="#" label="All modules" icon=${html`<${I.Layers}/>`} count=${101} active />
+        <${NavItem} href="#" label="Projects & planning" icon=${html`<${I.FolderKanban}/>`} count=${5} />
+        <${NavItem} href="#" label="Pages & experiences" icon=${html`<${I.FileText}/>`} count=${6} />
+        <${NavItem} href="#" label="People & knowledge" icon=${html`<${I.Users}/>`} count=${12} />
+        <${NavItem} href="#" label="Design & experience" icon=${html`<${I.Palette}/>`} count=${23} />
+        <${NavItem} href="#" label="Developer tools" icon=${html`<${I.Code2}/>`} count=${12} />
+        <${NavItem} href="#" label="Marketing & growth" icon=${html`<${I.Megaphone}/>`} count=${8} />
+        <${NavItem} href="#" label="Company operations" icon=${html`<${I.Building2}/>`} count=${9} />
+      <//>
+    <//>`}
+    inspector=${html`<${Inspector} eyebrow="Selected module" title="Connected work" actions=${html`<${IconButton} size="sm" label="Close inspector" icon=${html`<${I.X}/>`} />`}>
+      <${InspectorSection} title="Status"><${StatusBadge} status="preview" /><//>
+      <${InspectorSection} title="Working version"><${Select} size="sm" aria-label="Working version" defaultValue="a" options=${[{ value: "a", label: "v3.46 · preview" }, { value: "b", label: "v3.31 · archived" }]} /><//>
+      <${InspectorSection}><${Banner} tone="info" title="Design stays locked">Text edits only.<//><//>
+    <//>`}
+    prompt=${html`<${PromptBar} value=${prompt} onChange=${setPrompt} onSubmit=${() => setPrompt("")}
+      start=${html`<${IconButton} size="sm" label="Command menu" icon=${html`<${I.Command}/>`} /><${IconButton} size="sm" label="Attach" icon=${html`<${I.Plus}/>`} />`}
+      end=${html`<${IconButton} size="sm" label="Voice" icon=${html`<${I.Mic}/>`} />`} />`}>
+    <div className="grid gap-6">
+      <${PageHeader} eyebrow="Between Gigs · Builder" title="Workspace hub" description="101 modules · 6 tools" actions=${html`<${BG.ShellInspectorButton} label="Selected module" />`} />
+      <${FilterBar} end=${html`<${Button} size="sm" variant="ghost">Reset filters<//>`}>
+        <${Input} size="sm" aria-label="Find a page" placeholder="Find a page, tool or path…" start=${html`<${I.Search}/>`} className="min-w-48 flex-1" />
+        <${Select} size="sm" aria-label="Status" defaultValue="all" options=${[{ value: "all", label: "All statuses" }, { value: "w", label: "Working" }]} className="w-40" />
+        <${SegmentedControl} size="sm" label="View" value=${view} onChange=${setView} options=${[
+          { value: "gallery", label: "Gallery", icon: html`<${I.LayoutGrid}/>` }, { value: "list", label: "List", icon: html`<${I.List}/>` },
+          { value: "coverflow", label: "Coverflow", icon: html`<${I.GalleryHorizontal}/>` }]} />
+      <//>
+      <div className="flex flex-wrap gap-4">
+        <${ModuleCard} headingLevel=${2} title="Connected work" status="preview" version="v3.46" action=${open} progress=${{ value: 55, label: "Building" }} selected />
+        <${ModuleCard} headingLevel=${2} title="Table Studio" status="preview" version="v3.31" action=${open} progress=${{ value: 55, label: "Building" }} />
+        <${ModuleCard} headingLevel=${2} title="Spec Builder" status="not-started" progress=${{ value: 0, label: "Planned" }} />
+      </div>
+      <div className="flex justify-center"><${Pager} page=${1} pageCount=${5} onChange=${() => {}} itemLabel="Connected work" /></div>
+    </div>
+  <//></div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

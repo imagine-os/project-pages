@@ -1,0 +1,30 @@
+<!-- @dsCard group="Patterns" height=400 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>ModuleCard</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { ModuleCard, Button, IconButton } = BG;
+  const [sel, setSel] = useState("Connected work");
+  const open = html`<${Button} size="sm" variant="secondary" fullWidth iconEnd=${html`<${I.ArrowUpRight}/>`}>Open<//>`;
+  const pin = html`<${IconButton} label="Pin module" size="sm" icon=${html`<${I.Pin}/>`} />`;
+  const card = (title, status, value, label, version) => html`<${ModuleCard} title=${title} status=${status} version=${version} action=${status === "not-started" ? null : open} pin=${pin}
+    progress=${{ value, label }} selected=${sel === title} onSelect=${() => setSel(title)} />`;
+  return html`<div className="flex flex-wrap gap-4 p-6">
+    ${card("Connected work", "preview", 55, "Building", "v3.46")}
+    ${card("Feature reminders", "working", 70, "Building")}
+    ${card("Spec Builder", "not-started", 0, "Planned")}
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

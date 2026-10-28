@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HoyOS and Between Gigs Pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f3f4f6;--surface:#fff;--fg:#151a22;--muted:#5b6474;--line:#dde1e7;--hoy:#c2552d;--gigs:#5b4fd0}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1218;--surface:#171b23;--fg:#e7eaf0;--muted:#98a1b2;--line:#283040;--hoy:#f08a5d;--gigs:#9d94ff}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 "IBM Plex Sans","Segoe UI",system-ui,sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:40px max(16px,env(safe-area-inset-left)) 72px}
+h1{font:700 clamp(30px,5vw,44px)/1.05 "Familjen Grotesk","Segoe UI",sans-serif;margin:0 0 8px}
+h2{font:700 22px "Familjen Grotesk","Segoe UI",sans-serif;margin:36px 0 10px;padding-bottom:8px;border-bottom:3px solid var(--c)}
+p{color:var(--muted);margin:0}ul{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+li+li{border-top:1px solid var(--line)}li a{display:block;padding:12px 16px;color:var(--fg);text-decoration:none;font-weight:600}li a:hover{color:var(--c)}
+li a span{display:block;font-weight:400;font-size:13px;color:var(--muted)}a{color:var(--c)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>HoyOS and Between Gigs Pages</h1>
+  <p>Review pages, design systems and plans. Everything is also linked from the <a style="--c:var(--hoy)" href="https://playset-llc.github.io/agent-operations-theater/hub/">Project Link Hub</a>.</p>
+  <section style="--c:var(--hoy)">
+    <h2>HoyOS</h2>
+    <ul>
+      <li><a href="hoy/project-board/">Project Board<span>Every task by status, read-only snapshot</span></a></li>
+      <li><a href="hoy/polish-plan/">UI Polish Plan<span>What the polish pass covers and in what order</span></a></li>
+      <li><a href="hoy/design-system/">HOY Design System<span>Tokens, components and brand assets</span></a></li>
+      <li><a href="hoy/bold-directions/">Bold Directions<span>The visual directions explored, A to D</span></a></li>
+      <li><a href="hoy/before-after/">Before and After<span>Screens before and after the polish</span></a></li>
+      <li><a href="hoy/studio-ui/">Studio UI<span>The staff workspace in Pulso</span></a></li>
+      <li><a href="hoy/hub-layouts/">Hub Layouts<span>Four layouts for the testing hub</span></a></li>
+      <li><a href="hoy/navigation-architecture/">Navigation Architecture<span>How sections and screens connect</span></a></li>
+    </ul>
+  </section>
+  <section style="--c:var(--gigs)">
+    <h2>Between Gigs</h2>
+    <ul>
+      <li><a href="between-gigs/design-system/">Between Gigs Design System<span>Tokens, 50 components and the logo</span></a></li>
+      <li><a href="between-gigs/showcase/">Showcase<span>A walkthrough of the system and prototype</span></a></li>
+      <li><a href="between-gigs/build-map/">2.0 Build Map<span>What gets built for 2.0 and in what order</span></a></li>
+      <li><a href="between-gigs/backend-handoff/">2.0 Backend Handoff<span>What the backend needs to deliver</span></a></li>
+    </ul>
+  </section>
+</div>
+</body>
+</html>

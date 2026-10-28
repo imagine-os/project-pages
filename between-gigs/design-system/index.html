@@ -1,0 +1,870 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Between Gigs Design System</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"><style>
+:root{--bg:#f3f4f6;--surface:#fff;--fg:#151a22;--muted:#5b6474;--line:#dde1e7;--chip:#eef1f5;--c:#5b4fd0;
+--f-display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;--f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1218;--surface:#171b23;--fg:#e7eaf0;--muted:#98a1b2;--line:#283040;--chip:#212836}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--f-body)}
+.wrap{max-width:1240px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left)) 72px}
+.crumb{font:12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.crumb a{color:var(--c);text-decoration:none}
+h1{font:700 clamp(30px,5vw,46px)/1.05 var(--f-display);letter-spacing:-.02em;margin:10px 0 8px;text-wrap:balance}
+h2{font:700 24px/1.15 var(--f-display);margin:44px 0 14px;padding-bottom:10px;border-bottom:3px solid var(--c)}
+h3{font:600 17px var(--f-display);margin:0}
+.lede{color:var(--muted);max-width:70ch;margin:0}.note{font-size:13px;color:var(--muted);margin-top:10px}
+a{color:var(--c)}code{font:12.5px var(--f-mono);background:var(--chip);padding:1px 5px;border-radius:4px}
+</style><style>.md{max-width:78ch}.md table{border-collapse:collapse;font-size:14px;margin:12px 0;display:block;overflow-x:auto}.md td,.md th{border:1px solid var(--line);padding:6px 10px;text-align:left}
+.cmps{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,560px),1fr));gap:18px}
+.cmp{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.cmp header{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;margin-bottom:10px}.cmp header span{color:var(--muted);font-size:13px;flex:1}.cmp header a{font-size:13px;font-weight:600;text-decoration:none}
+.cmp iframe{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff}
+.cmp details{margin-top:10px;font-size:14px}.cmp summary{cursor:pointer;font-weight:600}
+.sws{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}.sw{display:grid;grid-template-columns:36px 1fr;gap:2px 10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px}
+.sw i{grid-row:span 2;width:36px;height:36px;border-radius:6px;border:1px solid var(--line)}.sw b{font-size:13px}.sw code{background:none;padding:0;color:var(--muted)}
+.ass{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}.as{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+.as img{width:100%;aspect-ratio:4/3;object-fit:contain;background:repeating-conic-gradient(var(--chip) 0 25%,transparent 0 50%) 0 0/16px 16px;border-radius:4px}.as figcaption{font:11px var(--f-mono);color:var(--muted);margin-top:6px}</style></head><body><div class="wrap">
+<div class="crumb"><a href="https://playset-llc.github.io/agent-operations-theater/hub/">Project Link Hub</a> · Between Gigs</div>
+<h1>Between Gigs Design System</h1><p class="lede">The foundations every Between Gigs screen builds on: tokens, 50 React components and the logo, in a light and a dark theme.</p>
+<p class="note">Exported from the claude.ai design system: every component preview below is live HTML.</p><h2>Overview</h2><div class="cmps"><article class="cmp" id="Cover"><header><h3>Cover</h3><span></span>
+<a href="components/Cover/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Cover/preview.html" style="height:288px" loading="lazy" title="Cover preview"></iframe>
+</article></div><h2>Actions</h2><div class="cmps"><article class="cmp" id="Button"><header><h3>Button</h3><span></span>
+<a href="components/Button/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Button/preview.html" style="height:200px" loading="lazy" title="Button preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Triggers an action. Five variants, each with one job, so a person can tell at a glance which button matters.</p>
+<h2>Variants</h2>
+<ul>
+<li><code>primary</code>: the one mint action per view ("Claim a card", "Save changes", "Search"). Never two on the same screen.</li>
+<li><code>strong</code>: the decisive step inside a flow or review ("Create my profile", "Approve profile"). Forest in light theme, near-white in dark.</li>
+<li><code>secondary</code>: outline. Every other visible action ("Export", "How it works", "Request changes").</li>
+<li><code>ghost</code>: toolbar and low-emphasis actions ("Undo", "Cancel" inside dense panels).</li>
+<li><code>danger</code>: destructive actions. Always confirm inside the page first.</li>
+</ul>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>children</code>: the label. Sentence case, a verb that says what happens.</li>
+<li><code>variant</code>, <code>size</code> (<code>sm</code> 32px, <code>md</code> 40px, <code>lg</code> 48px for marketing and the search bar).</li>
+<li><code>iconStart</code> / <code>iconEnd</code>: 16px Lucide icons. Use <code>ArrowUpRight</code> on the end only for links that leave the page.</li>
+<li><code>loading</code>: keeps the label, adds a spinner, blocks clicks.</li>
+</ul>
+<h2>Don't</h2>
+<ul>
+<li>Don't make a primary button to fill space. If you're unsure which one is primary, the screen has too many actions.</li>
+<li>Don't replace the label with "Loading…".</li>
+<li>Don't put two primary or two danger buttons next to each other.</li>
+</ul></div></details></article><article class="cmp" id="IconButton"><header><h3>IconButton</h3><span></span>
+<a href="components/IconButton/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/IconButton/preview.html" style="height:120px" loading="lazy" title="IconButton preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A square button that shows only an icon, for toolbars and dense headers where the icon is universally understood.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>label</code> (required): the accessible name, also shown as the native tooltip. Say what it does: "Notifications", not "Bell".</li>
+<li><code>icon</code>: one Lucide icon.</li>
+<li><code>variant</code>: <code>ghost</code> (default, toolbars), <code>secondary</code> (stands alone), <code>primary</code> (a single add action), <code>strong</code>.</li>
+<li><code>size</code>: <code>sm</code> 32px or <code>md</code> 40px.</li>
+<li><code>pressed</code>: for toggles such as layout modes and sketch tools.</li>
+</ul>
+<h2>Use when</h2>
+<ul>
+<li>The icon is unambiguous (search, close, more, layout). Otherwise use a Button with a label.</li>
+<li>Wrap in Tooltip when the action needs more than one word or has a shortcut.</li>
+</ul></div></details></article><article class="cmp" id="SegmentedControl"><header><h3>SegmentedControl</h3><span></span>
+<a href="components/SegmentedControl/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/SegmentedControl/preview.html" style="height:140px" loading="lazy" title="SegmentedControl preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Switches between views of the same content, such as Gallery / List / Coverflow / Tiles or Default / Light / Dark.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>label</code>: names the group for screen readers ("View").</li>
+<li><code>options</code>: 2 to 5 items, each with <code>value</code>, <code>label</code> and an optional icon.</li>
+<li><code>value</code> and <code>onChange</code>.</li>
+<li><code>size</code>: <code>sm</code> in toolbars, <code>md</code> elsewhere.</li>
+</ul>
+<h2>Use when</h2>
+<ul>
+<li>The choice changes how the same data is shown and takes effect immediately.</li>
+<li>For moving between different content, use Tabs. For a setting saved with a form, use RadioGroup.</li>
+</ul>
+<p>Arrow keys move the selection; only the selected option is in the tab order.</p></div></details></article><article class="cmp" id="Switch"><header><h3>Switch</h3><span></span>
+<a href="components/Switch/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Switch/preview.html" style="height:170px" loading="lazy" title="Switch preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Turns a setting on or off immediately, with no save step.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>checked</code> and <code>onChange(checked)</code>.</li>
+<li><code>label</code> and optional <code>description</code>. Without a visible label, pass <code>aria-label</code>.</li>
+</ul>
+<h2>Use when</h2>
+<ul>
+<li>The change applies the moment it is flipped (Typewriter, Highlight edits, Use Hub pointer).</li>
+<li>For a yes/no inside a form that is submitted later, use Checkbox.</li>
+<li>Label the setting, not the state: "Highlight edits", not "Highlighting is on".</li>
+</ul></div></details></article></div><h2>Brand</h2><div class="cmps"><article class="cmp" id="Logo"><header><h3>Logo</h3><span></span>
+<a href="components/Logo/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Logo/preview.html" style="height:300px" loading="lazy" title="Logo preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>The Between Gigs logo, drawn from the approved files. Its inks follow the theme of the surface it sits on: the on-light file's colors in light theme, the on-dark file's in dark theme and inside dark-theme islands.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>layout</code>: <code>wide</code> (monogram beside the wordmark; headers and nav), <code>stacked</code> (wordmark under the monogram; covers, sign-in, square spaces), <code>mark</code> (monogram alone; the app's top bar, collapsed rail, favicon).</li>
+<li><code>height</code> in px. Width follows. Minimum: <code>wide</code> 24px tall, <code>mark</code> 20px tall.</li>
+</ul>
+<h2>Rules</h2>
+<ul>
+<li>Never recolor, outline, rotate or add effects. The inks are the <code>logo-mark</code>, <code>logo-ink</code> and <code>logo-rule</code> tokens, which hold the files' exact colors.</li>
+<li>Keep clear space of at least half the monogram's height on every side.</li>
+<li>On photos or material textures, put a solid <code>surface</code> or <code>surface-brand</code> plate behind it.</li>
+<li>The original SVGs are in the Logos asset group for print, slides and partners.</li>
+</ul></div></details></article></div><h2>Data</h2><div class="cmps"><article class="cmp" id="Table"><header><h3>Table</h3><span></span>
+<a href="components/Table/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Table/preview.html" style="height:330px" loading="lazy" title="Table preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Rows of records that share the same fields: people, invitations, campaigns, the review queue.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>columns</code>: <code>{ key, header, cell?, numeric?, align?, sortable?, width? }[]</code>. <code>numeric</code> right-aligns and uses tabular mono digits.</li>
+<li><code>rows</code> and <code>rowKey(row)</code>.</li>
+<li><code>caption</code> (required; visible with <code>showCaption</code>).</li>
+<li><code>sort</code> + <code>onSortChange</code> for sortable columns; <code>onRowClick</code> + <code>selectedKey</code> for master–detail views.</li>
+<li><code>density</code>: <code>comfortable</code> (48px rows) or <code>compact</code> (36px).</li>
+<li><code>empty</code>: what to show when there are no rows.</li>
+</ul>
+<p>The header row sticks while scrolling. On narrow screens the table scrolls sideways inside its frame; for phones, prefer a card list.</p></div></details></article></div><h2>Display</h2><div class="cmps"><article class="cmp" id="Accordion"><header><h3>Accordion</h3><span></span>
+<a href="components/Accordion/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Accordion/preview.html" style="height:300px" loading="lazy" title="Accordion preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Sections that expand and collapse in place: Thread setup, FAQs, groups of settings.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>items</code>: <code>{ id, title, meta?, content }[]</code>. <code>meta</code> is short text on the right ("3 items").</li>
+<li><code>type</code>: <code>multiple</code> (default) or <code>single</code> (opening one closes the rest). <code>defaultOpen</code>: ids open at first.</li>
+<li><code>variant</code>: <code>framed</code> (default) or <code>flush</code> inside panels.</li>
+</ul>
+<p>Don't hide anything people need on every visit. Each header is a real button with <code>aria-expanded</code>.</p></div></details></article><article class="cmp" id="Avatar"><header><h3>Avatar</h3><span></span>
+<a href="components/Avatar/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Avatar/preview.html" style="height:120px" loading="lazy" title="Avatar preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A person's photo, or their initials when there is no photo. Square avatars stand for companies and workspaces.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>name</code> (required): alt text and the source of the initials.</li>
+<li><code>src</code>: photo URL. A broken image falls back to initials.</li>
+<li><code>size</code>: <code>sm</code> 24px (lists, seats), <code>md</code> 32px (top bar, switcher), <code>lg</code> 48px (profile headers).</li>
+<li><code>shape</code>: <code>circle</code> for people, <code>square</code> for companies.</li>
+</ul></div></details></article><article class="cmp" id="AvatarGroup"><header><h3>AvatarGroup</h3><span></span>
+<a href="components/AvatarGroup/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/AvatarGroup/preview.html" style="height:110px" loading="lazy" title="AvatarGroup preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Overlapping avatars for a team, contributors or who's in a call, with "+N" for the rest.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>people</code>: <code>{ name, src? }[]</code>, most relevant first. <code>max</code> (default 4), <code>size</code> (<code>sm</code>, <code>md</code>).</li>
+</ul>
+<p>The whole group is announced once with every name, so screen readers don't read each avatar.</p></div></details></article><article class="cmp" id="Badge"><header><h3>Badge</h3><span></span>
+<a href="components/Badge/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Badge/preview.html" style="height:140px" loading="lazy" title="Badge preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A short label for a state or a type, in a tone color.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>tone</code>: <code>success</code>, <code>warning</code>, <code>danger</code>, <code>info</code>, <code>neutral</code> or <code>brand</code> (types and samples, not states).</li>
+<li><code>children</code>: one to three words.</li>
+<li><code>dot</code> or <code>icon</code> (14px) for scanning in dense lists; <code>size</code> <code>sm</code> or <code>md</code>.</li>
+</ul>
+<h2>Use when</h2>
+<ul>
+<li>For the product's status words (Draft, Needs review, Approved…) use StatusBadge so the color always matches the word.</li>
+<li>Badges are not buttons. For a removable or clickable label use Tag.</li>
+</ul></div></details></article><article class="cmp" id="Card"><header><h3>Card</h3><span></span>
+<a href="components/Card/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Card/preview.html" style="height:300px" loading="lazy" title="Card preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>The one container for grouped content. Module cards, profile cards, funnel steps and panels all start from it.</p>
+<h2>Variants</h2>
+<ul>
+<li><code>raised</code> (default): on the page ground, with <code>shadow-sm</code>.</li>
+<li><code>flat</code>: inside a panel or another surface; hairline only.</li>
+<li><code>sunken</code>: a recessed well inside a card.</li>
+</ul>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>children</code>, usually starting with <code>CardHeader</code> (<code>kicker</code>, <code>title</code>, <code>description</code>, <code>aside</code>).</li>
+<li><code>padding</code>: <code>sm</code> 12px, <code>md</code> 16px (default), <code>lg</code> 24px (panels).</li>
+<li><code>stripe</code>: a <code>cat-*</code> color along the top edge to show the item's type (funnel steps). Always with a type label.</li>
+<li><code>selected</code>: the featured or current card. One per view.</li>
+<li><code>interactive</code>: hover feedback. Put the real link or button inside the card; don't make the whole div clickable.</li>
+</ul>
+<h2>Don't</h2>
+<ul>
+<li>Don't nest raised cards. Inside a card, use <code>flat</code> or <code>sunken</code>.</li>
+<li>Don't add a colored left border; use <code>stripe</code> on top, or a Badge.</li>
+</ul></div></details></article><article class="cmp" id="Count"><header><h3>Count</h3><span></span>
+<a href="components/Count/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Count/preview.html" style="height:110px" loading="lazy" title="Count preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A number pill after a label: category totals, tab counts, unread items.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>value</code>; <code>max</code> to cap the display ("99+").</li>
+<li><code>tone</code>: <code>quiet</code> for totals, <code>accent</code> (mint) only for new or unread items that need attention.</li>
+</ul></div></details></article><article class="cmp" id="Kbd"><header><h3>Kbd</h3><span></span>
+<a href="components/Kbd/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Kbd/preview.html" style="height:100px" loading="lazy" title="Kbd preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A keyboard key or shortcut, shown next to the action it triggers or inside menus and the command palette.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>keys</code>: each key separately, <code>["⌘", "K"]</code>. Use the Mac symbols in the UI and show Ctrl on Windows where it matters.</li>
+</ul></div></details></article><article class="cmp" id="Progress"><header><h3>Progress</h3><span></span>
+<a href="components/Progress/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Progress/preview.html" style="height:170px" loading="lazy" title="Progress preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Shows how far something has come: a module's build, founding cards claimed, an upload.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>value</code> and <code>max</code> (default 100).</li>
+<li><code>label</code>: what is progressing. <code>valueText</code>: the end text ("55% est.", "6 of 20"); defaults to the percentage.</li>
+<li><code>size</code>: <code>sm</code> (6px) in cards, <code>md</code> (10px) as a page's headline progress.</li>
+</ul>
+<p>The fill is <code>ink-brand</code>, so it holds 3:1 against its track in both themes. Never show progress you can't measure; use a Skeleton or spinner instead.</p></div></details></article><article class="cmp" id="Stat"><header><h3>Stat</h3><span></span>
+<a href="components/Stat/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Stat/preview.html" style="height:200px" loading="lazy" title="Stat preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>One headline number with its label. <code>StatRow</code> lays several out between hairlines.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>value</code>: the formatted number ("$5,000", "14"). Set in Sora, tabular.</li>
+<li><code>label</code>: lower-case phrase that completes the number ("numbered founding cards").</li>
+<li><code>delta</code>: optional change, <code>{ value, direction, invert? }</code>. <code>invert</code> when going up is bad (errors, costs).</li>
+<li><code>size</code>: <code>lg</code> for marketing and dashboards, <code>md</code> inside panels.</li>
+</ul>
+<p>Only use stat rows when the numbers are the point of the page. Never invent figures to fill a row.</p></div></details></article><article class="cmp" id="StatusBadge"><header><h3>StatusBadge</h3><span></span>
+<a href="components/StatusBadge/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/StatusBadge/preview.html" style="height:150px" loading="lazy" title="StatusBadge preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>The product's fixed status vocabulary. Each word always appears in the same color, everywhere.</p>
+<table>
+<thead>
+<tr>
+<th>status</th>
+<th>Word</th>
+<th>Tone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>draft</code></td>
+<td>Draft</td>
+<td>warning</td>
+</tr>
+<tr>
+<td><code>not-started</code></td>
+<td>Not started</td>
+<td>neutral</td>
+</tr>
+<tr>
+<td><code>working</code></td>
+<td>Working</td>
+<td>info</td>
+</tr>
+<tr>
+<td><code>preview</code></td>
+<td>Preview</td>
+<td>info</td>
+</tr>
+<tr>
+<td><code>needs-review</code></td>
+<td>Needs review</td>
+<td>warning</td>
+</tr>
+<tr>
+<td><code>changes-requested</code></td>
+<td>Changes requested</td>
+<td>warning</td>
+</tr>
+<tr>
+<td><code>approved</code></td>
+<td>Approved</td>
+<td>success</td>
+</tr>
+<tr>
+<td><code>published</code></td>
+<td>Published</td>
+<td>success</td>
+</tr>
+<tr>
+<td><code>live</code></td>
+<td>Live</td>
+<td>success</td>
+</tr>
+<tr>
+<td><code>archived</code></td>
+<td>Archived</td>
+<td>neutral</td>
+</tr>
+</tbody>
+</table>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>status</code>: one of the keys above. A new status is a design decision: add it to <code>statusMeta</code> and the README's status table together.</li>
+</ul></div></details></article><article class="cmp" id="Tag"><header><h3>Tag</h3><span></span>
+<a href="components/Tag/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Tag/preview.html" style="height:150px" loading="lazy" title="Tag preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Keywords on cards ("Alterations", "Closet styling"), filter chips ("Silver Lake") and removable selections.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>children</code>: one or two words.</li>
+<li><code>onSelect</code> + <code>selected</code>: turns it into a toggle chip (filters).</li>
+<li><code>onRemove</code>: adds a remove button named "Remove <tag>".</li>
+</ul>
+<p>Tags describe; they never show status. Use Badge or StatusBadge for state.</p></div></details></article></div><h2>Feedback</h2><div class="cmps"><article class="cmp" id="Banner"><header><h3>Banner</h3><span></span>
+<a href="components/Banner/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Banner/preview.html" style="height:260px" loading="lazy" title="Banner preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A message about a page or section that stays until it is resolved or dismissed.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>tone</code>: <code>info</code>, <code>success</code>, <code>warning</code>, <code>danger</code>. The icon follows the tone.</li>
+<li><code>layout</code>: <code>inline</code> (rounded, inside content) or <code>strip</code> (full-width band at the top of a page, like "Draft · not public").</li>
+<li><code>title</code> (bold lead), <code>children</code> (the detail), <code>action</code> (a link or small button), <code>onDismiss</code>.</li>
+</ul>
+<h2>Use when</h2>
+<ul>
+<li>The message is about the state of the page (draft, locked, failed to save).</li>
+<li>For a confirmation that something just happened, use a Toast. For a field error, use Field's <code>error</code>.</li>
+</ul></div></details></article><article class="cmp" id="EmptyState"><header><h3>EmptyState</h3><span></span>
+<a href="components/EmptyState/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/EmptyState/preview.html" style="height:280px" loading="lazy" title="EmptyState preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Fills a view with nothing to show yet, and says how to start.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>title</code>: what is empty, plainly ("No studies yet").</li>
+<li><code>children</code>: what will appear here and how to add the first one.</li>
+<li><code>action</code>: usually one primary Button. <code>icon</code>: a Lucide icon.</li>
+</ul>
+<p>For a filter with no matches, say so and offer "Reset filters" instead of a create action.</p></div></details></article><article class="cmp" id="Skeleton"><header><h3>Skeleton</h3><span></span>
+<a href="components/Skeleton/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Skeleton/preview.html" style="height:170px" loading="lazy" title="Skeleton preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A placeholder in the shape of content that is still loading. Use for loads over about 300ms.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>shape</code>: <code>text</code> (a line), <code>block</code> (an image or card area), <code>circle</code> (an avatar).</li>
+<li><code>className</code> for width and height.</li>
+</ul>
+<p>Match the real layout so nothing jumps when content arrives. Pulsing stops under reduced motion.</p></div></details></article><article class="cmp" id="Toast"><header><h3>Toast</h3><span></span>
+<a href="components/Toast/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Toast/preview.html" style="height:220px" loading="lazy" title="Toast preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A brief confirmation that something just happened, with an optional Undo.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li>Mount <code>ToastProvider</code> once near the app root, then call <code>useToast()</code> and <code>show({ message, tone, action, duration })</code>.</li>
+<li><code>message</code>: past tense, says what happened ("Changes saved", "Profile approved").</li>
+<li><code>action</code>: one short action, usually Undo or Redo. Toasts with an action stay at least 6 seconds.</li>
+</ul>
+<h2>Don't</h2>
+<ul>
+<li>Don't use a toast for errors the person must act on; use a Banner.</li>
+<li>Don't stack more than three. The provider keeps the newest three.</li>
+</ul></div></details></article><article class="cmp" id="Tooltip"><header><h3>Tooltip</h3><span></span>
+<a href="components/Tooltip/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Tooltip/preview.html" style="height:130px" loading="lazy" title="Tooltip preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A short label shown on hover and focus, mostly to name icon-only controls or show a shortcut.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>content</code>: a few words on one line.</li>
+<li><code>children</code>: one focusable element.</li>
+<li><code>side</code>: <code>top</code> (default) or <code>bottom</code>.</li>
+</ul>
+<p>Never put information only in a tooltip. Touch screens can't hover.</p></div></details></article></div><h2>Forms</h2><div class="cmps"><article class="cmp" id="Checkbox"><header><h3>Checkbox</h3><span></span>
+<a href="components/Checkbox/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Checkbox/preview.html" style="height:200px" loading="lazy" title="Checkbox preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A yes/no choice inside a form, or one of several independent choices in a list.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li>Standard checkbox props (<code>checked</code>/<code>defaultChecked</code>, <code>onChange</code>, <code>name</code>).</li>
+<li><code>label</code>: says what checking it means ("Add me to the wall"). <code>description</code> for the consequence.</li>
+</ul>
+<h2>Use when</h2>
+<ul>
+<li>The choice is saved with the form. For a setting that applies immediately, use Switch.</li>
+<li>Never pre-check consent boxes (reviews, marketing, being listed publicly).</li>
+</ul></div></details></article><article class="cmp" id="Combobox"><header><h3>Combobox</h3><span></span>
+<a href="components/Combobox/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Combobox/preview.html" style="height:380px" loading="lazy" title="Combobox preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Pick one value from a long list by typing to filter it: the company switcher, assigning a person, choosing a service from dozens.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>options</code>: <code>{ value, label, description?, icon?, disabled? }[]</code>. Descriptions are searched too.</li>
+<li><code>value</code> (or <code>null</code>) and <code>onChange(value)</code>. <code>placeholder</code>, <code>emptyText</code>, <code>size</code>, <code>invalid</code>.</li>
+<li>A label: wrap it in Field, or pass <code>aria-label</code>.</li>
+</ul>
+<p>Arrow keys move through matches, Enter picks, Escape closes. For fewer than about ten options, use Select.</p></div></details></article><article class="cmp" id="Field"><header><h3>Field</h3><span></span>
+<a href="components/Field/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Field/preview.html" style="height:300px" loading="lazy" title="Field preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Wraps one form control with its label and its help or error text, and connects them for screen readers.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>label</code>: short, sentence case, no colon.</li>
+<li><code>children</code>: exactly one Input, Textarea or Select. Field passes it <code>id</code>, <code>invalid</code> and <code>aria-describedby</code>.</li>
+<li><code>hint</code>: what to enter or why it's asked.</li>
+<li><code>error</code>: what went wrong and how to fix it ("Enter a 5-digit ZIP code, like 90026"). Replaces the hint while shown.</li>
+<li><code>optional</code>: marks the field "Optional". Required is the default, so required fields are not marked.</li>
+</ul>
+<h2>Do</h2>
+<ul>
+<li>Show errors after the person leaves the field or submits, not while they type.</li>
+<li>Stack fields with <code>gap-5</code>; group related fields under a heading-sm.</li>
+</ul></div></details></article><article class="cmp" id="Input"><header><h3>Input</h3><span></span>
+<a href="components/Input/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Input/preview.html" style="height:240px" loading="lazy" title="Input preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A single-line text field. The focus ring sits on the whole frame, so icons and units stay inside it.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li>Standard input props (<code>value</code>, <code>onChange</code>, <code>type</code>, <code>placeholder</code>, <code>name</code>).</li>
+<li><code>size</code>: <code>sm</code> 32px for filter bars and tables, <code>md</code> 40px default, <code>lg</code> 48px for the marketing search bar.</li>
+<li><code>start</code> / <code>end</code>: an icon, a currency sign, a unit or a small clear button.</li>
+<li><code>invalid</code>: set by Field when there is an error; set it yourself only outside a Field.</li>
+</ul>
+<h2>Do</h2>
+<ul>
+<li>Always give it a label: through Field, or <code>aria-label</code> when the context is obvious (a search box with a search icon).</li>
+<li>Placeholders show an example, never the label.</li>
+</ul></div></details></article><article class="cmp" id="RadioGroup"><header><h3>RadioGroup</h3><span></span>
+<a href="components/RadioGroup/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/RadioGroup/preview.html" style="height:220px" loading="lazy" title="RadioGroup preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>One choice from two to five options that should all be visible at once.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>name</code>, a visible <code>label</code> (rendered as the fieldset legend), <code>options</code>, <code>value</code>, <code>onChange</code>.</li>
+<li><code>orientation</code>: <code>vertical</code> (default) or <code>horizontal</code> for short labels.</li>
+</ul>
+<p>Put the recommended option first and say so in its label or description. More than five options: use Select.</p></div></details></article><article class="cmp" id="Select"><header><h3>Select</h3><span></span>
+<a href="components/Select/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Select/preview.html" style="height:200px" loading="lazy" title="Select preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Picks one value from a short list. The list is drawn by the design system, not the operating system, so it has the same rounded, raised look as Menu and Combobox in both themes.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>options</code>: <code>{ value, label, disabled? }[]</code>.</li>
+<li><code>value</code> + <code>onValueChange(value)</code> to control it, or <code>defaultValue</code> to let it manage itself. <code>onChange</code> also fires with <code>{ target: { value } }</code> for form libraries.</li>
+<li><code>placeholder</code>: shown in the field until something is chosen ("Choose a service"). It is not an option in the list.</li>
+<li><code>name</code> to submit with a form (a hidden input carries the value). <code>size</code>, <code>invalid</code>, <code>disabled</code>, <code>start</code> (an icon, as in filter bars).</li>
+</ul>
+<h2>Keyboard</h2>
+<p>Enter, Space or the arrow keys open the list; arrows, Home and End move; Enter or Space picks; Escape closes and returns focus. Typing a letter jumps to the next option that starts with it, open or closed.</p>
+<h2>Use when</h2>
+<ul>
+<li>Up to about ten options. Longer lists, or options that need search, use Combobox.</li>
+<li>Five or fewer options that all deserve to be seen: use RadioGroup or SegmentedControl.</li>
+</ul></div></details></article><article class="cmp" id="Slider"><header><h3>Slider</h3><span></span>
+<a href="components/Slider/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Slider/preview.html" style="height:180px" loading="lazy" title="Slider preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Picks a value on a continuous range where the exact number matters less than the feel: card size, shine, pointer size, canvas transparency.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>label</code>, <code>value</code>, <code>onChange(number)</code>, and <code>min</code> / <code>max</code> / <code>step</code>.</li>
+<li><code>format</code>: shows the current value at the end of the label row ("25%", "92px").</li>
+</ul>
+<p>For exact numbers (prices, counts), use an Input with <code>type="number"</code>.</p></div></details></article><article class="cmp" id="Textarea"><header><h3>Textarea</h3><span></span>
+<a href="components/Textarea/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Textarea/preview.html" style="height:220px" loading="lazy" title="Textarea preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Multi-line text: project descriptions, review notes, prompts, hypotheses.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li>Standard textarea props; <code>rows</code> sets the starting height (default 4). It resizes vertically.</li>
+<li><code>maxLength</code> with <code>showCount</code> to show "used / max" under the field.</li>
+<li><code>invalid</code>: set by Field.</li>
+</ul>
+<p>Use inside a Field. For long-form writing with formatting, use the Writing Studio editor, not this.</p></div></details></article></div><h2>Layout</h2><div class="cmps"><article class="cmp" id="AppShell"><header><h3>AppShell</h3><span></span>
+<a href="components/AppShell/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/AppShell/preview.html" style="height:720px" loading="lazy" title="AppShell preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>The frame of every signed-in screen. It places the top bar, the module bar, the sidebar, the page content, the inspector and the floating prompt bar, and handles their scrolling and stacking.</p>
+<h2>Parts</h2>
+<ul>
+<li><code>TopBar</code>: <code>brand</code> (workspace switcher and version), <code>start</code> (zoom, undo, page tools), <code>end</code> (layout toggles, appearance, notifications, account). Separate groups with <code>ToolbarDivider</code>. 56px tall.</li>
+<li><code>ModuleBar</code>: the row of open modules, <code>items</code> + <code>activeId</code>. Scrolls sideways; never wraps.</li>
+<li><code>Sidebar</code>: <code>title</code>, <code>headerAction</code> (collapse), NavSections as children, <code>footer</code> links. 248px, or a 64px rail with <code>collapsed</code>. Below the <code>lg</code> breakpoint it becomes a left Drawer: put <code>ShellMenuButton</code> first in the TopBar's <code>brand</code> to open it.</li>
+<li><code>Inspector</code>: details of the selected item, as <code>InspectorSection</code>s. 320px from <code>xl</code> up. Below that it becomes a right Drawer: add <code>ShellInspectorButton</code> to the page actions, or control it with <code>inspectorOpen</code> / <code>onInspectorOpenChange</code> so selecting a row opens it. Omit it when nothing is selected.</li>
+<li><code>PromptBar</code>: the floating composer. <code>start</code> and <code>end</code> take small IconButtons; the mint send button is built in and disabled while empty.</li>
+</ul>
+<h2>The consumer provides</h2>
+<ul>
+<li>Each part as a slot, and the page as <code>children</code>. Content is centered at 1280px max with the page padding already applied.</li>
+<li>The shell takes the height of its parent. Give the parent <code>h-dvh</code>.</li>
+</ul>
+<h2>Rules</h2>
+<ul>
+<li>One top bar, one module bar, one sidebar per screen. Split views put several page panes inside <code>children</code>; they don't repeat the shell.</li>
+<li>Materials (the personal finish) apply to the TopBar, Sidebar and PromptBar surfaces only.</li>
+</ul></div></details></article><article class="cmp" id="FilterBar"><header><h3>FilterBar</h3><span></span>
+<a href="components/FilterBar/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/FilterBar/preview.html" style="height:140px" loading="lazy" title="FilterBar preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>The recessed row of search and filters above a collection (Workspace hub, material library, People &amp; profiles).</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>children</code> in this order: the search Input (give it <code>className="min-w-48 flex-1"</code> so it takes the spare width), then filter Selects (each with a <code>FilterLabel</code>), then the view SegmentedControl, then sliders.</li>
+<li><code>end</code>: right-aligned extras, usually "Reset filters" (ghost Button), shown only when a filter is active.</li>
+</ul>
+<p>All controls inside use <code>size="sm"</code>. The bar wraps on narrow screens; it never scrolls sideways.</p></div></details></article></div><h2>Navigation</h2><div class="cmps"><article class="cmp" id="Breadcrumbs"><header><h3>Breadcrumbs</h3><span></span>
+<a href="components/Breadcrumbs/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Breadcrumbs/preview.html" style="height:110px" loading="lazy" title="Breadcrumbs preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Shows where a page sits and links back up: Workspace › Marketing &amp; growth › Campaign Studio.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>items</code>: from the top level down, each <code>{ label, href?, icon? }</code>. The last item is the current page and is not a link.</li>
+</ul>
+<p>Use on every page deeper than a top-level module. Keep labels identical to the page titles they point to.</p></div></details></article><article class="cmp" id="CommandPalette"><header><h3>CommandPalette</h3><span></span>
+<a href="components/CommandPalette/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/CommandPalette/preview.html" style="height:120px" loading="lazy" title="CommandPalette preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>⌘K: jump to any module, company or action by typing.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>open</code>, <code>onClose</code>, <code>commands</code>: <code>{ id, label, group, onRun, icon?, keywords?, shortcut? }[]</code>. Groups appear in the order first used.</li>
+<li>Call <code>useCommandShortcut(open)</code> once near the app root so ⌘K (Ctrl+K on Windows) opens it.</li>
+</ul>
+<p>Arrow keys move, Enter runs, Escape closes. Keep labels the same as the page titles they lead to.</p></div></details></article><article class="cmp" id="NavItem"><header><h3>NavItem</h3><span></span>
+<a href="components/NavItem/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/NavItem/preview.html" style="height:320px" loading="lazy" title="NavItem preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>One row in the sidebar or a section nav, with an icon and an optional count. <code>NavSection</code> groups rows under a title.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>label</code>, <code>href</code> (or other anchor props), <code>icon</code>, <code>count</code>.</li>
+<li><code>active</code>: the current page. Sets <code>aria-current="page"</code>.</li>
+<li><code>collapsed</code>: rail mode, icon only; the label becomes the accessible name and tooltip.</li>
+</ul>
+<p>Sidebar rows use Lucide icons at 20px. The illustrated category artwork belongs in category headers, not in nav rows.</p></div></details></article><article class="cmp" id="Pager"><header><h3>Pager</h3><span></span>
+<a href="components/Pager/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Pager/preview.html" style="height:110px" loading="lazy" title="Pager preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Steps through a set one item or page at a time: Coverflow, stacked profile cards, long result lists.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>page</code> (1-based), <code>pageCount</code>, <code>onChange(page)</code>.</li>
+<li><code>itemLabel</code>: the current item's name, shown after the position ("1 / 5 · Connected work").</li>
+</ul>
+<p>The position is announced to screen readers when it changes.</p></div></details></article><article class="cmp" id="Stepper"><header><h3>Stepper</h3><span></span>
+<a href="components/Stepper/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Stepper/preview.html" style="height:150px" loading="lazy" title="Stepper preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Shows where someone is in a multi-step flow, such as the four-step profile builder.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>steps</code>: short step names. Three to five steps; more means the flow should be split.</li>
+<li><code>current</code>: 0-based index. Earlier steps show a check.</li>
+<li><code>onStepClick</code>: lets people go back to a finished step. Forward jumps aren't offered.</li>
+</ul>
+<p>The current step is marked with <code>aria-current="step"</code>. Pair it with a forward button that names the next step ("Continue to Skills").</p></div></details></article><article class="cmp" id="Tabs"><header><h3>Tabs</h3><span></span>
+<a href="components/Tabs/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Tabs/preview.html" style="height:220px" loading="lazy" title="Tabs preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Switches between sections of one page. This is the only tab style in the product: underline tabs, with optional counts.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>Tabs</code> with <code>value</code> / <code>onChange</code>; inside it a <code>TabList</code> with a <code>label</code>, then <code>Tab</code>s and matching <code>TabPanel</code>s.</li>
+<li><code>Tab</code>: <code>value</code>, label, optional <code>icon</code> and <code>count</code>, <code>disabled</code>.</li>
+</ul>
+<h2>Use when</h2>
+<ul>
+<li>Sections of the same page or record (Studies / Media lab / Profiles).</li>
+<li>To change how the same data is displayed, use SegmentedControl. To go to another page, use links or NavItem.</li>
+</ul>
+<p>Arrow keys, Home and End move between tabs. The list scrolls horizontally instead of wrapping.</p></div></details></article></div><h2>Overlays</h2><div class="cmps"><article class="cmp" id="ConfirmDialog"><header><h3>ConfirmDialog</h3><span></span>
+<a href="components/ConfirmDialog/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/ConfirmDialog/preview.html" style="height:120px" loading="lazy" title="ConfirmDialog preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Asks before something destructive or hard to undo.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>open</code>, <code>onCancel</code>, <code>onConfirm</code>, <code>busy</code> while it runs.</li>
+<li><code>title</code>: a question that names the thing ("Remove Maya Chen from the gallery?").</li>
+<li><code>description</code>: what happens and whether it can be undone.</li>
+<li><code>confirmLabel</code>: the action as a verb ("Remove profile"). Never "OK" or "Yes".</li>
+<li><code>tone</code>: <code>danger</code> (default) or <code>default</code>.</li>
+</ul>
+<p>If the action can be undone, skip the dialog and offer Undo in a Toast instead.</p></div></details></article><article class="cmp" id="Drawer"><header><h3>Drawer</h3><span></span>
+<a href="components/Drawer/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Drawer/preview.html" style="height:160px" loading="lazy" title="Drawer preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A panel that slides in from the left or right edge and blocks the page until it's closed. The sidebar and inspector become drawers on smaller screens; settings and setup panels use it on every screen.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>open</code>, <code>onClose</code>, <code>title</code>, optional <code>description</code> and <code>footer</code> (Buttons, primary last).</li>
+<li><code>side</code>: <code>left</code> for navigation, <code>right</code> for details and settings. <code>size</code>: <code>sm</code> (default), <code>md</code>, <code>lg</code>.</li>
+</ul>
+<p>Built on Modal, so focus stays inside, Escape closes, and focus returns to the button that opened it.</p></div></details></article><article class="cmp" id="Menu"><header><h3>Menu</h3><span></span>
+<a href="components/Menu/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Menu/preview.html" style="height:380px" loading="lazy" title="Menu preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A list of actions or choices opened from a button: Appearance, account, row actions, the company switcher.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>trigger</code>: a Button or IconButton. Menu adds <code>aria-haspopup</code> and <code>aria-expanded</code>.</li>
+<li><code>items</code>: a mix of <code>{ label, onSelect, icon, description, shortcut, checked, danger, disabled }</code>, <code>"separator"</code> and <code>{ heading }</code>.
+  Setting <code>checked</code> on items makes them a pick-one list with a check on the current choice.</li>
+<li><code>header</code>: optional element above the items, such as a search Input.</li>
+<li><code>align</code>: <code>start</code> or <code>end</code> relative to the trigger.</li>
+</ul>
+<p>Keyboard: Down arrow opens and moves, Up arrow, Home, End; Escape or Tab closes and returns focus to the trigger.</p></div></details></article><article class="cmp" id="Modal"><header><h3>Modal</h3><span></span>
+<a href="components/Modal/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Modal/preview.html" style="height:640px" loading="lazy" title="Modal preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A focused task that blocks the page until it's done or dismissed. With <code>placement="right"</code> it becomes a drawer.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>open</code>, <code>onClose</code>, <code>title</code>, optional <code>description</code>.</li>
+<li><code>children</code>: the body; it scrolls when tall.</li>
+<li><code>footer</code>: Buttons, right-aligned, primary last. Usually Cancel (ghost) + one primary or strong action.</li>
+<li><code>size</code>: <code>sm</code>, <code>md</code> (default), <code>lg</code>. <code>placement</code>: <code>center</code> or <code>right</code>.</li>
+</ul>
+<p>Built on the native <code>&lt;dialog&gt;</code>: focus is trapped, Escape closes, and it renders in the browser's top layer, so no z-index fights. Clicking the scrim closes it; for forms with unsaved input, confirm before closing.</p></div></details></article><article class="cmp" id="Popover"><header><h3>Popover</h3><span></span>
+<a href="components/Popover/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Popover/preview.html" style="height:330px" loading="lazy" title="Popover preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A small panel of settings or details anchored to a button, that doesn't block the page: Appearance, Material box, Mouse &amp; gestures, a "With you" call panel.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>trigger</code>: a Button or IconButton. <code>label</code>: the panel's name for screen readers. Optional <code>title</code>.</li>
+<li><code>children</code>: the controls. <code>align</code> (<code>start</code> / <code>end</code>), <code>width</code> (<code>sm</code>, <code>md</code>, <code>lg</code>).</li>
+<li><code>open</code> / <code>onOpenChange</code> to control it; omit them to let it manage itself.</li>
+</ul>
+<h2>Use when</h2>
+<ul>
+<li>Changes apply as people make them. For a list of actions use Menu. For a task that must be finished or cancelled, use Modal or Drawer.</li>
+</ul>
+<p>Focus moves into the panel when it opens; Escape or a click outside closes it.</p></div></details></article></div><h2>Patterns</h2><div class="cmps"><article class="cmp" id="FlowConnector"><header><h3>FlowConnector</h3><span></span>
+<a href="components/FlowConnector/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/FlowConnector/preview.html" style="height:150px" loading="lazy" title="FlowConnector preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>The arrow between two steps on a flow or funnel canvas, with an optional label for what the person does to move on.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>label</code>: a short verb phrase ("Claims a card", "Books").</li>
+<li><code>variant</code>: <code>solid</code>, or <code>dashed</code> for paths to steps that aren't built or are optional.</li>
+</ul>
+<p>Place it between two cards in a flex row; it stretches to fill the gap. The label sits above the line and never wraps, so every arrow in a row stays at the same height. Keep labels to two or three words. It is drawn in <code>line-strong</code>, so it holds 3:1 on the canvas.</p></div></details></article><article class="cmp" id="FunnelStepCard"><header><h3>FunnelStepCard</h3><span></span>
+<a href="components/FunnelStepCard/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/FunnelStepCard/preview.html" style="height:330px" loading="lazy" title="FunnelStepCard preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>One step on the Funnel Studio canvas: what kind of step it is, its order, status, a preview and what happens there.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>type</code>: <code>traffic</code>, <code>page</code>, <code>form</code>, <code>email</code> or <code>marketplace</code>. Each has a fixed label, category color and icon (<code>stepTypes</code>), shown as the top stripe, a dot and the empty-preview icon.</li>
+<li><code>status</code> shows as a badge in the preview's top-right corner, so the header always has room for the full step type.</li>
+<li><code>step</code> (shown as "03"), <code>title</code>, <code>status</code>.</li>
+<li><code>description</code>: what the step does, with an arrow to the next step ("Name, email, ZIP → reserved email").</li>
+<li><code>preview</code>: a screenshot. It sits on <code>surface-embed</code> so light pages and emails look true in both themes. Without one, a quiet dashed placeholder shows the step type's icon instead of an empty white box.</li>
+<li><code>hint</code>: a short footer note. <code>selected</code>: the step shown in the inspector. <code>onOpen</code>: opens the draft.</li>
+<li><code>fluid</code>: the card grows to share the row (min 192px). Without it the card is a fixed 224px, for canvases that scroll.</li>
+</ul>
+<p>Connector lines between steps belong to the canvas, drawn in <code>line-strong</code> with labels in <code>caption</code>.</p></div></details></article><article class="cmp" id="ModuleCard"><header><h3>ModuleCard</h3><span></span>
+<a href="components/ModuleCard/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/ModuleCard/preview.html" style="height:400px" loading="lazy" title="ModuleCard preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A module in the Workspace hub: status, version, live preview, the open action and build progress.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>title</code>, <code>status</code> (StatusBadge vocabulary), <code>version</code>.</li>
+<li><code>preview</code>: a screenshot URL. It sits on <code>surface-embed</code>, so light screenshots look the same in both themes.</li>
+<li><code>action</code>: the open Button (secondary, full width, <code>ArrowUpRight</code>). Omit for modules that haven't started.</li>
+<li><code>pin</code>: a pin IconButton. <code>progress</code>: <code>{ value, label }</code> with the stage word ("Building", "Planned").</li>
+<li><code>selected</code>: the module in focus in Coverflow.</li>
+</ul>
+<p>Coverflow's tilt and depth belong to the Coverflow layout, not to the card. The card itself stays flat.</p></div></details></article><article class="cmp" id="PageHeader"><header><h3>PageHeader</h3><span></span>
+<a href="components/PageHeader/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/PageHeader/preview.html" style="height:230px" loading="lazy" title="PageHeader preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>The top of every app page: where you are, what this is, and what you can do here.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>breadcrumbs</code>: a Breadcrumbs element (for pages below a module).</li>
+<li><code>eyebrow</code>: the area name, typed in sentence case ("Marketing &amp; growth"); the style uppercases it.</li>
+<li><code>title</code>, optional <code>meta</code> (version or count), <code>description</code> (one sentence).</li>
+<li><code>actions</code>: page-level Buttons, primary last.</li>
+<li><code>size</code>: <code>page</code> (display-sm) for app pages, <code>studio</code> (display-md) for studio landing pages.</li>
+</ul></div></details></article><article class="cmp" id="ProfileCard"><header><h3>ProfileCard</h3><span></span>
+<a href="components/ProfileCard/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/ProfileCard/preview.html" style="height:470px" loading="lazy" title="ProfileCard preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A professional in search results: who they are, what they do, where, when, and from how much.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>name</code>, <code>specialty</code> (service area), <code>summary</code> (one sentence, their voice), <code>photo</code>.</li>
+<li><code>tags</code>: two or three services. <code>location</code>: "Neighborhood · N miles away". <code>availability</code>: "Available this week".</li>
+<li><code>rate</code>: starting hourly rate in dollars. <code>action</code>: the View profile Button. <code>save</code>: a star IconButton.</li>
+<li><code>sample</code>: marks a fictional sample profile. Every sample must be marked.</li>
+</ul>
+<p>Photos are real portraits of the professional at work. No stock imagery. Without a photo, the initials stand in.</p></div></details></article><article class="cmp" id="StageStats"><header><h3>StageStats</h3><span></span>
+<a href="components/StageStats/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/StageStats/preview.html" style="height:170px" loading="lazy" title="StageStats preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Counts per stage of a pipeline, in order: Invited → Signed in → Draft → Submitted → Changes requested → Approved → In gallery.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>title</code> and <code>stages</code>: <code>{ label, value, attention? }[]</code> in pipeline order.</li>
+<li><code>value: null</code> shows a dash: the stage exists but nothing is counted yet. Never show 0 for "not measured".</li>
+<li><code>attention</code>: highlights stages waiting on someone (Submitted waits on Peter or Patti).</li>
+</ul>
+<p>Use real counts only. In proposals and drafts, show dashes, not invented numbers.</p></div></details></article><article class="cmp" id="WorkspaceTile"><header><h3>WorkspaceTile</h3><span></span>
+<a href="components/WorkspaceTile/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/WorkspaceTile/preview.html" style="height:330px" loading="lazy" title="WorkspaceTile preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A company workspace in the Playset gallery: cover, relationship, name, state and the open link.</p>
+<h2>The consumer provides</h2>
+<ul>
+<li><code>name</code>, <code>kind</code> (Client, Prospect, To organize, Archived), <code>status</code> (one line), <code>href</code>.</li>
+<li><code>color</code>: a <code>cat-*</code> cover color. Derive it from the workspace id so it never changes between visits. <code>image</code> replaces it with a picture.</li>
+<li><code>pin</code>: a star IconButton with <code>pressed</code>. <code>secondaryAction</code>: usually edit.</li>
+</ul>
+<h2>Rules</h2>
+<ul>
+<li>The cover is a flat category color. No gradients.</li>
+<li>Initials sit on a <code>surface</code> plate in <code>ink</code>, never directly on the color. That keeps them readable in both themes (dark-theme category colors are light).</li>
+</ul></div></details></article></div><h2>Colour tokens</h2><div class="sws"><div class="sw"><i style="background:#eef6f1"></i><b>forest-50</b><code>#eef6f1</code></div><div class="sw"><i style="background:#d9ecdf"></i><b>forest-100</b><code>#d9ecdf</code></div><div class="sw"><i style="background:#b3d8c2"></i><b>forest-200</b><code>#b3d8c2</code></div><div class="sw"><i style="background:#82bd9c"></i><b>forest-300</b><code>#82bd9c</code></div><div class="sw"><i style="background:#4f9a74"></i><b>forest-400</b><code>#4f9a74</code></div><div class="sw"><i style="background:#2a7a53"></i><b>forest-500</b><code>#2a7a53</code></div><div class="sw"><i style="background:#17633f"></i><b>forest-600</b><code>#17633f</code></div><div class="sw"><i style="background:#114e32"></i><b>forest-700</b><code>#114e32</code></div><div class="sw"><i style="background:#0f3d29"></i><b>forest-800</b><code>#0f3d29</code></div><div class="sw"><i style="background:#0b2b1d"></i><b>forest-900</b><code>#0b2b1d</code></div><div class="sw"><i style="background:#071a11"></i><b>forest-950</b><code>#071a11</code></div><div class="sw"><i style="background:#d4fbe9"></i><b>mint-100</b><code>#d4fbe9</code></div><div class="sw"><i style="background:#a6f6d2"></i><b>mint-200</b><code>#a6f6d2</code></div><div class="sw"><i style="background:#6ff2b9"></i><b>mint-300</b><code>#6ff2b9</code></div><div class="sw"><i style="background:#3deba0"></i><b>mint-400</b><code>#3deba0</code></div><div class="sw"><i style="background:#1fdc8c"></i><b>mint-500</b><code>#1fdc8c</code></div><div class="sw"><i style="background:#12b873"></i><b>mint-600</b><code>#12b873</code></div><div class="sw"><i style="background:#0b8a55"></i><b>mint-700</b><code>#0b8a55</code></div><div class="sw"><i style="background:#086c42"></i><b>mint-800</b><code>#086c42</code></div><div class="sw"><i style="background:#ffffff"></i><b>sage-0</b><code>#ffffff</code></div><div class="sw"><i style="background:#f5f8f4"></i><b>sage-50</b><code>#f5f8f4</code></div><div class="sw"><i style="background:#ebf0e9"></i><b>sage-100</b><code>#ebf0e9</code></div><div class="sw"><i style="background:#dae3d8"></i><b>sage-200</b><code>#dae3d8</code></div><div class="sw"><i style="background:#bfccbd"></i><b>sage-300</b><code>#bfccbd</code></div><div class="sw"><i style="background:#8a9b8b"></i><b>sage-400</b><code>#8a9b8b</code></div><div class="sw"><i style="background:#6c7e6e"></i><b>sage-500</b><code>#6c7e6e</code></div><div class="sw"><i style="background:#516253"></i><b>sage-600</b><code>#516253</code></div><div class="sw"><i style="background:#3b4a3e"></i><b>sage-700</b><code>#3b4a3e</code></div><div class="sw"><i style="background:#233028"></i><b>sage-800</b><code>#233028</code></div><div class="sw"><i style="background:#0e1a13"></i><b>sage-900</b><code>#0e1a13</code></div><div class="sw"><i style="background:#fcefc4"></i><b>amber-100</b><code>#fcefc4</code></div><div class="sw"><i style="background:#f5cf63"></i><b>amber-300</b><code>#f5cf63</code></div><div class="sw"><i style="background:#8a5a00"></i><b>amber-700</b><code>#8a5a00</code></div><div class="sw"><i style="background:#3a2c08"></i><b>amber-900</b><code>#3a2c08</code></div><div class="sw"><i style="background:#fde8e5"></i><b>red-100</b><code>#fde8e5</code></div><div class="sw"><i style="background:#ff9a8c"></i><b>red-300</b><code>#ff9a8c</code></div><div class="sw"><i style="background:#b3261e"></i><b>red-700</b><code>#b3261e</code></div><div class="sw"><i style="background:#3d1410"></i><b>red-900</b><code>#3d1410</code></div><div class="sw"><i style="background:#e4eefb"></i><b>blue-100</b><code>#e4eefb</code></div><div class="sw"><i style="background:#93bdf5"></i><b>blue-300</b><code>#93bdf5</code></div><div class="sw"><i style="background:#1f5aa6"></i><b>blue-700</b><code>#1f5aa6</code></div><div class="sw"><i style="background:#10233b"></i><b>blue-900</b><code>#10233b</code></div><div class="sw"><i style="background:#d6f25c"></i><b>lime-300</b><code>#d6f25c</code></div><div class="sw"><i style="background:#0f3d290d"></i><b>surface-hover</b><code>#0f3d290d</code></div><div class="sw"><i style="background:#071a1199"></i><b>scrim</b><code>#071a1199</code></div><div class="sw"><i style="background:#eaf4ee"></i><b>ink-on-brand</b><code>#eaf4ee</code></div><div class="sw"><i style="background:#04180e"></i><b>on-action</b><code>#04180e</code></div><div class="sw"><i style="background:#ffffff"></i><b>on-action-strong</b><code>#ffffff</code></div><div class="sw"><i style="background:#ffffff"></i><b>on-action-danger</b><code>#ffffff</code></div><div class="sw"><i style="background:#14794a"></i><b>success</b><code>#14794a</code></div><div class="sw"><i style="background:#e2f5ea"></i><b>success-soft</b><code>#e2f5ea</code></div><div class="sw"><i style="background:#012b18"></i><b>logo-mark</b><code>#012b18</code></div><div class="sw"><i style="background:#012b18"></i><b>logo-ink</b><code>#012b18</code></div><div class="sw"><i style="background:#799184"></i><b>logo-rule</b><code>#799184</code></div><div class="sw"><i style="background:#1e8a57"></i><b>cat-1</b><code>#1e8a57</code></div><div class="sw"><i style="background:#0e7f86"></i><b>cat-2</b><code>#0e7f86</code></div><div class="sw"><i style="background:#2f69c9"></i><b>cat-3</b><code>#2f69c9</code></div><div class="sw"><i style="background:#7651c4"></i><b>cat-4</b><code>#7651c4</code></div><div class="sw"><i style="background:#bb3f78"></i><b>cat-5</b><code>#bb3f78</code></div><div class="sw"><i style="background:#a8700f"></i><b>cat-6</b><code>#a8700f</code></div><div class="sw"><i style="background:#5f7d0e"></i><b>cat-7</b><code>#5f7d0e</code></div><div class="sw"><i style="background:#5b6f62"></i><b>cat-8</b><code>#5b6f62</code></div></div><h2>Brand assets</h2><div class="ass"><figure class="as"><img src="assets/3ecbc4c56f772dce060ad64ac7429619.svg" alt="" loading="lazy"><figcaption>3ecbc4c5…</figcaption></figure><figure class="as"><img src="assets/477801c560a7979ebbbf7323eaed4e66.svg" alt="" loading="lazy"><figcaption>477801c5…</figcaption></figure><figure class="as"><img src="assets/73c86ea1d4272524760ca3b7d9a4d910.svg" alt="" loading="lazy"><figcaption>73c86ea1…</figcaption></figure><figure class="as"><img src="assets/c829eac023560442e118ab003947d7fa.svg" alt="" loading="lazy"><figcaption>c829eac0…</figcaption></figure></div><h2>Guidelines</h2><div class="md"><p>Between Gigs connects Hollywood professionals who are between productions with clients who need their craft in everyday life. The product is a dense working dashboard (Workspace hub, Funnel Studio, Campaign Studio, Writing Studio, People &amp; profiles) plus a marketing site and onboarding flows. This system is the single set of foundations all of them build on, in a light and a dark theme.</p>
+<p>Components are built only from these tokens. Each component's page lists what the consumer provides, when to use it and what to avoid. If a screen needs something no component covers, add the token or component here first, then use it.</p>
+<h2>Principles</h2>
+<ul>
+<li><strong>Calm workspace, loud moments.</strong> The app is quiet: flat surfaces, hairlines, one mint action per view. Save glow, gradients, the card fan and lime for marketing and celebration (founding cards, approvals).</li>
+<li><strong>Depth from surfaces, not decoration.</strong> Layers read through <code>bg</code> → <code>surface</code> → <code>surface-raised</code>, plus <code>line</code> and the shadow scale. Textures are an opt-in personal finish (see Materials), never the thing that separates one panel from another.</li>
+<li><strong>One of each.</strong> One button style per role, one tab style, one panel style. If a screen needs a new variant, it needs a new token first.</li>
+<li><strong>Name things the way people say them.</strong> "Claim a card", "Request changes", "Needs review". Not "Submit", "Reject", "Pending state".</li>
+</ul>
+<h2>Content fundamentals</h2>
+<ul>
+<li>Sentence case everywhere: buttons, tabs, titles, menu items. Uppercase only through the <code>eyebrow</code> style, set by CSS.</li>
+<li>Write to the reader as "you"; the company is "we" ("We'll be in touch if we have questions").</li>
+<li>Buttons say exactly what happens: "Save changes", "Approve profile", "Open workspace". The toast confirms in past tense: "Changes saved", "Profile approved".</li>
+<li>Status words are fixed. Use only: Draft, Not started, Working, Preview, Needs review, Changes requested, Approved, Live, Archived. Each has one status color (see Status).</li>
+<li>Use the middle dot <code>·</code> to join metadata: "Silver Lake · 3 miles away · Available this week".</li>
+<li>Mark sample data plainly and once per view: "Names shown are illustrative samples for this draft." Set it in <code>caption</code>, <code>ink-subtle</code>.</li>
+<li>No emoji in product UI. The illustrated category icons in the sidebar are artwork, not emoji.</li>
+</ul>
+<h2>Color</h2>
+<p>Color has two layers. <strong>Primitives</strong> (<code>forest-*</code>, <code>mint-*</code>, <code>sage-*</code>, <code>amber-*</code>, <code>red-*</code>, <code>blue-*</code>, <code>lime-300</code>) are the raw palette and never appear in component code. <strong>Semantic tokens</strong> (<code>bg</code>, <code>surface</code>, <code>ink</code>, <code>action</code>, …) alias primitives per theme and are the only colors components use. Switching theme swaps semantic values; nothing else changes.</p>
+<h3>Brand colors</h3>
+<ul>
+<li><code>forest-800</code> is the brand forest: <code>surface-brand</code> and <code>action-strong</code> in light theme.</li>
+<li>The logo keeps its own exact inks (<code>logo-mark</code>, <code>logo-ink</code>, <code>logo-rule</code>), taken from the approved files. They are for the logo only. See the Logo section.</li>
+<li><code>mint-500</code> is the brand mint: the <code>action</code> fill in both themes. Mint is never text on a light ground. For brand-colored text use <code>ink-brand</code> (<code>forest-600</code> light, <code>mint-400</code> dark).</li>
+<li><code>sage-*</code> are the neutrals. They lean green on purpose, so a grey never looks stock.</li>
+<li><code>lime-300</code> belongs to the founding cards and celebration moments. It never carries UI state.</li>
+</ul>
+<h3>Grounds and how the themes split</h3>
+<ul>
+<li>Page: <code>bg</code>. Containers: <code>surface</code>. Floating things (menus, popovers, modals, toasts): <code>surface-raised</code> with <code>shadow-md</code> or <code>shadow-lg</code>. Recessed areas (filter bars, inputs, code): <code>surface-sunken</code>.</li>
+<li>Hover is the translucent <code>surface-hover</code> laid over whatever surface is underneath. Selection is <code>surface-selected</code>.</li>
+<li><code>surface-brand</code> is forest in <strong>both</strong> themes. Use it for marketing heroes, the founding-members wall and the sign-in panel. In light theme it is the only dark area on the page. Never use it for app chrome; the light theme's sidebar and top bar stay <code>surface</code>.</li>
+<li>Anything on <code>surface-brand</code> is a <strong>dark-theme island</strong>: set <code>data-theme="dark"</code> on the band's own element. Every token inside then takes its dark value, so text, buttons and badges read correctly on the forest whichever theme the page is in. Text on the band is checked in the dark theme: <code>ink</code> 10.9:1, <code>ink-muted</code> 6.4:1, <code>ink-subtle</code> 4.6:1, <code>ink-brand</code> 7.9:1.</li>
+<li><code>surface-embed</code> is white in <strong>both</strong> themes. Anything that shows real content as it will appear elsewhere (sketch pad, device studio, page and email previews, version compare) sits on it, framed by <code>line</code>. Text on it is <code>ink-on-embed</code>.</li>
+</ul>
+<h3>Text</h3>
+<ul>
+<li><code>ink</code> for primary text, <code>ink-muted</code> for secondary, <code>ink-subtle</code> for placeholders and captions. All three hold 4.5:1 on <code>bg</code>, <code>surface</code>, <code>surface-raised</code> and <code>surface-sunken</code> in both themes.</li>
+<li><code>ink-disabled</code> is deliberately below 4.5:1. Use it only on disabled controls.</li>
+<li>Links use <code>link</code> and stay underlined at rest.</li>
+<li>Headline accents ("Twenty cards. <strong>Twenty names.</strong>") put the second line in <code>ink-brand</code>. One accent per headline.</li>
+<li>The marker highlight (the poster's "deliver" and "today") is <code>highlight</code> behind <code>ink</code> text, with <code>radius-xs</code> corners.</li>
+</ul>
+<h3>Actions</h3>
+<ul>
+<li><code>action</code> + <code>on-action</code>: the primary action. One per view.</li>
+<li><code>action-strong</code> + <code>on-action-strong</code>: the decisive action inside a flow or review ("Create my profile", "Approve profile"). Forest in light theme, near-white in dark theme.</li>
+<li>Secondary actions are outline buttons: <code>surface</code> fill, <code>line-strong</code> border, <code>ink</code> label.</li>
+<li>Destructive actions use <code>action-danger</code> + <code>on-action-danger</code>, and always ask for confirmation inside the page.</li>
+<li>Selected and on states of small controls (checked checkbox, chosen radio, switch on, slider fill, progress) use <code>ink-brand</code>, with <code>bg</code> for the mark on top. Mint is too light against white to show state on its own, so it stays reserved for labelled buttons.</li>
+</ul>
+<h3>Status</h3>
+<p>Each status has a text color and a soft ground. Badges use the soft ground with the text color. Banners use the soft ground with <code>ink</code> body text and a status-colored icon.</p>
+<table>
+<thead>
+<tr>
+<th>Status words</th>
+<th>Text</th>
+<th>Ground</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Approved, Published, Live</td>
+<td><code>success</code></td>
+<td><code>success-soft</code></td>
+</tr>
+<tr>
+<td>Draft, Needs review, Unsaved changes, Changes requested</td>
+<td><code>warning</code></td>
+<td><code>warning-soft</code></td>
+</tr>
+<tr>
+<td>Error, Failed, Version unavailable</td>
+<td><code>danger</code></td>
+<td><code>danger-soft</code></td>
+</tr>
+<tr>
+<td>Preview, Coming soon, Working</td>
+<td><code>info</code></td>
+<td><code>info-soft</code></td>
+</tr>
+<tr>
+<td>Not started, Planned, Archived</td>
+<td><code>ink-muted</code></td>
+<td><code>neutral-soft</code></td>
+</tr>
+</tbody>
+</table>
+<p>Status is never color alone: always show the word, and an icon where space allows. <code>success</code> sits close to the brand green, so the word carries the meaning.</p>
+<p>The draft strip at the top of preview pages ("Draft · not public …") is a full-width <code>warning-soft</code> band with <code>ink</code> text.</p>
+<h3>Categories</h3>
+<p><code>cat-1</code> to <code>cat-8</code> tell apart things of the same kind: funnel step types (traffic source, web page, form, email, marketplace), workspace covers and chart series. They are marks: a 3px top stripe on a card, a dot, a chart bar or line, a cover tint. Each holds 3:1 on <code>surface</code> and <code>bg</code>. Never use them for text or status, and always pair a category color with its label. Assign them in order and keep the assignment stable across the product (Pages &amp; experiences is always <code>cat-1</code>).</p>
+<p>Workspace cover tiles use a category color as a flat fill, with the workspace initials in <code>ink</code> on a <code>surface</code> plate at <code>heading-lg</code>. Never put text directly on a category color: the dark-theme category colors are light, so no single text color reads on all of them. No random gradients.</p>
+<h2>Typography</h2>
+<p>Four families, each with one job:</p>
+<ul>
+<li><strong>Sora</strong> (<code>display</code>): titles and big numbers. Geometric, close to the brand's poster lettering. Weight 600, tight tracking. Never below 28px.</li>
+<li><strong>Figtree</strong> (<code>sans</code>): everything in the interface: headings inside panels, body, labels, buttons.</li>
+<li><strong>Newsreader</strong> (<code>serif</code>): long-form reading only, in Writing Studio, The Journal and article previews.</li>
+<li><strong>JetBrains Mono</strong> (<code>mono</code>): versions, zoom levels, IDs and dense numeric columns.</li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>App page titles use <code>display-sm</code> ("Workspace hub"); studio landing titles use <code>display-md</code>. Marketing heroes use <code>display-xl</code>, once per page.</li>
+<li>Above a title, an <code>eyebrow</code> in <code>ink-brand</code> names the area ("MARKETING &amp; GROWTH").</li>
+<li>Panel and card titles use <code>heading-lg</code>, <code>heading-md</code> or <code>heading-sm</code> by container size. Do not use display styles inside panels.</li>
+<li>Default app text is <code>body-md</code>. Metadata and card descriptions are <code>body-sm</code> in <code>ink-muted</code>.</li>
+<li>Buttons, tabs and form labels are <code>label-md</code>. Badges and chips are <code>label-sm</code>.</li>
+<li>Stat rows ("20 numbered founding cards", "$250") use <code>stat</code> for the number and <code>body-sm</code> in <code>ink-muted</code> for the label. Set <code>tabular-nums</code> on every number that can change.</li>
+<li>Keep running text under 65ch (<code>size-prose</code>). Balance headings with <code>text-wrap: balance</code>.</li>
+</ul>
+<h2>Spacing and layout</h2>
+<ul>
+<li>The base is 4px. In Tailwind v4 <code>--spacing</code> is 4px, so <code>p-4</code> is 16px.</li>
+<li>Card padding <code>space-4</code>; panel and modal padding <code>space-6</code>; gap between cards <code>space-4</code> to <code>space-6</code>; gap between page sections <code>space-8</code>.</li>
+<li>Inside a control: icon-to-label <code>space-2</code>, horizontal padding <code>space-4</code> (<code>space-3</code> on <code>size-control-sm</code>).</li>
+</ul>
+<h3>The app shell</h3>
+<ul>
+<li>Top bar: <code>size-topbar</code> tall, <code>surface</code>, bottom <code>line</code>. Holds the workspace switcher, version tag (<code>data-sm</code>), zoom, view toggles and account.</li>
+<li>Module tabs: one row under the top bar. Scrolls horizontally; never wraps.</li>
+<li>Sidebar: <code>size-sidebar</code> wide (<code>size-rail</code> collapsed), <code>surface</code>, right <code>line</code>. Category rows with a count pill at the end.</li>
+<li>Content: <code>bg</code>, max <code>size-content</code> wide, <code>space-10</code> top padding.</li>
+<li>Inspector and notebook panels: <code>size-inspector</code> wide on the right, <code>surface</code>, left <code>line</code>.</li>
+<li>Floating prompt bar: centered at the bottom, <code>surface-raised</code>, <code>radius-xl</code>, <code>shadow-md</code>, <code>z-rail</code>.</li>
+<li>Split view: panes share one <code>line</code> divider. The focused pane gets a 2px <code>focus</code> outline. No other pane decoration.</li>
+<li>Below <code>bp-md</code> the sidebar becomes a drawer; below <code>bp-lg</code> the inspector becomes a drawer.</li>
+</ul>
+<h2>Radius</h2>
+<ul>
+<li><code>radius-md</code> for every control (buttons, inputs, selects, segmented controls, menu items).</li>
+<li><code>radius-lg</code> for cards, menus, popovers and toasts. <code>radius-xl</code> for panels, modals, drawers and the prompt bar.</li>
+<li><code>radius-full</code> for badges, count pills, avatars, toggles and progress bars.</li>
+<li>Nested corners: the inner radius is the outer radius minus the padding between them. A <code>radius-lg</code> card holding an image with <code>space-2</code> padding gives the image <code>radius-sm</code>.</li>
+</ul>
+<h2>Elevation and borders</h2>
+<ul>
+<li>Cards on <code>bg</code>: <code>surface</code> + <code>line</code> + <code>shadow-sm</code>. Cards inside a panel drop the shadow and keep the <code>line</code>.</li>
+<li>Menus, popovers, flyouts and toasts: <code>surface-raised</code> + <code>line</code> + <code>shadow-md</code>.</li>
+<li>Modals and drawers: <code>surface-raised</code> + <code>shadow-lg</code> over <code>scrim</code>.</li>
+<li>Featured or selected card: <code>border-selected</code> in <code>focus</code> color, plus <code>shadow-glow</code>. One per view.</li>
+<li>In dark theme shadows are nearly invisible. The step from <code>surface</code> to <code>surface-raised</code> and a faint top highlight inside the shadow tokens do the work. Do not add glows to compensate.</li>
+<li>Hairlines are <code>line</code> at <code>border-hairline</code>. Control borders are <code>line-strong</code>. Empty slots ("Open" founding cards, drop zones) use a dashed <code>line-dashed</code> border and always carry a label.</li>
+</ul>
+<h2>Focus and states</h2>
+<ul>
+<li>Every interactive element shows a focus ring: 2px solid <code>focus</code> with a 2px offset. It holds 3:1 on every ground in both themes. Never remove it; never replace it with a glow.</li>
+<li>Hover: <code>surface-hover</code> wash, or <code>action-hover</code> / <code>action-strong-hover</code> for solid fills.</li>
+<li>Pressed: hover color plus <code>duration-instant</code>.</li>
+<li>Disabled: <code>ink-disabled</code> label, <code>line</code> border, no hover. For images and cards use <code>opacity-disabled</code>.</li>
+<li>Invalid field: <code>danger</code> border and a <code>danger</code> helper line under the field that says how to fix it.</li>
+<li>Loading: keep the label and add a spinner; never swap the label for "Loading…".</li>
+</ul>
+<h2>Iconography</h2>
+<ul>
+<li>Use one outline icon set for all interface icons: Lucide, 1.75px stroke, at <code>size-icon-sm</code> (in controls), <code>size-icon-md</code> (nav, toolbars) or <code>size-icon-lg</code> (empty states). Icons take the text color of their label.</li>
+<li>The illustrated category icons in the sidebar (wood, paper, film props) are artwork. They appear only as category markers at <code>size-icon-md</code> or larger, and never inside buttons.</li>
+<li>This system has not imported the icon files yet. Lucide is the proposed set because it matches the line icons already in the dashboard; confirm before building components.</li>
+</ul>
+<h2>Motion</h2>
+<ul>
+<li>Hover and toggles: <code>duration-fast</code> with <code>ease-standard</code>.</li>
+<li>Menus, popovers and tab indicators: <code>duration-base</code>; enter with <code>ease-enter</code>, leave with <code>ease-exit</code>.</li>
+<li>Modals, drawers and panel resize: <code>duration-slow</code>.</li>
+<li>Coverflow, the founding-card fan and marketing reveals: <code>duration-deliberate</code>. <code>ease-spring</code> is for small celebratory moments only.</li>
+<li>Under <code>prefers-reduced-motion</code>, replace movement with an instant change or a short fade.</li>
+</ul>
+<h2>Layers</h2>
+<p>Stack order is fixed: <code>z-base</code> &lt; <code>z-raised</code> &lt; <code>z-sticky</code> (top bar, tabs) &lt; <code>z-rail</code> (sidebar, prompt bar) &lt; <code>z-dropdown</code> &lt; <code>z-overlay</code> (scrim) &lt; <code>z-modal</code> &lt; <code>z-popover</code> &lt; <code>z-toast</code> &lt; <code>z-tooltip</code> &lt; <code>z-pointer</code> (the custom hub pointer). Never write a raw z-index.</p>
+<h2>Accessibility</h2>
+<ul>
+<li>Every text token is checked at 4.5:1 against the grounds its usage note names, in both themes. Control borders, focus rings and category marks are checked at 3:1.</li>
+<li><code>ink-disabled</code> and <code>sage-400</code> fail on purpose and are reserved for disabled controls.</li>
+<li>Status and category always carry a word, not just a color.</li>
+<li>Text never sits directly on a material texture: the texture stays under <code>opacity-material-max</code>, and text keeps a solid surface behind it (see Materials).</li>
+<li>Hit targets are at least <code>size-control-sm</code> (32px), and 40px on touch.</li>
+</ul></div>
+</div></body></html>

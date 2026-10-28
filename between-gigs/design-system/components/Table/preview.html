@@ -1,0 +1,34 @@
+<!-- @dsCard group="Data" height=330 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Table</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Table, Avatar, StatusBadge } = BG;
+  const rows = [
+    { id: "1", name: "Maya Chen", role: "Set carpenter · Art department", status: "needs-review", rate: 45 },
+    { id: "2", name: "Luis Ortega", role: "Set carpenter · Custom furniture", status: "approved", rate: 55 },
+    { id: "3", name: "Renée Duval", role: "Production coordinator · Events", status: "changes-requested", rate: 60 },
+    { id: "4", name: "Devon Price", role: "Location scout", status: "draft", rate: 65 },
+  ];
+  const [sort, setSort] = useState({ key: "rate", direction: "asc" });
+  const sorted = [...rows].sort((a, b) => (sort.direction === "asc" ? 1 : -1) * (a[sort.key] > b[sort.key] ? 1 : -1));
+  return html`<div className="p-6"><${Table} caption="Profiles in review" rowKey=${(r) => r.id} rows=${sorted} sort=${sort} onSortChange=${setSort}
+    onRowClick=${() => {}} selectedKey="1" columns=${[
+      { key: "name", header: "Professional", sortable: true, cell: (r) => html`<span className="flex items-center gap-3"><${Avatar} name=${r.name} size="sm" /><span className="grid"><span className="text-label-md">${r.name}</span><span className="text-body-sm text-ink-muted">${r.role}</span></span></span>` },
+      { key: "status", header: "Status", cell: (r) => html`<${StatusBadge} status=${r.status} size="sm" />` },
+      { key: "rate", header: "From", numeric: true, sortable: true, cell: (r) => "$" + r.rate + "/hr" },
+    ]} /></div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

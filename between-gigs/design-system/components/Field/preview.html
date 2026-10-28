@@ -1,0 +1,30 @@
+<!-- @dsCard group="Forms" height=300 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Field</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Field, Input, Select } = BG;
+  return html`<div className="grid max-w-md gap-5 p-6">
+    <${Field} label="Name"><${Input} placeholder="First and last name" /><//>
+    <${Field} label="ZIP code" error="Enter a 5-digit ZIP code, like 90026."><${Input} defaultValue="9002" /><//>
+    <${Field} label="What do you need help with?" hint="Pick the closest match. You can add details next." optional>
+      <${Select} placeholder="Choose a service" options=${[
+        { value: "builds", label: "Furniture & creative builds" }, { value: "makeup", label: "Makeup services" },
+        { value: "hair", label: "Hair styling" }, { value: "wardrobe", label: "Wardrobe & personal styling" },
+      ]} />
+    <//>
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

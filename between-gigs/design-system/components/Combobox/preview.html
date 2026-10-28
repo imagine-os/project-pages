@@ -1,0 +1,27 @@
+<!-- @dsCard group="Forms" height=380 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Combobox</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Combobox, Field, Avatar } = BG;
+  const companies = ["Between Gigs", "Sergio's Campus", "Hoy Wellness Club", "Santa Maria Tennis Club", "Tennis Shop", "Campus Café", "Security Booth"];
+  const [v, setV] = useState("Between Gigs");
+  return html`<div className="max-w-sm p-6"><${Field} label="Company">
+    <${Combobox} value=${v} onChange=${setV} placeholder="Find a company…" options=${companies.map((c, i) => ({
+      value: c, label: c, description: i === 0 ? "Hub linked · v3.64" : "Profile only", icon: html`<${Avatar} name=${c} shape="square" size="sm" />`,
+    }))} />
+  <//></div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

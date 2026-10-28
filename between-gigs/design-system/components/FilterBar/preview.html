@@ -1,0 +1,28 @@
+<!-- @dsCard group="Layout" height=140 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>FilterBar</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { FilterBar, FilterLabel, Input, Select, SegmentedControl, Button } = BG;
+  const [view, setView] = useState("coverflow");
+  return html`<div className="p-6"><${FilterBar} end=${html`<${Button} size="sm" variant="ghost">Reset filters<//>`}>
+    <${Input} size="sm" aria-label="Find a page" placeholder="Find a page, tool or path…" start=${html`<${I.Search}/>`} className="min-w-48 flex-1" />
+    <${FilterLabel} htmlFor="st">Status<//><${Select} id="st" size="sm" defaultValue="all" options=${[{ value: "all", label: "All" }, { value: "w", label: "Working" }]} className="w-32" />
+    <${FilterLabel} htmlFor="so">Sort<//><${Select} id="so" size="sm" defaultValue="cat" options=${[{ value: "cat", label: "Category" }, { value: "new", label: "Newest" }]} className="w-36" />
+    <${SegmentedControl} size="sm" label="View" value=${view} onChange=${setView} options=${[
+      { value: "gallery", label: "Gallery" }, { value: "list", label: "List" }, { value: "coverflow", label: "Coverflow" }, { value: "tiles", label: "Tiles" }]} />
+  <//></div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

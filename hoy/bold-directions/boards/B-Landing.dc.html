@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>B · Noche roja — landing</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F1E7D2}a:hover{color:#F7F3B2}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; position: relative; overflow: hidden; background: #0E1622; color: #F1E7D2; font-family: 'DM Sans', system-ui, sans-serif;">
+  <img src="assets/0a579010fe07a1160c811a20040d469c.webp" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; opacity: 0.9;">
+  <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14,22,34,0.97) 0%, rgba(14,22,34,0.86) 38%, rgba(14,22,34,0.25) 72%, rgba(14,22,34,0.55) 100%), linear-gradient(0deg, rgba(14,22,34,0.95) 0%, rgba(14,22,34,0) 40%);" aria-hidden="true"></div>
+  <div style="position: absolute; left: -200px; bottom: -260px; width: 820px; height: 820px; border-radius: 50%; background: radial-gradient(circle, {{glow}} 0%, rgba(196,112,79,0) 62%); opacity: 0.55;" aria-hidden="true"></div>
+
+  <header style="position: relative; display: flex; align-items: center; justify-content: space-between; padding: 36px 80px;">
+    <img src="assets/200f0302bf024a86a7a5d1db92d5fd52.png" alt="HOY" style="height: 44px; width: auto;">
+    <div style="display: flex; align-items: center; gap: 28px; font-size: 14px;">
+      <span style="letter-spacing: 0.2em; text-transform: uppercase; color: rgba(241,231,210,0.72);">Medellín</span>
+      <a href="#entrar" style="text-underline-offset: 6px; text-decoration-color: rgba(241,231,210,0.4);">Entrar</a>
+    </div>
+  </header>
+
+  <main style="position: relative; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 28px; max-width: 760px;">
+    <p style="margin: 0; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: #F7F3B2;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #F7F3B2; box-shadow: 0 0 0 6px rgba(247,243,178,0.14), 0 0 24px #F7F3B2;" aria-hidden="true"></span>Encendemos la luz el 30 de octubre</p>
+    <h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 132px; line-height: 0.9; letter-spacing: -0.025em;">Muévete.<br>Respira.<br><em style="font-style: italic; color: #F7F3B2;">Vive el presente.</em></h1>
+
+    <div style="display: flex; gap: 0; margin-top: 12px; border-top: 1px solid rgba(241,231,210,0.18); border-bottom: 1px solid rgba(241,231,210,0.18);" role="timer" aria-label="Faltan 7 días, 14 horas y 32 minutos">
+      <div style="flex: 1; padding: 18px 0; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 56px; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums;">07</span><span style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(241,231,210,0.72);">días</span></div>
+      <div style="flex: 1; padding: 18px 0 18px 28px; border-left: 1px solid rgba(241,231,210,0.18); display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 56px; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums;">14</span><span style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(241,231,210,0.72);">horas</span></div>
+      <div style="flex: 1; padding: 18px 0 18px 28px; border-left: 1px solid rgba(241,231,210,0.18); display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 56px; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums;">32</span><span style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(241,231,210,0.72);">minutos</span></div>
+    </div>
+
+    <form style="display: flex; gap: 10px; align-items: stretch; margin-top: 8px;" aria-label="Avísame cuando abramos">
+      <label for="b-contact" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">WhatsApp o email</label>
+      <input id="b-contact" type="text" placeholder="Tu WhatsApp o email" style="flex: 1; min-height: 58px; padding: 0 22px; border-radius: 999px; border: 1px solid rgba(241,231,210,0.32); background: rgba(14,22,34,0.6); color: #F1E7D2; font: inherit; font-size: 16px;">
+      <button type="button" style="min-height: 58px; padding: 0 30px; border: 0; border-radius: 999px; background: #F1E7D2; color: #0E1622; font: inherit; font-size: 16px; font-weight: 500; cursor: pointer;">Avísame</button>
+    </form>
+    <p style="margin: 0; font-size: 13px; color: rgba(241,231,210,0.72);">Te escribimos una vez: el día que abramos, con tu clase de prueba.</p>
+  </main>
+
+  <aside style="position: absolute; right: 80px; bottom: 120px; width: 300px; display: flex; flex-direction: column; gap: 14px;" aria-label="Detalle del estudio">
+    <img src="assets/b64e72d6f33becfe0f642698ad878628.webp" alt="La barra del estudio bajo luz roja" style="width: 300px; height: 380px; object-fit: cover; border-radius: 6px;">
+    <span style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(241,231,210,0.72);">Barre · Pilates · Yoga · Respiración</span>
+  </aside>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 56px; border-top: 1px solid rgba(241,231,210,0.14); display: flex; align-items: center; gap: 48px; padding: 0 80px; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 22px; color: rgba(241,231,210,0.6); white-space: nowrap; overflow: hidden;" aria-hidden="true">
+    <span>muévete</span><span>·</span><span>respira</span><span>·</span><span>conecta</span><span>·</span><span>haz una pausa</span><span>·</span><span>vive el presente</span><span>·</span><span>muévete</span><span>·</span><span>respira</span><span>·</span><span>conecta</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"glow":{"editor":"color","default":"#C4704F","options":["#C4704F","#E0A08F","#5F85B1"]},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { glow: this.props.glow ?? '#C4704F' };
+  }
+}
+</script>
+</body>
+</html>

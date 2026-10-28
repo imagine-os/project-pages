@@ -1,0 +1,30 @@
+<!-- @dsCard group="Patterns" height=330 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>FunnelStepCard</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { FunnelStepCard, FlowConnector } = BG;
+  const [sel, setSel] = useState("p3");
+  return html`<div className="overflow-x-auto p-6"><div className="flex items-stretch" style=${{ minWidth: "940px" }}>
+    <${FunnelStepCard} fluid type="traffic" step=${1} status="published" title="As seen in Deadline" description="Press and Peter's network bring visitors to the landing page." hint="External traffic" selected=${sel === "p1"} onOpen=${() => setSel("p1")} />
+    <${FlowConnector} label="Clicks" />
+    <${FunnelStepCard} fluid type="page" step=${2} status="draft" title="Founding 20 landing" description="Card wheel, the offer and how it works, ending in Claim." hint="Double-click to open draft" selected=${sel === "p3"} onOpen=${() => setSel("p3")} />
+    <${FlowConnector} label="Claims a card" />
+    <${FunnelStepCard} fluid type="email" step=${3} status="draft" title="Your card is reserved" description="Card number and a link to browse professionals." hint="Double-click to open draft" selected=${sel === "p5"} onOpen=${() => setSel("p5")} />
+    <${FlowConnector} label="Books" variant="dashed" />
+    <${FunnelStepCard} fluid type="marketplace" step=${4} status="not-started" title="Book a professional" description="The client books and the $250 is applied at checkout." hint="Not built yet" selected=${sel === "p6"} onOpen=${() => setSel("p6")} />
+  </div></div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

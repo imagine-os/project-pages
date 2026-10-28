@@ -1,0 +1,34 @@
+<!-- @dsCard group="Navigation" height=320 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>NavItem</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { NavItem, NavSection } = BG;
+  return html`<div className="flex gap-6 p-6">
+    <nav aria-label="Workspace" className="w-62 rounded-lg border border-line bg-surface p-3"><${NavSection} title="Workspace">
+      <${NavItem} href="#" label="All modules" icon=${html`<${I.Layers}/>`} count=${101} active />
+      <${NavItem} href="#" label="Projects & planning" icon=${html`<${I.FolderKanban}/>`} count=${5} />
+      <${NavItem} href="#" label="People & knowledge" icon=${html`<${I.Users}/>`} count=${12} />
+      <${NavItem} href="#" label="Design & experience" icon=${html`<${I.Palette}/>`} count=${23} />
+      <${NavItem} href="#" label="Developer tools" icon=${html`<${I.Code2}/>`} count=${12} />
+    <//></nav>
+    <nav aria-label="Workspace rail" className="grid content-start gap-0.5 rounded-lg border border-line bg-surface p-3">
+      <${NavItem} href="#" label="All modules" icon=${html`<${I.Layers}/>`} collapsed active />
+      <${NavItem} href="#" label="Projects & planning" icon=${html`<${I.FolderKanban}/>`} collapsed />
+      <${NavItem} href="#" label="People & knowledge" icon=${html`<${I.Users}/>`} collapsed />
+    </nav>
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

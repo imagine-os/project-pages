@@ -1,0 +1,27 @@
+<!-- @dsCard group="Actions" height=170 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Switch</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Switch } = BG;
+  const [a, setA] = useState(true);
+  const [b, setB] = useState(false);
+  return html`<div className="grid max-w-md gap-5 p-6">
+    <${Switch} checked=${a} onChange=${setA} label="Highlight edits" description="Marks text that changed since the approved copy." />
+    <${Switch} checked=${b} onChange=${setB} label="Use Hub pointer" description="Off uses your device's default." />
+    <div className="flex items-center gap-3 text-label-md text-ink"><${Switch} checked=${true} onChange=${() => {}} aria-label="Typewriter mode" /> Typewriter</div>
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

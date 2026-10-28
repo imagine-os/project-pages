@@ -1,0 +1,36 @@
+<!-- @dsCard height=300 -->
+<!doctype html>
+<html><head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap"><meta charset="utf-8">
+<style>
+  html, body { margin: 0; }
+  .cover { position: relative; width: 960px; height: 300px; overflow: hidden; background: var(--color-bg); }
+  .cover svg { position: absolute; inset: 0; }
+  .deep { fill: var(--brand-deepBlue); } .ground { fill: var(--color-bg); } .sun { fill: var(--brand-yellow); }
+  .sunw { fill: var(--tone-sun-wash); } .clayw { fill: var(--tone-clay-wash); } .mossw { fill: var(--tone-moss-wash); } .riverw { fill: var(--tone-river-wash); }
+  .t { position: absolute; left: 48px; bottom: 40px; max-width: 440px; }
+  .name { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 72px; line-height: .95; letter-spacing: -0.01em; color: var(--color-ink); margin: 0; }
+  .tag { max-width: 400px; margin: 16px 0 0; font: 400 14px/1.4 'DM Sans', system-ui, sans-serif; color: var(--color-text-muted); }
+</style></head>
+<body>
+<div class="cover">
+  <svg viewBox="0 0 960 300" width="960" height="300" aria-hidden="true">
+    <!-- blocks: brand-deepBlue slab 192×276 (r-lg 32), tone-sun-wash 216×120, tone-clay-wash 112×116, tone-moss-wash 88×116, tone-river-wash 56×80 (r-md 24)
+         arrangement: one tall slab bleeding off the top with washes stepping down to the right edge, a small river satellite at left
+         pattern: literal motif — the studio's arched windows (r-arch, door-shaped) cut from the slab in the ground colour, with the sun above; HOY's rooms are arches of plaster in morning light
+         scales: gaps sp-lg 16 / sp-md 12, insets sp-xl 24, arch width 40 (sp-2xl + sp-sm) with a full semicircle top, sun r 20 -->
+    <rect class="deep" x="560" y="-32" width="192" height="276" rx="32"/>
+    <circle class="sun" cx="656" cy="48" r="20"/>
+    <path class="ground" d="M584 220 V112 A20 20 0 0 1 624 112 V220 Z"/>
+    <path class="ground" d="M636 220 V112 A20 20 0 0 1 676 112 V220 Z"/>
+    <path class="ground" d="M688 220 V112 A20 20 0 0 1 728 112 V220 Z"/>
+    <rect class="sunw" x="768" y="24" width="216" height="120" rx="24"/>
+    <rect class="clayw" x="768" y="160" width="112" height="116" rx="24"/>
+    <rect class="mossw" x="896" y="160" width="88" height="116" rx="24"/>
+    <rect class="riverw" x="488" y="196" width="56" height="80" rx="24"/>
+  </svg>
+  <div class="t">
+    <h1 class="name">HOY Design System</h1>
+    <p class="tag">Pulso Materia — plaster, paper, stone and linen for a wellness studio.</p>
+  </div>
+</div>
+</body></html>

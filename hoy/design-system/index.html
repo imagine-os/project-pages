@@ -1,0 +1,193 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HOY Design System</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"><style>
+:root{--bg:#f3f4f6;--surface:#fff;--fg:#151a22;--muted:#5b6474;--line:#dde1e7;--chip:#eef1f5;--c:#c2552d;
+--f-display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;--f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1218;--surface:#171b23;--fg:#e7eaf0;--muted:#98a1b2;--line:#283040;--chip:#212836}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--f-body)}
+.wrap{max-width:1240px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left)) 72px}
+.crumb{font:12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.crumb a{color:var(--c);text-decoration:none}
+h1{font:700 clamp(30px,5vw,46px)/1.05 var(--f-display);letter-spacing:-.02em;margin:10px 0 8px;text-wrap:balance}
+h2{font:700 24px/1.15 var(--f-display);margin:44px 0 14px;padding-bottom:10px;border-bottom:3px solid var(--c)}
+h3{font:600 17px var(--f-display);margin:0}
+.lede{color:var(--muted);max-width:70ch;margin:0}.note{font-size:13px;color:var(--muted);margin-top:10px}
+a{color:var(--c)}code{font:12.5px var(--f-mono);background:var(--chip);padding:1px 5px;border-radius:4px}
+</style><style>.md{max-width:78ch}.md table{border-collapse:collapse;font-size:14px;margin:12px 0;display:block;overflow-x:auto}.md td,.md th{border:1px solid var(--line);padding:6px 10px;text-align:left}
+.cmps{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,560px),1fr));gap:18px}
+.cmp{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.cmp header{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;margin-bottom:10px}.cmp header span{color:var(--muted);font-size:13px;flex:1}.cmp header a{font-size:13px;font-weight:600;text-decoration:none}
+.cmp iframe{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff}
+.cmp details{margin-top:10px;font-size:14px}.cmp summary{cursor:pointer;font-weight:600}
+.sws{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}.sw{display:grid;grid-template-columns:36px 1fr;gap:2px 10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px}
+.sw i{grid-row:span 2;width:36px;height:36px;border-radius:6px;border:1px solid var(--line)}.sw b{font-size:13px}.sw code{background:none;padding:0;color:var(--muted)}
+.ass{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}.as{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+.as img{width:100%;aspect-ratio:4/3;object-fit:contain;background:repeating-conic-gradient(var(--chip) 0 25%,transparent 0 50%) 0 0/16px 16px;border-radius:4px}.as figcaption{font:11px var(--f-mono);color:var(--muted);margin-top:6px}</style></head><body><div class="wrap">
+<div class="crumb"><a href="https://playset-llc.github.io/agent-operations-theater/hub/">Project Link Hub</a> · HoyOS</div>
+<h1>HOY Design System</h1><p class="lede">Pulso Materia: plaster, paper, stone and linen for a wellness studio. Tokens, components and brand assets for HoyOS.</p>
+<p class="note">Exported from the claude.ai design system: every component preview below is live HTML.</p><h2>Overview</h2><div class="cmps"><article class="cmp" id="Cover"><header><h3>Cover</h3><span></span>
+<a href="components/Cover/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Cover/preview.html" style="height:300px" loading="lazy" title="Cover preview"></iframe>
+</article></div><h2>Actions</h2><div class="cmps"><article class="cmp" id="Button"><header><h3>Button</h3><span>Ink pill, tactile paper pill, outline, tonal, ghost, danger</span>
+<a href="components/Button/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Button/preview.html" style="height:260px" loading="lazy" title="Button preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Pill-shaped actions: one ink pill per view for the main action, tactile paper pills for everything else.</p>
+<p><strong>Use</strong>
+- <code>btn-primary</code> — the one main action in a view or card ("Reservar clase", "Confirmar check-in"). <code>color-accent-fill</code> (ink in light, deep blue in dark) with <code>color-text-on-primary</code> and <code>shadow-ink-lift</code>.
+- <code>btn-secondary</code> — every other action. Paper (<code>color-surface</code>) with a top highlight, a <code>rgba(ink,.12)</code> hairline and <code>shadow-pill</code>; on hover it lifts to <code>shadow-pill-hover</code>, on press it sinks to <code>shadow-pill-pressed</code> and moves 1 px down.
+- <code>btn-outline</code> — exports and filters that sit on the plaster ground; keeps a visible edge.
+- <code>btn-tonal</code> — repeated row actions (a 24% tint of <code>color-accent</code>, <code>color-primary</code> text, no shadow).
+- <code>btn-ghost</code> — cancel and tertiary links. <code>btn-danger</code> — destructive and irreversible actions only.</p>
+<p><strong>What the consumer provides:</strong> a short verb label in Spanish and English (<code>{ es, en }</code>), an optional leading icon (lucide, 1.75 stroke), <code>size</code> sm/md/lg, <code>loading</code>, <code>disabled</code>.</p>
+<p><strong>Rules</strong>
+- Height is never under <code>h-ctl</code> (44 px); <code>btn-lg</code> is <code>h-ctl-lg</code> (48 px). Padding is <code>0 sp-lg</code> (<code>sp-xl</code> for large).
+- Label: DM Sans 600, 14 px (16 px large), sentence case, no trailing punctuation.
+- Never two primary pills side by side; never a primary pill on a deep-blue hero (use secondary there).
+- Disabled is 50% opacity and keeps its shape; loading shows a spinner and keeps the label at 60%.
+- Focus: a 2 px <code>color-focus</code> ring offset 2 px.</p></div></details></article><article class="cmp" id="Chip"><header><h3>Chip</h3><span>Filter chips and class-tone chips</span>
+<a href="components/Chip/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Chip/preview.html" style="height:220px" loading="lazy" title="Chip preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>Small pills for filtering a view and for naming a class type by its tone.</p>
+<p><strong>Use</strong>
+- Filter chips (<code>button.chip</code>) — date ranges, filters and segmented choices in a row. Unselected chips are tactile paper pills (<code>shadow-pill</code>); the selected chip is the ink pill (<code>color-accent-fill</code>, <code>shadow-ink-lift</code>). One selected per group unless the group is multi-select.
+- Tone chips (<code>chip-tone</code>) — the class type in rosters, schedules and bookings: a translucent tone ground, the tone's <code>fg</code> ink and a <code>tone-*-dot</code>. In dark mode the ink is the dot mixed 30% toward <code>color-ink</code> so it holds 4.5:1.</p>
+<p><strong>What the consumer provides:</strong> the label (<code>{ es, en }</code>), <code>selected</code>, and for tone chips the class <code>tone</code> id (river, sun, clay, moss, sage, slate, plum).</p>
+<p><strong>Rules</strong>
+- Interactive chips are at least <code>h-ctl</code> tall; tone chips are labels and can be compact.
+- Chips in a tab row stay on one line.
+- Tone names are never shown as words — the class name is the label.</p></div></details></article></div><h2>Data</h2><div class="cmps"><article class="cmp" id="StatTile"><header><h3>StatTile</h3><span>KPI row on the four limewash tones</span>
+<a href="components/StatTile/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/StatTile/preview.html" style="height:200px" loading="lazy" title="StatTile preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>A KPI tile: a label, one figure with an optional trend, and a hint, painted in a limewash class tone.</p>
+<p><strong>Use</strong>
+- A KPI row takes the tones in order: river, sun, clay, moss (<code>tone-*-wash</code>), repeating every four tiles.
+- The wash is the pigment softened toward the plaster — <code>tone-*-dot</code> at 64% over <code>#F4EDE0</code> (66% over <code>#B8B0A0</code> in dark). It carries only the paper grain and a soft top light; no stone mottling.
+- All text on a wash is <code>stat-ink</code> (#0e1721): 6.5–11.8:1 in light, ≥ 4.5:1 in dark.
+- A tile alone (outside a KPI row) is plain paper with <code>color-ink</code> figures.</p>
+<p><strong>What the consumer provides:</strong> <code>label</code>, <code>value</code> (preformatted, es-CO number format), optional <code>trend</code> (up / down / flat with its text) and <code>hint</code>.</p>
+<p><strong>Rules</strong>
+- Figure: DM Sans 700, 28 px, -0.03em, tabular numerals. It shrinks to fit (to 50%) and never wraps.
+- Label and hint clamp to two lines so tiles in a row keep one height.
+- Never use the full-strength <code>tone-*-dot</code> as a tile fill — dots and bars only.</p></div></details></article></div><h2>Feedback</h2><div class="cmps"><article class="cmp" id="Notice"><header><h3>Notice</h3><span>Linen notes: info, success, warning, danger</span>
+<a href="components/Notice/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Notice/preview.html" style="height:300px" loading="lazy" title="Notice preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>An inline note on linen: a round icon, a title, one line of text and an optional action.</p>
+<p><strong>Use</strong>
+- <code>notice-info</code> — a quiet paper note (<code>color-surface-2</code> + linen) with a 3 px <code>brand-yellow</code> edge and a <code>color-highlight</code> icon. Use for context the user should notice but need not act on.
+- <code>notice-success</code>, <code>notice-warn</code>, <code>notice-danger</code> — a 10–12% tint of the status colour over paper with a solid status icon. Always pair the colour with a word and an icon.</p>
+<p><strong>What the consumer provides:</strong> <code>tone</code>, <code>title</code>, <code>text</code>, optional <code>action</code> (a secondary or ghost button, right-aligned; below the text under 480 px).</p>
+<p><strong>Rules</strong>
+- One info notice per section at most — three yellow notes in a row read as a wall.
+- Notices sit inside the content flow, never as toasts.</p></div></details></article></div><h2>Surfaces</h2><div class="cmps"><article class="cmp" id="Card"><header><h3>Card</h3><span>Paper card and the blue-stone hero</span>
+<a href="components/Card/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Card/preview.html" style="height:320px" loading="lazy" title="Card preview"></iframe>
+<details><summary>How to use it</summary><div class="md"><p>The paper surface that holds every panel, list and form, and the blue-stone hero for the one thing that matters most.</p>
+<p><strong>Use</strong>
+- <code>card</code> — paper (<code>color-surface</code>) with the paper grain and linen weave, <code>r-md</code> corners, <code>shadow-card</code>, padded <code>card-pad</code> (16 px phone, 24 px from 768). Title in <code>card-title</code>, an optional eyebrow above it.
+- <code>card-primary</code> — the deep-blue stone hero (<code>brand-deepBlue</code> + travertine mottling + grain): the next class, the hub build tile, a gift card. At most one per screen. Text is <code>color-text-on-primary</code>; eyebrows at 82%.
+- Interactive cards lift to <code>shadow-raised</code> and move 2 px up on hover (<code>dur-base</code>, <code>ease-out</code>).</p>
+<p><strong>What the consumer provides:</strong> a title, optional eyebrow and actions (top right), body content; <code>padding</code> sm/md/lg; <code>raised</code>; <code>interactive</code>.</p>
+<p><strong>Rules</strong>
+- Cells in a grid keep their natural height — never stretch an empty card to "balance" a row; pair it with real content instead.
+- Rows inside a card are separated by <code>color-border</code> hairlines, padded <code>sp-md</code> vertically.
+- Nested corners follow inner = outer − padding.</p></div></details></article><article class="cmp" id="Materials"><header><h3>Materials</h3><span>Pulso Materia: plaster, blue plaster, paper, stone, linen</span>
+<a href="components/Materials/preview.html" target="_blank" rel="noopener">Open ↗</a></header>
+<iframe src="components/Materials/preview.html" style="height:250px" loading="lazy" title="Materials preview"></iframe>
+</article></div><h2>Colour tokens</h2><div class="sws"><div class="sw"><i style="background:#35597d"></i><b>brand-deepBlue</b><code>#35597d</code></div><div class="sw"><i style="background:#5f85b1"></i><b>brand-midBlue</b><code>#5f85b1</code></div><div class="sw"><i style="background:#f7f3b2"></i><b>brand-yellow</b><code>#f7f3b2</code></div><div class="sw"><i style="background:#f1e7d2"></i><b>brand-cream</b><code>#f1e7d2</code></div><div class="sw"><i style="background:#1c2e42"></i><b>brand-ink</b><code>#1c2e42</code></div><div class="sw"><i style="background:#e7dcc6"></i><b>brand-sand</b><code>#e7dcc6</code></div><div class="sw"><i style="background:#fbf7ef"></i><b>brand-white</b><code>#fbf7ef</code></div><div class="sw"><i style="background:#ede4d4"></i><b>color-bg</b><code>#ede4d4</code></div><div class="sw"><i style="background:#fbf7ef"></i><b>color-surface</b><code>#fbf7ef</code></div><div class="sw"><i style="background:#fffcf6"></i><b>color-surface-elevated</b><code>#fffcf6</code></div><div class="sw"><i style="background:#f5eee1"></i><b>color-surface-2</b><code>#f5eee1</code></div><div class="sw"><i style="background:#efe7da"></i><b>color-surface-3</b><code>#efe7da</code></div><div class="sw"><i style="background:#e3dbcb"></i><b>color-surface-4</b><code>#e3dbcb</code></div><div class="sw"><i style="background:#1c2e42"></i><b>color-ink</b><code>#1c2e42</code></div><div class="sw"><i style="background:#24384f"></i><b>color-text</b><code>#24384f</code></div><div class="sw"><i style="background:#4c5d70"></i><b>color-text-muted</b><code>#4c5d70</code></div><div class="sw"><i style="background:rgba(36,56,79,.72)"></i><b>color-text-faint</b><code>rgba(36,56,79,.72)</code></div><div class="sw"><i style="background:#35597d"></i><b>color-primary</b><code>#35597d</code></div><div class="sw"><i style="background:#1c2e42"></i><b>color-accent-fill</b><code>#1c2e42</code></div><div class="sw"><i style="background:#24384f"></i><b>color-accent-fill-hover</b><code>#24384f</code></div><div class="sw"><i style="background:#fbf7ef"></i><b>color-text-on-primary</b><code>#fbf7ef</code></div><div class="sw"><i style="background:#5f85b1"></i><b>color-accent</b><code>#5f85b1</code></div><div class="sw"><i style="background:#f7f3b2"></i><b>color-highlight</b><code>#f7f3b2</code></div><div class="sw"><i style="background:#4a4212"></i><b>color-on-highlight</b><code>#4a4212</code></div><div class="sw"><i style="background:rgba(36,56,79,.12)"></i><b>color-border</b><code>rgba(36,56,79,.12)</code></div><div class="sw"><i style="background:rgba(53,89,125,.28)"></i><b>color-border-strong</b><code>rgba(53,89,125,.28)</code></div><div class="sw"><i style="background:#5f85b1"></i><b>color-focus</b><code>#5f85b1</code></div><div class="sw"><i style="background:#4f7d5a"></i><b>color-success</b><code>#4f7d5a</code></div><div class="sw"><i style="background:#8a6a1e"></i><b>color-warn</b><code>#8a6a1e</code></div><div class="sw"><i style="background:#7e3b2c"></i><b>color-danger</b><code>#7e3b2c</code></div><div class="sw"><i style="background:#2c4a6b"></i><b>color-info</b><code>#2c4a6b</code></div><div class="sw"><i style="background:rgba(36,56,79,.35)"></i><b>color-scrim</b><code>rgba(36,56,79,.35)</code></div><div class="sw"><i style="background:#5f85b1"></i><b>tone-river-dot</b><code>#5f85b1</code></div><div class="sw"><i style="background:#d8c24a"></i><b>tone-sun-dot</b><code>#d8c24a</code></div><div class="sw"><i style="background:#c4704f"></i><b>tone-clay-dot</b><code>#c4704f</code></div><div class="sw"><i style="background:#5a7355"></i><b>tone-moss-dot</b><code>#5a7355</code></div><div class="sw"><i style="background:#7e9c88"></i><b>tone-sage-dot</b><code>#7e9c88</code></div><div class="sw"><i style="background:#848f9b"></i><b>tone-slate-dot</b><code>#848f9b</code></div><div class="sw"><i style="background:#9e6e8f"></i><b>tone-plum-dot</b><code>#9e6e8f</code></div><div class="sw"><i style="background:#95aac2"></i><b>tone-river-wash</b><code>#95aac2</code></div><div class="sw"><i style="background:#e2d180"></i><b>tone-sun-wash</b><code>#e2d180</code></div><div class="sw"><i style="background:#d59d83"></i><b>tone-clay-wash</b><code>#d59d83</code></div><div class="sw"><i style="background:#919f87"></i><b>tone-moss-wash</b><code>#919f87</code></div><div class="sw"><i style="background:#a8b9a8"></i><b>tone-sage-wash</b><code>#a8b9a8</code></div><div class="sw"><i style="background:#acb1b4"></i><b>tone-slate-wash</b><code>#acb1b4</code></div><div class="sw"><i style="background:#bd9cac"></i><b>tone-plum-wash</b><code>#bd9cac</code></div><div class="sw"><i style="background:#0e1721"></i><b>stat-ink</b><code>#0e1721</code></div></div><h2>Brand assets</h2><div class="ass"><figure class="as"><img src="assets/10a0454fb97db9f0cb703c0067d7df71.png" alt="" loading="lazy"><figcaption>10a0454f…</figcaption></figure><figure class="as"><img src="assets/183ca0b34b3b1faeb8940f89ff22cd20.png" alt="" loading="lazy"><figcaption>183ca0b3…</figcaption></figure><figure class="as"><img src="assets/72a216edc3b1112395931d99a0e022ee.svg" alt="" loading="lazy"><figcaption>72a216ed…</figcaption></figure><figure class="as"><img src="assets/bcc74041b6a4a3b50704eb6d6b3aa7e7.png" alt="" loading="lazy"><figcaption>bcc74041…</figcaption></figure><figure class="as"><img src="assets/d7235240430dea30a1e2abb0174134f6.webp" alt="" loading="lazy"><figcaption>d7235240…</figcaption></figure><figure class="as"><img src="assets/f01f72ef4eee900294369fa3035d1b50.webp" alt="" loading="lazy"><figcaption>f01f72ef…</figcaption></figure><figure class="as"><img src="assets/f4ca2549d5251d05168c69b179fc0747.webp" alt="" loading="lazy"><figcaption>f4ca2549…</figcaption></figure></div><h2>Guidelines</h2><div class="md"><p>HoyOS is the operating system of a wellness studio in Medellín: the member app, the front desk, the coordinators' and owners' workspace and the team hub. It is designed the way the studio is built: <strong>Pulso Materia</strong> — sun-washed limestone plaster, blue plaster, paper, travertine stone and linen, with the warmth of morning light through leaves. The interface should feel like the room, not like software laid on top of it.</p>
+<p>Live: <a href="https://hoy-human-club.github.io/Hoy-2.0/">the app</a> · <a href="https://hoy-human-club.github.io/Hoy-2.0/#/hub">team hub</a> · <a href="https://hoy-human-club.github.io/Hoy-2.0/#/staff">front desk</a> · <a href="https://hoy-human-club.github.io/Hoy-2.0/#/app">member home</a></p>
+<h2>Principles</h2>
+<ol>
+<li><strong>Material before colour.</strong> Grounds are plaster, panels are paper, heroes are stone. Flat colour alone is never the finished state.</li>
+<li><strong>One clear action.</strong> Each view has one ink pill (<code>btn-primary</code>); every other action is a tactile paper pill.</li>
+<li><strong>Calm density.</strong> Remove page headings that only repeat the menu; let content start at the top. Cells keep their natural height — balance comes from pairing real content, never from stretched empty boxes.</li>
+<li><strong>Pigment is precious.</strong> Full-strength class tones mark dots and bars; large tiles use the softened limewash (<code>tone-*-wash</code>).</li>
+<li><strong>Bilingual by default.</strong> Every string exists in Spanish (required) and English.</li>
+</ol>
+<h2>Voice and content</h2>
+<ul>
+<li>Spanish first, warm and brief, tú form: "Tu clase empieza en 20 minutos", "Reservar clase", "Ver horario".</li>
+<li>Sentence case everywhere; eyebrows are the only uppercase text ("HOY · MARTES").</li>
+<li>Verbs on buttons; no trailing punctuation; no emoji in the interface.</li>
+<li>Numbers use Colombian format: <code>$1.284.000</code>, <code>86%</code>, <code>07:00</code>.</li>
+</ul>
+<h2>Colour</h2>
+<ul>
+<li><strong>Brand</strong>: <code>brand-deepBlue</code> #35597D is the identity colour — the menu, heroes and the wordmark. <code>brand-cream</code>, <code>brand-yellow</code> (sun, highlights only) and <code>brand-ink</code> complete it.</li>
+<li><strong>Grounds and surfaces</strong>: the page is <code>color-bg</code> under the limestone photograph; cards and controls are <code>color-surface</code> paper; <code>color-surface-2</code> / <code>-3</code> step down for notes and pressed states.</li>
+<li><strong>Text</strong>: <code>color-ink</code> for headings and figures, <code>color-text</code> for body, <code>color-text-muted</code> for secondary lines, <code>color-text-faint</code> only for eyebrows on paper and ground. All pass WCAG AA in both themes.</li>
+<li><strong>Primary action</strong>: <code>color-accent-fill</code> — ink in light, deep blue in dark — with <code>color-text-on-primary</code>.</li>
+<li><strong>Class tones</strong>: river, sun, clay, moss (plus sage, slate, plum) identify class types. <code>tone-*-dot</code> at full pigment for dots, calendar marks and bars; <code>tone-*-wash</code> (pigment 64% over #F4EDE0, 66% over #B8B0A0 in dark) for large tiles, always with <code>stat-ink</code> text. A KPI row runs river → sun → clay → moss.</li>
+<li><strong>Status</strong>: <code>color-success</code>, <code>color-warn</code>, <code>color-danger</code>, <code>color-info</code> — always with a word or icon, never colour alone.</li>
+</ul>
+<h2>Typography</h2>
+<ul>
+<li><strong>Cormorant Garamond</strong> (<code>editorial</code>) for page titles and greetings: <code>display</code> 41 px / 1.0, regular; <code>title</code> 28 px / 1.15, medium. One display line per screen.</li>
+<li><strong>DM Sans</strong> (<code>body</code>) for everything else: card titles 18 px semibold, body 16 px / 1.5, dense UI 14 px, captions 12 px, eyebrows 11 px semibold uppercase at +0.14em.</li>
+<li>Figures are DM Sans bold, −0.03em, tabular numerals. Body text is held to a 65ch measure.</li>
+<li>Captions never compute below 16 px from 1920 px wide; the whole interface scales with the <code>--ui</code> band (×1.125 at 1920, ×1.375 at 2560, ×1.75 at 3840).</li>
+</ul>
+<h2>Materials (Pulso Materia)</h2>
+<table>
+<thead>
+<tr>
+<th>Material</th>
+<th>Where</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Limestone plaster</td>
+<td>Page ground: workspace, hub, member app</td>
+<td>Photo under an 84% <code>color-bg</code> veil, fixed to the viewport; leaf-shadow light in the top-right at 18%</td>
+</tr>
+<tr>
+<td>Blue plaster</td>
+<td>Side menu, hub hero</td>
+<td>Blue plaster photo multiplied into <code>brand-deepBlue</code></td>
+</tr>
+<tr>
+<td>Paper</td>
+<td>Cards, tables, panels, controls</td>
+<td><code>color-surface</code> + fine paper grain + linen weave</td>
+</tr>
+<tr>
+<td>Stone</td>
+<td>The one blue hero per screen</td>
+<td><code>brand-deepBlue</code> + travertine mottling + grain</td>
+</tr>
+<tr>
+<td>Linen</td>
+<td>Notes, drawers</td>
+<td><code>color-surface-2</code> + a two-way hairline weave</td>
+</tr>
+</tbody>
+</table>
+<p>Materials sit behind content, never on top of text, and keep every ground within a few percent of its flat colour so contrast is unchanged. Dark mode replaces the photographs with procedural stone.</p>
+<h2>Depth, shape and buttons</h2>
+<ul>
+<li>Paper lies almost flat (<code>shadow-card</code>); drawers and hovered cards lift (<code>shadow-raised</code>).</li>
+<li>Controls are tactile: secondary buttons and chips carry a hairline edge, a top highlight and <code>shadow-pill</code>; hover deepens to <code>shadow-pill-hover</code>; press sinks to <code>shadow-pill-pressed</code> and moves 1 px. Primary pills and selected chips use <code>shadow-ink-lift</code>.</li>
+<li>Corners are soft: <code>r-md</code> (24 px) for cards and tiles, <code>r-lg</code> (32 px) for heroes and drawers, <code>r-ctl</code> for inputs, <code>r-full</code> for every button and chip.</li>
+</ul>
+<h2>Spacing and layout</h2>
+<ul>
+<li>One 4 px scale (<code>sp-*</code>, in rem). Read it as a sentence: controls <code>sp-md</code> apart, cards pad <code>sp-lg</code> → <code>sp-xl</code> from 768 px, blocks <code>sp-xl</code> apart, sections <code>sp-3xl</code> → <code>sp-4xl</code>.</li>
+<li>Every control is at least <code>h-ctl</code> (44 px) tall.</li>
+<li>Staff and admin use the sidebar shell; the menu is always visible from 900 px and scrolls with edge fades and arrows instead of a scrollbar. The member app uses a bottom dock below 900 px and a top bar above.</li>
+</ul>
+<h2>Motion</h2>
+<ul>
+<li>Controls respond in <code>dur-fast</code> (120 ms); cards lift in <code>dur-base</code> (200 ms) on <code>ease-out</code>.</li>
+<li>Hub and dashboard tiles reveal progressively (<code>dur-reveal</code>, staggered). Nothing loops except ambient light.</li>
+<li>Everything honours <code>prefers-reduced-motion</code> and <code>prefers-reduced-transparency</code>.</li>
+</ul>
+<h2>Accessibility</h2>
+<ul>
+<li>Text meets 4.5:1 (3:1 at 24 px+) in light and dark; limewash tiles measure 6.5–11.8:1.</li>
+<li>Focus is a solid 2 px <code>color-focus</code> ring offset 2 px on every interactive element.</li>
+<li>Status always carries a word or icon; class tones are never the only cue.</li>
+</ul>
+<h2>Iconography</h2>
+<p>Lucide outline icons through one <code>Icon</code> atom: sizes <code>icon-xs</code> → <code>icon-xl</code> (14–32 px), stroke 1.75 at rest and 2.25 for the active menu or dock item. No emoji, no filled icon sets.</p>
+<h2>Logo</h2>
+<p>The HOY script wordmark (<code>assets/Logos</code>) in deep blue on light grounds, cream or yellow on deep blue. Clear space equals ⅓ of the script height; minimum 120 px wide.</p></div>
+</div></body></html>

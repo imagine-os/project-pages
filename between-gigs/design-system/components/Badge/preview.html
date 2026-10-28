@@ -1,0 +1,30 @@
+<!-- @dsCard group="Display" height=140 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Badge</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Badge } = BG;
+  return html`<div className="grid gap-4 p-6">
+    <div className="flex flex-wrap items-center gap-2">
+      <${Badge} tone="success">Approved<//><${Badge} tone="warning">Needs review<//><${Badge} tone="danger">Failed<//>
+      <${Badge} tone="info">Preview<//><${Badge} tone="neutral">Not started<//><${Badge} tone="brand">Sample person<//>
+    </div>
+    <div className="flex flex-wrap items-center gap-2">
+      <${Badge} tone="warning" dot size="sm">Draft · not public<//><${Badge} tone="info" icon=${html`<${I.Lock}/>`}>Design locked<//>
+      <${Badge} tone="brand" size="sm">Trust · Week 2<//>
+    </div>
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

@@ -1,0 +1,857 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Between Gigs Showcase</title>
+<meta name="description" content="The Between Gigs design system: tokens, type, React components and materials, live in light and dark.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<script>
+  // Day/Night: restore the saved choice before first paint. Dark is the default.
+  try { var saved = localStorage.getItem("bg-theme") || localStorage.getItem("bg-showcase-theme"); if (saved === "light" || saved === "dark") document.documentElement.setAttribute("data-theme", saved); } catch (e) {}
+</script>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="bundle.css">
+<style>
+/* Layout: a 12-column bento grid on the brand's near-black forest; every tile is a cell of the same grid, and the grid itself is drawn faintly behind the hero. */
+:root {
+  color-scheme: dark;
+  --page: var(--forest-950);
+  --tile: #0b2117;
+  --tile-hi: #0f2a1e;
+  --rule: #1d3a2b;
+  --rule-strong: #2c5541;
+  --guide: rgba(111, 242, 185, 0.06);
+  --gap: 12px;
+  --display: var(--font-display);
+  --text: var(--font-sans);
+  --mono: var(--font-mono);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page: var(--sage-100);
+  --tile: #fbfcfa;
+  --tile-hi: #ffffff;
+  --rule: var(--sage-200);
+  --rule-strong: var(--sage-300);
+  --guide: rgba(111, 242, 185, 0.06);
+}
+html, body { background: var(--page); transition: background-color .4s var(--ease-standard); }
+body { margin: 0; color: var(--ink); font-family: var(--text); -webkit-font-smoothing: antialiased; }
+.page {
+  background: var(--page);
+  color: var(--ink);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 64px;
+}
+.wrap { max-width: 1400px; margin: 0 auto; display: grid; gap: 56px; }
+
+/* top bar */
+.mast { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 8px; border-bottom: 1px solid var(--rule); padding-bottom: 20px; }
+.mast-meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-family: var(--mono); font-size: 12px; color: var(--ink-muted); letter-spacing: .02em; }
+.mast-meta b { color: var(--ink); font-weight: 500; }
+
+/* bento */
+.bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.tile {
+  position: relative; min-width: 0; overflow: hidden;
+  background: var(--tile); color: var(--ink); border: 1px solid var(--rule); border-radius: 22px;
+  padding: 24px; display: flex; flex-direction: column; gap: 16px;
+  transition: border-color .2s var(--ease-standard), transform .3s var(--ease-standard), background .2s;
+}
+.tile:hover { border-color: var(--rule-strong); background: var(--tile-hi); }
+.tile[data-reveal] { transition: opacity .64s cubic-bezier(.2,.8,.2,1) var(--reveal-delay), transform .64s cubic-bezier(.2,.8,.2,1) var(--reveal-delay), filter .64s var(--reveal-delay), border-color .2s, background .2s; }
+@keyframes rise { from { opacity: .35; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .tile { animation: none; } .tile:hover { transform: none; } }
+.s-12 { grid-column: span 12; } .s-8 { grid-column: span 8; } .s-7 { grid-column: span 7; } .s-6 { grid-column: span 6; }
+.s-5 { grid-column: span 5; } .s-4 { grid-column: span 4; } .s-3 { grid-column: span 3; }
+.r-2 { grid-row: span 2; }
+@media (max-width: 1080px) {
+  .s-8, .s-7, .s-6, .s-5 { grid-column: span 12; }
+  .s-4, .s-3 { grid-column: span 6; }
+  .r-2 { grid-row: auto; }
+}
+@media (max-width: 640px) { .bento > * { grid-column: span 12 !important; } .tile { padding: 20px; } }
+
+.label { display: flex; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-subtle); }
+.label b { color: var(--ink-brand); font-weight: 500; }
+.tile > h3 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 22px; line-height: 28px; letter-spacing: -.015em; color: var(--ink); text-wrap: balance; }
+.tile > p { margin: 0; color: var(--ink-muted); font-size: 15px; line-height: 23px; max-width: 62ch; }
+.grow { flex: 1; }
+
+/* section heads */
+.sec { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px var(--gap); align-items: end; }
+.sec-k { grid-column: 1 / -1; font-family: var(--mono); font-size: 12px; color: var(--ink-brand); letter-spacing: .08em; text-transform: uppercase; }
+.sec h2 { grid-column: 1 / span 7; margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(30px, 4vw, 48px); line-height: 1.04; letter-spacing: -.03em; text-wrap: balance; }
+.sec p { grid-column: 9 / span 4; margin: 0; color: var(--ink-muted); font-size: 14px; line-height: 21px; }
+@media (max-width: 1080px) { .sec-k, .sec h2, .sec p { grid-column: 1 / -1; } }
+
+/* hero */
+.hero { min-height: 520px; padding: clamp(24px, 4vw, 48px); justify-content: space-between; background: var(--surface-brand); border-color: #1e5a3e; isolation: isolate; }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1;
+  background-image: repeating-linear-gradient(90deg, var(--guide) 0 1px, transparent 1px calc(100% / 12));
+  mask-image: linear-gradient(180deg, #000 0%, transparent 85%); }
+.hero-mark { position: absolute; right: -6%; bottom: -14%; z-index: -1; opacity: .12; pointer-events: none; }
+.hero-mark svg { width: min(62vw, 760px); height: auto; }
+.hero h1 { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(44px, 7.4vw, 108px); line-height: .94; letter-spacing: -.045em; text-wrap: balance; max-width: 11ch; }
+.hero h1 em { font-style: normal; color: var(--ink-brand); }
+.hero-foot { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 20px; }
+.hero-foot p { font-size: 17px; line-height: 26px; color: var(--ink-muted); max-width: 46ch; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; padding: 6px 10px; border-radius: 999px; border: 1px solid #2f6b4c; color: var(--ink); }
+
+.big { font-family: var(--display); font-weight: 600; font-size: clamp(56px, 6vw, 88px); line-height: .9; letter-spacing: -.05em; font-variant-numeric: tabular-nums; color: var(--ink); }
+.big small { font-size: .32em; letter-spacing: -.01em; color: var(--ink-muted); margin-left: 6px; }
+.meter { display: grid; grid-template-columns: repeat(23, 1fr); gap: 3px; }
+.meter i { height: 22px; border-radius: 3px; background: var(--action); }
+.meter i:nth-child(4n) { opacity: .75; }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; border-radius: 14px; overflow: hidden; border: 1px solid var(--rule); flex: 1; min-height: 120px; }
+.split > div { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; background: var(--bg); color: var(--ink); }
+.split .mini-t { font-family: var(--display); font-weight: 600; font-size: 15px; }
+.split .mini-s { font-size: 12px; color: var(--ink-muted); }
+
+/* color */
+.swatches { display: grid; grid-template-columns: 2.2fr 1.6fr 1fr 1fr; grid-template-rows: 150px 90px; gap: 8px; }
+.sw { border-radius: 14px; padding: 12px; display: flex; flex-direction: column; justify-content: flex-end; font-family: var(--mono); font-size: 11px; line-height: 16px; min-width: 0; }
+.sw b { font-family: var(--text); font-size: 13px; font-weight: 600; }
+.sw-forest { grid-row: span 2; background: var(--forest-800); color: #eaf4ee; border: 1px solid #1e5a3e; }
+.sw-mint { background: var(--mint-500); color: #04180e; }
+.sw-sage { background: var(--sage-50); color: #0e1a13; }
+.sw-ink { background: var(--forest-950); color: #eaf4ee; border: 1px solid var(--rule); }
+.sw-lime { background: var(--lime-300); color: #04180e; }
+.sw-sage2 { background: var(--sage-200); color: #0e1a13; }
+.sw-mint2 { background: var(--mint-200); color: #04180e; }
+@media (max-width: 640px) { .swatches { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 84px); } .sw-forest { grid-row: span 1; } }
+.cats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+.cats i { height: 28px; border-radius: 8px; }
+
+/* type */
+.aa { font-family: var(--display); font-weight: 600; font-size: clamp(120px, 14vw, 190px); line-height: .8; letter-spacing: -.06em; color: var(--ink); }
+.aa span { color: var(--ink-brand); }
+.faces { display: grid; gap: 0; }
+.face { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-block: 10px; border-top: 1px solid var(--rule); }
+.face span:first-child { font-size: 20px; color: var(--ink); }
+.face span:last-child { font-family: var(--mono); font-size: 11px; color: var(--ink-subtle); text-align: right; }
+.ladder { display: grid; gap: 8px; }
+.rung { display: flex; align-items: baseline; gap: 16px; min-width: 0; }
+.rung code { flex: 0 0 96px; font-family: var(--mono); font-size: 11px; color: var(--ink-subtle); }
+.rung span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+/* scales */
+.bars { display: grid; gap: 7px; }
+.bar { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; color: var(--ink-subtle); }
+.bar i { height: 10px; border-radius: 3px; background: var(--ink-brand); display: block; }
+.radii { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.radii div { aspect-ratio: 1; border: 1.5px solid var(--ink-brand); border-bottom: 0; border-left: 0; display: flex; align-items: flex-end; padding: 6px; font-family: var(--mono); font-size: 10px; color: var(--ink-subtle); }
+.stack { position: relative; flex: 1; min-height: 170px; }
+.stack div { position: absolute; width: 62%; height: 90px; border-radius: 16px; background: var(--surface-raised); border: 1px solid var(--line); padding: 12px; font-family: var(--mono); font-size: 11px; color: var(--ink-muted); }
+.stack div:nth-child(1) { left: 0; top: 0; box-shadow: var(--shadow-sm); }
+.stack div:nth-child(2) { left: 18%; top: 38px; box-shadow: var(--shadow-md); }
+.stack div:nth-child(3) { left: 36%; top: 76px; box-shadow: var(--shadow-lg); }
+.curves { display: grid; gap: 12px; }
+.curve { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 12px; font-family: var(--mono); font-size: 11px; color: var(--ink-subtle); }
+.track { position: relative; height: 18px; border-radius: 999px; background: var(--surface-sunken); }
+.track i { position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--action); animation: glide 2.4s infinite alternate; }
+@keyframes glide { to { left: calc(100% - 15px); } }
+@media (prefers-reduced-motion: reduce) { .track i { animation: none; left: calc(100% - 15px); } }
+
+/* live mounts */
+.mount { min-width: 0; }
+.mount .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.stage { border-radius: 16px; background: var(--bg); border: 1px solid var(--rule); padding: 20px; flex: 1; display: grid; align-content: center; gap: 14px; min-width: 0; }
+
+
+/* materials */
+.mats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; flex: 1; }
+.mat { border-radius: 14px; min-height: 120px; display: flex; align-items: flex-end; padding: 10px; font-size: 12px; font-weight: 600; color: #eaf4ee; border: 1px solid var(--rule); }
+.m-glass { background: linear-gradient(135deg, rgba(234,244,238,.22), rgba(234,244,238,.04) 60%), radial-gradient(circle at 30% 20%, rgba(111,242,185,.25), transparent 60%), var(--forest-900); }
+.m-oak { background: repeating-linear-gradient(100deg, #6b4a2b 0 6px, #7a5634 6px 9px, #5e3f24 9px 14px); }
+.m-felt { background: radial-gradient(rgba(255,255,255,.08) 1px, transparent 1.4px) 0 0 / 5px 5px, #24533c; }
+
+.mast-end { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+/* Rare-earth collection: procedural finishes, no image files. Each layer is plain CSS. */
+@property --ho { syntax: "<color>"; inherits: true; initial-value: #e3cfa3; }
+@property --eu { syntax: "<number>"; inherits: true; initial-value: 1; }
+.re-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1080px) { .re-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .re-grid { grid-template-columns: 1fr; } }
+.re { --mx: 30%; --my: 20%; position: relative; isolation: isolate; overflow: hidden; min-height: 248px; border-radius: 18px; padding: 16px; display: grid; grid-template-rows: auto 1fr auto; border: 1px solid rgba(255,255,255,.12); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 18px 40px -24px rgba(0,0,0,.6); transition: transform .5s var(--ease-standard), box-shadow .5s; }
+.re:hover { transform: translateY(-3px); }
+.re-base { position: absolute; inset: 0; z-index: -2; }
+.re::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.42), rgba(255,255,255,0) 42%); mix-blend-mode: overlay; transition: background-position .2s; }
+.re-top { display: flex; justify-content: space-between; font: 500 11px/1 var(--mono); letter-spacing: .06em; opacity: .85; }
+.re-sym { align-self: center; font-family: var(--display); font-weight: 600; font-size: 76px; line-height: 1; letter-spacing: -.05em; }
+.re-name { font-family: var(--display); font-weight: 600; font-size: 17px; }
+.re-note { margin-top: 4px; font-size: 12.5px; line-height: 18px; opacity: .82; max-width: 30ch; }
+
+/* 60 Nd: nickel-plated magnet, brushed, with the lilac sheen of neodymium salts */
+.re-nd { color: #f3f4f7; }
+.re-nd .re-base { background:
+  repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px),
+  conic-gradient(from calc(200deg + var(--tilt, 0deg)) at 78% 18%, rgba(185,161,242,.6), rgba(134,179,243,.35), rgba(79,211,204,.3), rgba(242,141,186,.4), rgba(185,161,242,.6)),
+  linear-gradient(155deg, #50555f 0%, #23272e 46%, #383c44 72%, #17191e 100%); background-blend-mode: normal, soft-light, normal; }
+
+/* 63 Eu: europium-doped phosphor, charged by day and glowing by night */
+.re-eu { color: #dcffec; }
+.re-eu .re-base { background:
+  linear-gradient(180deg, #04120b 0 13%, transparent 30%, transparent 52%, #04120b 76%),
+  radial-gradient(rgba(170,255,214,.9) .7px, transparent 1.3px) 0 0 / 7px 7px,
+  radial-gradient(rgba(110,240,180,.7) .6px, transparent 1.2px) 3px 4px / 11px 11px,
+  radial-gradient(120% 95% at 30% 72%, rgba(31,220,140,calc(.55 * var(--eu))), transparent 62%),
+  #04120b; }
+.re-eu .re-sym { text-shadow: 0 0 calc(22px * var(--eu)) rgba(79,224,160,.85); }
+.re-eu { --eu: 1; animation: phosphor 4.8s ease-in-out infinite alternate; }
+:root[data-theme="light"] .re-eu { --eu: .3; animation: none; }
+:root[data-theme="light"] .re-eu .re-base { filter: saturate(.35) brightness(.85); }
+.re-eu .re-base { transition: filter .8s var(--ease-standard); }
+@keyframes phosphor { from { --eu: .7; } to { --eu: 1.15; } }
+
+/* 59 Pr + 60 Nd: didymium glass, dichroic lilac to sea green; tilts with the pointer */
+.re-di { color: #1f1638; border-color: rgba(255,255,255,.5); }
+.re-di .re-base { background:
+  linear-gradient(105deg, transparent 28%, rgba(255,255,255,.6) 40%, transparent 49%),
+  linear-gradient(calc(118deg + var(--tilt, 0deg)), #cbb4f4 0%, #b7c6f1 34%, #9fdcc8 64%, #d6c3f7 100%);
+  filter: hue-rotate(calc(var(--hue, 0) * 1deg)) saturate(1.1); transition: filter .3s; }
+
+/* 67 Ho: holmium oxide, sand under daylight, rose under night light */
+.re-ho { color: #2b1a14; --ho: #e8a6c4; transition: --ho 1.2s var(--ease-standard), transform .5s var(--ease-standard); }
+:root[data-theme="light"] .re-ho { --ho: #e3cfa3; }
+.re-ho .re-base { background:
+  radial-gradient(rgba(60,30,20,.10) .6px, transparent 1.1px) 0 0 / 4px 4px,
+  radial-gradient(rgba(255,255,255,.35) .6px, transparent 1.1px) 2px 2px / 5px 5px,
+  linear-gradient(160deg, color-mix(in oklab, var(--ho), white 28%), var(--ho) 55%, color-mix(in oklab, var(--ho), black 14%)); }
+@media (prefers-reduced-motion: reduce) { .re, .re-eu { animation: none; transition: none; } .re:hover { transform: none; } }
+
+/* template frames: each template renders live at desktop width, scaled to fit */
+.frame { border-radius: 16px; overflow: hidden; border: 1px solid var(--rule-strong); background: var(--bg); flex: 1; }
+.frame-bar { display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; background: var(--surface-sunken); border-bottom: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-subtle); }
+.frame-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--rule-strong); }
+.frame-bar span { margin-left: 8px; }
+.viewport { position: relative; overflow: hidden; }
+.viewport > .canvas { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: 0 0; }
+.tpl-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.tpl-meta .chip { border-color: var(--rule-strong); color: var(--ink-muted); }
+.tpl-open { color: var(--ink-brand); text-decoration: none; display: inline-flex; align-items: center; min-height: 24px; background: none; border: 0; padding: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.tpl-open:hover { text-decoration: underline; text-underline-offset: 3px; }
+.chip-btn { min-height: 32px; padding: 0 14px; border-radius: 999px; background: var(--action); color: var(--on-action); font: 600 12px/1 var(--mono); letter-spacing: .04em; }
+.chip-btn:hover { text-decoration: none; background: var(--action-hover); }
+
+/* icons */
+.ico-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 6px; }
+.ico { display: grid; justify-items: center; gap: 8px; padding: 14px 6px 10px; border-radius: 12px; background: var(--bg); border: 1px solid var(--rule); color: var(--ink); }
+.ico svg { width: 22px; height: 22px; }
+.ico span { font-family: var(--mono); font-size: 10px; color: var(--ink-subtle); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Previews are pictures: no view-transition names, so they never collide with the running prototype. */
+.canvas, .canvas * { view-transition-name: none !important; }
+/* ...and scroll reveals start finished: a preview never scrolls, so nothing should wait to appear. */
+.canvas [data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; clip-path: none !important; transition: none !important; }
+.gigs-intro { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px 32px; }
+.gigs-intro h3 { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.05; letter-spacing: -.03em; color: var(--ink); }
+.gigs-intro p { margin: 10px 0 0; max-width: 70ch; color: var(--ink-muted); font-size: 15px; line-height: 23px; }
+.gigs-hero .chip-btn { min-height: 44px; padding: 0 20px; font-size: 13px; }
+
+/* full-page template */
+#tpl-full { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--bg); color: var(--ink); overflow: auto; }
+#tpl-full::backdrop { background: rgba(2, 10, 6, .8); }
+#tpl-full-root { min-height: 100%; display: flex; flex-direction: column; }
+#tpl-full-root > * { flex: 1; }
+.tpl-close { position: fixed; bottom: 16px; right: 16px; z-index: 2000; box-shadow: 0 8px 24px rgba(0,0,0,.25); min-height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--rule-strong); background: rgba(7, 26, 17, .7); color: #eaf4ee; font: 500 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); }
+
+/* motion demos */
+.mx-fx { display: flex; flex-wrap: wrap; gap: 6px; }
+.mx-app { border-radius: 16px; border: 1px solid var(--rule); background: var(--bg); overflow: hidden; }
+.mx-nav { display: flex; gap: 4px; padding: 8px; border-bottom: 1px solid var(--rule); background: var(--surface-sunken); }
+.mx-page { padding: 24px; min-height: 230px; display: grid; gap: 14px; align-content: start; background: var(--bg); }
+.mx-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mx-card { border-radius: 14px; padding: 14px; min-height: 92px; display: flex; flex-direction: column; justify-content: space-between; text-align: left; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+.mx-card b { font-family: var(--display); font-size: 15px; }
+.mx-card span { font-size: 12px; color: var(--ink-muted); }
+.mx-big { border-radius: 16px; padding: 24px; min-height: 196px; display: grid; gap: 10px; align-content: space-between; border: 1px solid var(--rule); color: var(--ink); }
+.mx-reveals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 760px) { .mx-reveals { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mx-cards { grid-template-columns: 1fr; } }
+.mx-rv { height: 110px; border-radius: 14px; display: grid; place-items: center; font: 500 12px/1 var(--mono); letter-spacing: .04em; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); }
+
+/* deliverables */
+.box { flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 0 24px; }
+.box div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 12px; border-top: 1px solid var(--rule); font-size: 14px; }
+.box div span:last-child { font-family: var(--mono); font-size: 12px; color: var(--ink-subtle); text-align: right; }
+@media (max-width: 640px) { .box { grid-template-columns: 1fr; } }
+
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 20px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 12px; color: var(--ink-subtle); }
+
+/* clickable tiles */
+.tile.is-link { cursor: pointer; }
+.tile.is-link:hover { transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .tile.is-link:hover { transform: none; } }
+.label { align-items: center; }
+.label > span:first-child { margin-right: auto; }
+.more { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--rule-strong); background: transparent; color: var(--ink); font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: background .15s, border-color .15s, color .15s; white-space: nowrap; }
+.more svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+.tile:hover .more, .more:hover, .more:focus-visible { background: var(--action); border-color: var(--action); color: var(--on-action); }
+@media (max-width: 640px) { .label b { display: none; } }
+
+/* detail overlay */
+#detail { width: min(1320px, calc(100% - 32px)); height: calc(100% - 32px); max-width: none; max-height: none; margin: auto; padding: 0; border: 1px solid var(--rule-strong); border-radius: 22px; background: var(--page); color: var(--ink); overflow: hidden; }
+#detail::backdrop { background: rgba(2, 10, 6, .72); backdrop-filter: blur(6px); }
+#detail[open] { display: flex; flex-direction: column; animation: pop .28s var(--ease-enter); }
+@keyframes pop { from { opacity: .4; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { #detail[open] { animation: none; } }
+.dv-head { display: flex; align-items: center; gap: 16px; padding: 18px 24px; border-bottom: 1px solid var(--rule); background: var(--tile); }
+.dv-head h2 { margin: 0; font: 600 24px/1.1 var(--display); letter-spacing: -.02em; }
+.dv-head p { margin: 2px 0 0; font: 12px/1.4 var(--mono); color: var(--ink-subtle); }
+.dv-close { margin-left: auto; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--rule-strong); background: transparent; color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.dv-close:hover { background: var(--surface-hover); }
+.dv-close svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
+#detail-body { flex: 1; overflow: auto; padding: 24px; }
+@media (max-width: 640px) { #detail { width: 100%; height: 100%; border-radius: 0; } #detail-body { padding: 16px; } .dv-head { padding: 14px 16px; } }
+.dv-stack { display: grid; gap: 20px; }
+.dv-sec { display: grid; gap: 14px; padding: 20px; border: 1px solid var(--rule); border-radius: 18px; background: var(--tile); min-width: 0; }
+.dv-sec-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+.dv-sec-h h3 { margin: 0; font: 600 20px/1.2 var(--display); letter-spacing: -.015em; }
+.dv-meta { font: 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-brand); }
+.dv-lead { margin: 0; color: var(--ink-muted); font-size: 14px; line-height: 21px; max-width: 70ch; }
+.dv-mono { font-family: var(--mono); font-size: 12px; }
+.dv-sub { color: var(--ink-subtle); }
+.dv-small { font-size: 12px; }
+.dv-strong { color: var(--ink); }
+.dv-use { color: var(--ink-muted); font-size: 13px; line-height: 19px; min-width: 220px; }
+.dv-table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 12px; }
+.dv-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dv-table th { text-align: left; font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-subtle); padding: 12px; border-bottom: 1px solid var(--rule); background: var(--surface-sunken); }
+.dv-table td { padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.dv-table tr:last-child td { border-bottom: 0; }
+.dv-pair { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.dv-chip { width: 22px; height: 22px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, .14); flex: 0 0 auto; }
+.dv-ramp { display: grid; grid-template-columns: 80px 1fr; gap: 12px; align-items: start; }
+.dv-ramp-k { font: 500 12px/32px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-subtle); }
+.dv-ramp-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.dv-step { display: grid; gap: 4px; min-width: 0; }
+.dv-step-c { height: 56px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .1); }
+@media (max-width: 640px) { .dv-ramp { grid-template-columns: 1fr; } }
+.dv-faces { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.dv-face { display: grid; gap: 4px; padding: 16px; border: 1px solid var(--rule); border-radius: 12px; min-width: 0; }
+.dv-face-aa { font-size: 40px; line-height: 1.1; color: var(--ink); }
+.dv-type { display: grid; }
+.dv-type-row { display: grid; grid-template-columns: 260px 1fr; gap: 20px; padding-block: 14px; border-top: 1px solid var(--rule); align-items: center; }
+.dv-type-spec { display: grid; gap: 3px; }
+.dv-type-sample { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 760px) { .dv-type-row { grid-template-columns: 1fr; } }
+.dv-bar { display: block; height: 10px; border-radius: 3px; background: var(--ink-brand); }
+.dv-rad { display: block; width: 40px; height: 40px; border: 2px solid var(--ink-brand); border-left: 0; border-bottom: 0; }
+.dv-shadow { display: block; width: 72px; height: 40px; border-radius: 10px; background: var(--surface-raised); }
+.dv-track { position: relative; display: block; width: 160px; height: 16px; border-radius: 999px; background: var(--surface-sunken); }
+.dv-track i { position: absolute; top: 3px; left: 3px; width: 10px; height: 10px; border-radius: 50%; background: var(--action); animation: glide 2.2s infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .dv-track i { animation: none; } }
+.dv-pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+.dv-pr { display: flex; align-items: center; gap: 12px; padding: 8px; border: 1px solid var(--rule); border-radius: 12px; min-width: 0; }
+.dv-pr-demo { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font: 600 17px var(--display); border: 2px solid transparent; }
+.dv-pr-txt { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.dv-pr-txt span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dv-pr-r { display: grid; justify-items: end; font-family: var(--mono); font-size: 11px; }
+.dv-pr-r b { font-size: 15px; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.dv-themes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 900px) { .dv-themes { grid-template-columns: 1fr; } }
+.dv-theme { display: grid; gap: 14px; align-content: start; padding: 24px; border-radius: 16px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); min-width: 0; }
+.dv-kit { display: grid; gap: 16px; }
+.dv-island { display: grid; gap: 18px; padding: 32px; border-radius: 16px; background: var(--surface-brand); color: var(--ink); }
+.dv-island-h { font: 600 clamp(28px, 4vw, 44px)/1.02 var(--display); letter-spacing: -.03em; }
+.dv-island-h em { font-style: normal; color: var(--ink-brand); }
+.dv-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.dv-top { align-items: flex-start; }
+.dv-col { display: grid; gap: 12px; }
+.dv-narrow { max-width: 440px; }
+.dv-grid3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.dv-inline { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-size: 14px; }
+.dv-demo { padding: 24px; border-radius: 14px; background: var(--bg); border: 1px solid var(--rule); min-width: 0; overflow-x: auto; }
+.dv-tip { padding-top: 40px; }
+.dv-menu { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; min-height: 280px; }
+.dv-nav { max-width: 280px; padding: 12px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.dv-flow { display: flex; align-items: stretch; min-width: 560px; }
+.dv-logos { align-items: flex-end; gap: 32px; }
+.dv-logo { justify-items: start; gap: 28px; padding: 32px; }
+.dv-filters { display: flex; flex-wrap: wrap; gap: 8px; position: sticky; top: -24px; z-index: 5; padding: 12px 0; background: var(--page); }
+.dv-list { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--ink-muted); font-size: 14px; line-height: 21px; max-width: 75ch; }
+.dv-mats { min-height: 160px; }
+@layer base {
+  a { color: var(--link); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+}
+</style>
+</head>
+<body>
+<div class="mount" data-mount="scroll-progress"></div>
+<div class="page">
+<div class="wrap">
+
+  <header class="mast">
+    <span class="mount" data-mount="logo-wide"></span>
+    <div class="mast-end">
+      <div class="mast-meta"><span><b>Design system</b> v1.6.2</span><span>October 2026</span><span>Light + dark</span><span>React · Tailwind v4</span></div>
+      <span class="mount" data-mount="theme-toggle"></span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="bento" aria-label="Overview">
+    <div class="tile hero s-8 r-2" style="--i:0" data-theme="dark">
+      <div class="hero-mark mount" data-mount="hero-mark" aria-hidden="true"></div>
+      <div class="label"><span>Between Gigs</span><b>System overview</b></div>
+      <h1>One system for every screen <em>between gigs.</em></h1>
+      <div class="hero-foot">
+        <p>The Workspace hub, Funnel Studio, profile review, onboarding and the marketing site now share one set of colors, type, components and rules, in light and dark.</p>
+        <div class="chips"><span class="chip">93 color tokens</span><span class="chip">19 type styles</span><span class="chip">75 scale tokens</span></div>
+      </div>
+    </div>
+    <div class="tile s-4" style="--i:1" data-detail="components" data-name="All 51 components">
+      <div class="label"><span>Components</span><b>Live</b></div>
+      <div class="big">51<small>React components</small></div>
+      <p>Every one renders live on this page. Nothing here is a screenshot.</p>
+    </div>
+    <div class="tile s-4" style="--i:2" data-detail="color" data-name="Design tokens">
+      <div class="label"><span>Tokens</span><b>One source</b></div>
+      <div class="big">187<small>design tokens</small></div>
+      <p>Colors, type, spacing, radius, elevation and motion, in light and dark.</p>
+    </div>
+    <div class="tile s-6" style="--i:3" data-detail="a11y" data-name="Contrast checks">
+      <div class="label"><span>Accessibility</span><b>WCAG 2.1 AA</b></div>
+      <div class="big">138<small>/ 138 color pairs pass</small></div>
+      <div class="meter" aria-hidden="true"></div>
+      <p>Every text and ground pairing is checked in both themes: 4.5:1 for text, 3:1 for borders, focus rings and marks.</p>
+    </div>
+    <div class="tile s-6" style="--i:4" data-detail="themes" data-name="Themes">
+      <div class="label"><span>Themes</span><b>One component, two themes</b></div>
+      <div class="split">
+        <div data-theme="light"><span class="mini-t">Light</span><span class="mount" data-mount="theme-light"></span><span class="mini-s">Sage ground, forest ink</span></div>
+        <div data-theme="dark"><span class="mini-t">Dark</span><span class="mount" data-mount="theme-dark"></span><span class="mini-s">Forest ground, mint signal</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDATIONS -->
+  <section class="sec"><span class="sec-k">01 · Foundations</span><h2>Built from the brand, not from a template.</h2><p>Forest, mint and green-tinted neutrals. Every color has a job, and components only use colors by their job.</p></section>
+  <section class="bento" aria-label="Foundations">
+    <div class="tile s-7" style="--i:0" data-detail="color" data-name="Color">
+      <div class="label"><span>Color</span><b>Brand primitives</b></div>
+      <div class="swatches">
+        <div class="sw sw-forest"><b>Forest 800</b>#0F3D29 · brand ground</div>
+        <div class="sw sw-mint"><b>Mint 500</b>#1FDC8C · the one action</div>
+        <div class="sw sw-sage"><b>Sage 50</b>#F5F8F4</div>
+        <div class="sw sw-ink"><b>Forest 950</b>#071A11</div>
+        <div class="sw sw-mint2"><b>Mint 200</b>highlight</div>
+        <div class="sw sw-lime"><b>Lime 300</b>celebration</div>
+        <div class="sw sw-sage2"><b>Sage 200</b>hairline</div>
+      </div>
+      <div class="label"><span>Category colors · funnel steps, covers, charts</span></div>
+      <div class="cats" aria-hidden="true"><i style="background:var(--cat-1)"></i><i style="background:var(--cat-2)"></i><i style="background:var(--cat-3)"></i><i style="background:var(--cat-4)"></i><i style="background:var(--cat-5)"></i><i style="background:var(--cat-6)"></i><i style="background:var(--cat-7)"></i><i style="background:var(--cat-8)"></i></div>
+    </div>
+    <div class="tile s-5" style="--i:1" data-detail="type" data-name="Typography">
+      <div class="label"><span>Typography</span><b>Four faces, one job each</b></div>
+      <div class="aa">A<span>a</span></div>
+      <div class="faces">
+        <div class="face"><span style="font-family:var(--font-display);font-weight:600">Sora</span><span>Titles · numbers</span></div>
+        <div class="face"><span style="font-family:var(--font-sans)">Figtree</span><span>Interface</span></div>
+        <div class="face"><span style="font-family:var(--font-serif);font-style:italic">Newsreader</span><span>Long-form · the Journal</span></div>
+        <div class="face"><span style="font-family:var(--font-mono);font-size:16px">JetBrains Mono</span><span>Versions · IDs</span></div>
+      </div>
+    </div>
+    <div class="tile s-6" style="--i:2" data-detail="type" data-name="Type scale">
+      <div class="label"><span>Type scale</span><b>19 styles</b></div>
+      <div class="ladder">
+        <div class="rung"><code>display-lg</code><span style="font-family:var(--font-display);font-weight:600;font-size:44px;line-height:48px;letter-spacing:-.03em">Twenty cards.</span></div>
+        <div class="rung"><code>display-sm</code><span style="font-family:var(--font-display);font-weight:600;font-size:32px;line-height:38px;letter-spacing:-.02em">Workspace hub</span></div>
+        <div class="rung"><code>heading-md</code><span style="font-size:18px;font-weight:650">Claim founding card No. 07</span></div>
+        <div class="rung"><code>body-md</code><span style="font-size:15px;color:var(--ink-muted)">Check the profile details, then approve.</span></div>
+        <div class="rung"><code>editorial-md</code><span style="font-family:var(--font-serif);font-size:18px;font-style:italic;color:var(--ink-muted)">Every name here chose to be listed.</span></div>
+        <div class="rung"><code>eyebrow</code><span style="font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--ink-brand)">THE FOUNDING MEMBERS WALL</span></div>
+      </div>
+    </div>
+    <div class="tile s-3" style="--i:3" data-detail="spacing" data-name="Spacing">
+      <div class="label"><span>Spacing</span><b>4px base</b></div>
+      <div class="bars">
+        <div class="bar"><i style="width:4px"></i>4</div><div class="bar"><i style="width:8px"></i>8</div><div class="bar"><i style="width:12px"></i>12</div>
+        <div class="bar"><i style="width:16px"></i>16</div><div class="bar"><i style="width:24px"></i>24</div><div class="bar"><i style="width:32px"></i>32</div>
+        <div class="bar"><i style="width:48px"></i>48</div><div class="bar"><i style="width:64px"></i>64</div><div class="bar"><i style="width:96px"></i>96</div>
+      </div>
+    </div>
+    <div class="tile s-3" style="--i:4" data-detail="radius" data-name="Radius">
+      <div class="label"><span>Radius</span><b>Soft, never sharp</b></div>
+      <div class="radii">
+        <div style="border-top-right-radius:8px">8</div><div style="border-top-right-radius:12px">12</div><div style="border-top-right-radius:16px">16</div>
+        <div style="border-top-right-radius:22px">22</div><div style="border-top-right-radius:32px">32</div><div style="border-top-right-radius:999px">full</div>
+      </div>
+    </div>
+    <div class="tile s-4" style="--i:5" data-detail="shadow" data-name="Elevation">
+      <div class="label"><span>Elevation</span><b>Surfaces step up</b></div>
+      <div class="stack"><div>shadow-sm · cards</div><div>shadow-md · menus</div><div>shadow-lg · modals</div></div>
+    </div>
+    <div class="tile s-4" style="--i:6" data-detail="easing" data-name="Motion">
+      <div class="label"><span>Motion</span><b>Four curves</b></div>
+      <div class="curves">
+        <div class="curve">standard<div class="track"><i style="animation-timing-function:var(--ease-standard)"></i></div></div>
+        <div class="curve">enter<div class="track"><i style="animation-timing-function:var(--ease-enter)"></i></div></div>
+        <div class="curve">exit<div class="track"><i style="animation-timing-function:var(--ease-exit)"></i></div></div>
+        <div class="curve">spring<div class="track"><i style="animation-timing-function:var(--ease-spring)"></i></div></div>
+      </div>
+      <p>Fast for hovers, slower for panels. Under reduced motion, everything settles instantly.</p>
+    </div>
+    <div class="tile s-4" style="--i:7" data-detail="materials" data-name="Materials">
+      <div class="label"><span>Materials</span><b>Optional personal finish</b></div>
+      <div class="mats"><div class="mat m-glass">Frosted glass</div><div class="mat m-oak">Lacquered oak</div><div class="mat m-felt">Pressed felt</div></div>
+      <p>A layer people can switch on. The default stays flat, and text never sits on a texture.</p>
+    </div>
+    <div class="tile s-12 re-tile" style="--i:8" data-detail="materials" data-name="Rare-earth materials">
+      <div class="label"><span>Materials · Rare-earth collection</span><b>Move your pointer · try Day/Night</b></div>
+      <div class="re-grid">
+        <div class="re re-nd"><span class="re-base"></span><span class="re-top"><span>60</span><span>144.24</span></span><span class="re-sym">Nd</span><div><div class="re-name">Neodymium</div><div class="re-note">Brushed magnet steel with the lilac sheen of its salts.</div></div></div>
+        <div class="re re-eu"><span class="re-base"></span><span class="re-top"><span>63</span><span>151.96</span></span><span class="re-sym">Eu</span><div><div class="re-name">Europium</div><div class="re-note">Phosphor grain. Charges by day, glows by night.</div></div></div>
+        <div class="re re-di"><span class="re-base"></span><span class="re-top"><span>59 · 60</span><span>Pr · Nd</span></span><span class="re-sym">Di</span><div><div class="re-name">Didymium glass</div><div class="re-note">Dichroic lilac to sea green. Tilt it with your pointer.</div></div></div>
+        <div class="re re-ho"><span class="re-base"></span><span class="re-top"><span>67</span><span>164.93</span></span><span class="re-sym">Ho</span><div><div class="re-name">Holmium</div><div class="re-note">Sand in daylight, rose under night light, like the oxide.</div></div></div>
+      </div>
+    </div>
+    <div class="tile s-12" style="--i:9">
+      <div class="label"><span>Icons · Lucide</span><b><a class="tpl-open" href="https://lucide.dev/icons" target="_blank" rel="noopener">lucide.dev ↗</a></b></div>
+      <div class="mount ico-grid" data-mount="icons"></div>
+      <p>One open-source outline set, 2px stroke, inheriting the text color. Components take icons as props, so the set can change later. Rules in ICONS.md.</p>
+    </div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section class="sec"><span class="sec-k">02 · Components</span><h2>One of each. Built once, used everywhere.</h2><p>One button style per role, one tab style, one status vocabulary. Every piece is accessible from the keyboard.</p></section>
+  <section class="bento" aria-label="Components">
+    <div class="tile s-7" style="--i:0" data-detail="components" data-focus="Actions" data-name="Actions"><div class="label"><span>Actions</span><b>Button · 5 roles</b></div><div class="stage mount" data-mount="buttons"></div></div>
+    <div class="tile s-5" style="--i:1" data-detail="components" data-focus="Display" data-name="Display components"><div class="label"><span>Status</span><b>Fixed vocabulary</b></div><div class="stage mount" data-mount="status"></div></div>
+    <div class="tile s-4" style="--i:2" data-detail="components" data-focus="Forms" data-name="Form components"><div class="label"><span>Forms</span><b>Field · Input · Select</b></div><div class="stage mount" data-mount="form"></div></div>
+    <div class="tile s-4" style="--i:3" data-detail="components" data-focus="Actions" data-name="Controls"><div class="label"><span>Controls</span><b>Segmented · Switch · Slider</b></div><div class="stage mount" data-mount="controls"></div></div>
+    <div class="tile s-4" style="--i:4" data-detail="components" data-focus="Feedback" data-name="Feedback components"><div class="label"><span>Feedback</span><b>Banner · Toast</b></div><div class="stage mount" data-mount="feedback"></div></div>
+    <div class="tile s-8" style="--i:5" data-detail="components" data-focus="Patterns" data-name="Patterns"><div class="label"><span>Patterns</span><b>ProfileCard</b></div><div class="stage mount" data-mount="profile"></div></div>
+    <div class="tile s-4 r-2" style="--i:6" data-detail="components" data-focus="Patterns" data-name="Patterns"><div class="label"><span>Patterns</span><b>ModuleCard</b></div><div class="stage mount" data-mount="module" style="justify-items:center"></div></div>
+    <div class="tile s-8" style="--i:7" data-detail="components" data-focus="Navigation" data-name="Navigation components"><div class="label"><span>Flow</span><b>Stepper · StageStats</b></div><div class="stage mount" data-mount="flow"></div></div>
+    <div class="tile s-12" style="--i:8" data-detail="components" data-focus="Patterns" data-name="Funnel patterns"><div class="label"><span>Funnel</span><b>FunnelStepCard · FlowConnector</b></div><div class="stage mount" data-mount="funnel" style="overflow-x:auto"></div></div>
+  </section>
+
+  <!-- MOTION -->
+  <section class="sec"><span class="sec-k">03 · Motion</span><h2>Pages that move like places.</h2><p>Eight page transitions led by a quiet default, eight soft scroll effects, a theme reveal and shared-element morphs, on the browser's own View Transitions API. Small distances, short fades, and all of it off under reduced motion.</p></section>
+  <section class="bento" aria-label="Motion">
+    <div class="tile s-8" style="--i:0" data-detail="components" data-focus="Motion" data-name="Page transitions"><div class="label"><span>Page transitions</span><b>useViewTransition · 8 effects</b></div><div class="mount" data-mount="transitions"></div></div>
+    <div class="tile s-4" style="--i:1" data-detail="components" data-focus="Actions" data-name="Theme toggle"><div class="label"><span>Theme</span><b>ThemeToggle · atom</b></div><div class="stage mount" data-mount="theme-demo"></div><p>The whole page reveals from the switch. Try it here or in the top bar.</p></div>
+    <div class="tile s-12" style="--i:2" data-detail="components" data-focus="Motion" data-name="Scroll effects"><div class="label"><span>Scroll effects</span><b>Reveal · 8 effects</b></div><div class="mount" data-mount="reveals"></div></div>
+    <div class="tile s-6" style="--i:3" data-detail="components" data-focus="Motion" data-name="Shared element"><div class="label"><span>Shared element</span><b>Morph · view transitions</b></div><div class="mount" data-mount="morph"></div><p>The card you pick grows into its page. Every tile on this showcase opens the same way.</p></div>
+    <div class="tile s-6" style="--i:4" data-detail="components" data-focus="Motion" data-name="Scroll progress and parallax"><div class="label"><span>Depth</span><b>ScrollProgress · Parallax</b></div><div class="mount" data-mount="depth"></div><p>The mint bar at the very top of this page is ScrollProgress. The hero's mark drifts with Parallax.</p></div>
+  </section>
+
+  <!-- BRAND + BOX -->
+  <section class="sec"><span class="sec-k">04 · Handover</span><h2>Everything the team needs to build with it.</h2><p>Files ready to drop into the dashboard, plus the rules that keep new screens consistent.</p></section>
+  <section class="bento" aria-label="Handover">
+    <div class="tile s-5" style="--i:0" data-detail="logo" data-name="Logo">
+      <div class="label"><span>Logo</span><b>Follows the theme</b></div>
+      <div class="split" style="min-height:220px">
+        <div data-theme="light" style="justify-content:center;align-items:center"><span class="mount" data-mount="logo-stacked-light"></span></div>
+        <div data-theme="dark" style="justify-content:center;align-items:center;background:var(--surface-brand)"><span class="mount" data-mount="logo-stacked-dark"></span></div>
+      </div>
+      <p>Wide, stacked and monogram lockups, with each file's exact inks in light and dark.</p>
+    </div>
+    <div class="tile s-7" style="--i:1" data-detail="box" data-name="Handover package">
+      <div class="label"><span>In the box</span><b>Ready to install</b></div>
+      <div class="box">
+        <div><span>Design tokens</span><span>tokens.json · 187</span></div>
+        <div><span>Tailwind v4 theme</span><span>between-gigs.css</span></div>
+        <div><span>React components</span><span>51 · TypeScript</span></div>
+        <div><span>Contrast report</span><span>138 pairs</span></div>
+        <div><span>Brand book</span><span>BRAND.md</span></div>
+        <div><span>Logo rules + files</span><span>LOGO.md · 4 SVG</span></div>
+        <div><span>Font files</span><span>6 · woff2</span></div>
+        <div><span>QA scripts</span><span>axe + keyboard</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMPLATES -->
+  <section class="sec"><span class="sec-k">05 · Templates</span><h2>Whole pages, assembled from the parts.</h2><p>Each template is a React component made only from the system's components and tokens. The three Between Gigs pages run together as one clickable prototype.</p></section>
+  <section class="bento" aria-label="Templates">
+    <div class="tile s-12 gigs-hero" style="--i:0">
+      <div class="label"><span>Prototype</span><b>GigsApp · search, profile, onboarding</b></div>
+      <div class="gigs-intro">
+        <div>
+          <h3>Search, meet, book. Then join.</h3>
+          <p>The client's three review prototypes, rebuilt on the system and taken further: filters that re-flow live, a portrait that flies from its card into the profile, a bento portfolio with a lightbox, and a five-step onboarding with a live preview. All six people are fictional.</p>
+        </div>
+        <div class="tpl-meta"><button type="button" class="tpl-open chip-btn tpl-launch" data-launch="GigsApp" aria-haspopup="dialog">Open the prototype ↗</button></div>
+      </div>
+    </div>
+    <div class="tile s-12" style="--i:1">
+      <div class="label"><span>A · Search results</span><b>SearchResults</b></div>
+      <div class="frame"><div class="frame-bar"><i></i><i></i><i></i><span>betweengigs.com/find</span></div><div class="viewport" data-template="SearchResults" data-h="1500"></div></div>
+      <div class="tpl-meta"><button type="button" class="tpl-open chip-btn tpl-launch" data-launch="GigsApp" data-route="search" aria-haspopup="dialog">Try it ↗</button><span class="chip">Live filters that re-flow</span><span class="chip">List / grid</span><span class="chip">Map pins follow your hover</span><span class="chip">Save</span></div>
+    </div>
+    <div class="tile s-6" style="--i:2">
+      <div class="label"><span>B · Profile</span><b>GigsterProfile</b></div>
+      <div class="frame"><div class="frame-bar"><i></i><i></i><i></i><span>betweengigs.com/maya-chen</span></div><div class="viewport" data-template="GigsterProfile" data-h="1700"></div></div>
+      <div class="tpl-meta"><button type="button" class="tpl-open chip-btn tpl-launch" data-launch="GigsApp" data-route="profile/maya" aria-haspopup="dialog">Try it ↗</button><span class="chip">Portrait morph</span><span class="chip">Scrollspy tabs</span><span class="chip">Lightbox</span><span class="chip">Request flow</span></div>
+    </div>
+    <div class="tile s-6" style="--i:3">
+      <div class="label"><span>C · Gigster onboarding</span><b>GigsterOnboarding</b></div>
+      <div class="frame"><div class="frame-bar"><i></i><i></i><i></i><span>betweengigs.com/join</span></div><div class="viewport" data-template="GigsterOnboarding" data-h="1700"></div></div>
+      <div class="tpl-meta"><button type="button" class="tpl-open chip-btn tpl-launch" data-launch="GigsApp" data-route="onboarding" aria-haspopup="dialog">Try it ↗</button><span class="chip">5 steps, sliding</span><span class="chip">Live preview</span><span class="chip">Validation</span></div>
+    </div>
+    <div class="tile s-12" style="--i:4">
+      <div class="label"><span>Coming soon</span><b>ComingSoon · template</b></div>
+      <div class="frame"><div class="frame-bar"><i></i><i></i><i></i><span>betweengigs.com</span></div><div class="viewport" data-template="ComingSoon" data-h="820"></div></div>
+      <div class="tpl-meta"><button type="button" class="tpl-open chip-btn tpl-launch" data-launch="ComingSoon" aria-haspopup="dialog">Open full page ↗</button><span class="chip">One call to action</span><span class="chip">Glow on hover</span><span class="chip">backdrop-europium · subtle</span></div>
+    </div>
+  </section>
+
+  <dialog id="tpl-full" aria-label="Template, full page">
+    <div id="tpl-full-root"></div>
+    <button type="button" id="tpl-close" class="tpl-close" aria-label="Close full page">Close ✕</button>
+  </dialog>
+
+  <dialog id="detail" aria-labelledby="detail-title">
+    <header class="dv-head"><div><h2 id="detail-title">Details</h2><p id="detail-sub"></p></div>
+      <button type="button" class="dv-close" id="detail-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></header>
+    <div id="detail-body"><div id="detail-root"></div></div>
+  </dialog>
+
+  <footer class="foot"><span class="mount" data-mount="logo-mark"></span><span>Between Gigs Design System · v1.6 · October 2026</span></footer>
+</div>
+</div>
+
+<script>
+(function () {
+  var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Scroll reveals for the static page: tiles rise in, section titles wipe up. Same data-reveal rules as <Reveal>.
+  var fx = function (el, effect, delay) { el.setAttribute("data-reveal", effect); el.style.setProperty("--reveal-delay", delay + "ms"); };
+  document.querySelectorAll(".bento > .tile").forEach(function (t) {
+    var i = Number(getComputedStyle(t).getPropertyValue("--i")) || 0;
+    fx(t, t.classList.contains("s-12") ? "tilt-in" : (t.classList.contains("s-4") || t.classList.contains("s-3")) ? "scale-in" : "fade-up", Math.min(i, 6) * 70);
+  });
+  document.querySelectorAll(".sec").forEach(function (sec) {
+    var k = sec.querySelector(".sec-k"), h = sec.querySelector("h2"), p = sec.querySelector("p");
+    if (k) fx(k, "slide-left", 0); if (h) fx(h, "clip-up", 90); if (p) fx(p, "fade-up", 220);
+  });
+  var targets = document.querySelectorAll("[data-reveal]");
+  if (!("IntersectionObserver" in window) || still) targets.forEach(function (t) { t.setAttribute("data-shown", ""); });
+  else {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.setAttribute("data-shown", ""); io.unobserve(e.target); } }); }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  // Rare-earth swatches: the highlight follows the pointer; didymium also tilts its hue.
+  if (still) return;
+  document.querySelectorAll(".re").forEach(function (el) {
+    el.addEventListener("pointermove", function (e) {
+      var b = el.getBoundingClientRect(), px = (e.clientX - b.left) / b.width, py = (e.clientY - b.top) / b.height;
+      el.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
+      el.style.setProperty("--my", (py * 100).toFixed(1) + "%");
+      el.style.setProperty("--tilt", ((px - .5) * 60).toFixed(1) + "deg");
+      el.style.setProperty("--hue", ((px - .5) * 50).toFixed(1));
+    });
+    el.addEventListener("pointerleave", function () { ["--mx", "--my", "--tilt", "--hue"].forEach(function (k) { el.style.removeProperty(k); }); });
+  });
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="bundle.js"></script>
+<script>
+(function () {
+  var meter = document.querySelector(".meter");
+  if (meter) for (var k = 0; k < 138; k++) meter.appendChild(document.createElement("i"));
+  if (!window.React || !window.BetweenGigs) return;
+  var R = React, BG = window.BetweenGigs, html = BG.html, I = BG.Icons;
+
+  // Motion demos -------------------------------------------------------------
+  var PAGES = [
+    { name: "Workspace hub", body: function () { return html`<div className="grid gap-3"><p className="text-body-md text-ink-muted">Your projects, drafts and the founding wall.</p><div className="flex flex-wrap gap-2"><${BG.StatusBadge} status="live" /><${BG.StatusBadge} status="draft" /><${BG.StatusBadge} status="needs-review" /></div><${BG.Progress} value=${12} max=${20} label="Founding cards claimed" valueText="12 of 20" size="sm" /></div>`; } },
+    { name: "Funnel Studio", body: function () { return html`<div className="grid gap-3"><p className="text-body-md text-ink-muted">Campaign 2: traffic, landing, claim, booking.</p><div className="flex flex-wrap items-center gap-2"><${BG.Badge} tone="info">4 steps<//><${BG.Badge} tone="warning">2 drafts<//><${BG.Badge} tone="success">1 published<//></div><${BG.Button} size="sm" variant="primary" iconEnd=${html`<${I.ArrowUpRight} />`}>Open canvas<//></div>`; } },
+    { name: "Profile review", body: function () { return html`<div className="grid gap-3"><p className="text-body-md text-ink-muted">Twelve profiles waiting for a decision.</p><div className="flex items-center gap-3"><${BG.AvatarGroup} people=${[{ name: "Maya Chen" }, { name: "Jordan Ellis" }, { name: "Sam Ortiz" }, { name: "Priya Nair" }]} max=${3} /><span className="text-body-sm text-ink-muted">and 8 more</span></div><div className="flex gap-2"><${BG.Button} size="sm" variant="strong">Approve next<//><${BG.Button} size="sm" variant="ghost">Skip<//></div></div>`; } },
+  ];
+  function Transitions() {
+    var fx = R.useState("shift"), pg = R.useState(0);
+    var go = BG.useViewTransition(fx[0]);
+    var to = function (i, e) { if (i === pg[0]) return; go(function () { pg[1](i); }, e.currentTarget, i < pg[0] ? "back" : "forward"); };
+    var P = PAGES[pg[0]];
+    return html`<div className="grid gap-3">
+      <div className="mx-fx" role="group" aria-label="Transition effect">${BG.pageEffects.map(function (f) {
+        return html`<${BG.Button} key=${f} size="sm" variant=${f === fx[0] ? "strong" : "secondary"} aria-pressed=${f === fx[0]} onClick=${function () { fx[1](f); }}>${f}<//>`; })}</div>
+      <div className="mx-app">
+        <div className="mx-nav" role="tablist" aria-label="Pages">${PAGES.map(function (p, i) {
+          return html`<${BG.Button} key=${p.name} size="sm" variant="ghost" role="tab" aria-selected=${i === pg[0]} className=${i === pg[0] ? "bg-surface-selected text-ink-brand" : ""} onClick=${function (e) { to(i, e); }}>${p.name}<//>`; })}</div>
+        <div className="mx-page vt-page"><p className="font-mono text-data-sm text-ink-subtle">${"0" + (pg[0] + 1) + " / 03"}</p><h3 className="font-display text-display-sm text-ink">${P.name}</h3>${P.body()}</div>
+      </div>
+    </div>`;
+  }
+  function Reveals() {
+    var k = R.useState(0);
+    return html`<div className="grid gap-3">
+      <div><${BG.Button} size="sm" variant="secondary" iconStart=${html`<${I.Undo2} />`} onClick=${function () { k[1](k[0] + 1); }}>Replay<//></div>
+      <div className="mx-reveals" key=${k[0]}>${BG.revealEffects.map(function (f, i) {
+        return html`<${BG.Reveal} key=${f} effect=${f} delay=${i * 80} repeat=${true} className="mx-rv">${f}<//>`; })}</div>
+    </div>`;
+  }
+  var MORPHS = [
+    { t: "Founding 20", s: "Twelve of twenty cards claimed.", c: "var(--surface-brand)", ink: "#eaf4ee" },
+    { t: "Journal", s: "Stories from the people between gigs.", c: "var(--surface-selected)", ink: "var(--ink)" },
+    { t: "Studio", s: "Campaigns, funnels and drafts.", c: "var(--surface-raised)", ink: "var(--ink)" },
+  ];
+  function Morph() {
+    var open = R.useState(-1), refs = R.useRef({});
+    var swap = function (next, fromEl) {
+      var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!document.startViewTransition || still) { open[1](next); return; }
+      fromEl.style.viewTransitionName = "morph";
+      var t = document.startViewTransition(function () {
+        fromEl.style.viewTransitionName = "";
+        ReactDOM.flushSync(function () { open[1](next); });
+        var target = refs.current[next < 0 ? "card" + open[0] : "big"];
+        if (target) target.style.viewTransitionName = "morph";
+      });
+      t.finished.finally(function () { Object.values(refs.current).forEach(function (el) { if (el) el.style.viewTransitionName = ""; }); });
+    };
+    if (open[0] >= 0) {
+      var m = MORPHS[open[0]];
+      return html`<div ref=${function (el) { refs.current.big = el; }} className="mx-big" style=${{ background: m.c, color: m.ink }}>
+        <div><p className="font-mono text-data-sm" style=${{ opacity: .7 }}>Opened</p><h3 className="font-display text-display-sm">${m.t}</h3><p className="mt-2 text-body-md" style=${{ opacity: .8 }}>${m.s}</p></div>
+        <div><${BG.Button} size="sm" variant="secondary" style=${{ color: m.ink }} onClick=${function (e) { swap(-1, refs.current.big); }}>Back<//></div>
+      </div>`;
+    }
+    return html`<div className="mx-cards">${MORPHS.map(function (m, i) {
+      return html`<button key=${m.t} type="button" ref=${function (el) { refs.current["card" + i] = el; }} className="mx-card" style=${{ background: m.c, color: m.ink }}
+        onClick=${function (e) { swap(i, e.currentTarget); }}><b>${m.t}</b><span style=${{ color: m.ink, opacity: .75 }}>Open</span></button>`; })}</div>`;
+  }
+  function Depth() {
+    var box = R.useRef(null);
+    return html`<div className="grid gap-2">
+      <${BG.ScrollProgress} target=${box} placement="inline" aria-label="Panel scroll" />
+      <div ref=${box} tabIndex="0" aria-label="Scrollable sample" className="h-40 overflow-auto rounded-xl border border-line bg-bg p-4">
+        ${["Scroll this panel.", "The bar above fills as you go.", "Long guides and the Journal use it.", "Decorative art can drift with Parallax.", "Text never moves.", "That's the rule.", "End."].map(function (t, i) {
+          return html`<p key=${i} className="mb-6 font-display text-heading-md text-ink">${t}</p>`; })}
+      </div>
+    </div>`;
+  }
+
+  function Controls() {
+    var v = R.useState("coverflow"), on = R.useState(true), shine = R.useState(40);
+    return html`<div className="grid gap-5">
+      <${BG.SegmentedControl} label="View" size="sm" value=${v[0]} onChange=${v[1]} options=${[{ value: "gallery", label: "Gallery" }, { value: "list", label: "List" }, { value: "coverflow", label: "Coverflow" }]} />
+      <${BG.Switch} checked=${on[0]} onChange=${on[1]} label="Highlight edits" description="Marks text that changed." />
+      <${BG.Slider} label="Shine" value=${shine[0]} onChange=${shine[1]} format=${function (x) { return x + "%"; }} />
+    </div>`;
+  }
+  function Flow() {
+    var s = R.useState(1);
+    return html`<div className="grid gap-6">
+      <${BG.Stepper} steps=${["Details", "Skills", "Availability", "Preview"]} current=${s[0]} onStepClick=${s[1]} />
+      <${BG.StageStats} title="This cohort" stages=${[{ label: "Invited", value: 120 }, { label: "Signed in", value: 64 }, { label: "Draft", value: 31 }, { label: "Submitted", value: 12, attention: true }, { label: "Approved", value: 18 }, { label: "In gallery", value: null }]} />
+    </div>`;
+  }
+  var open = html`<${BG.Button} size="sm" variant="secondary" fullWidth iconEnd=${html`<${I.ArrowUpRight}/>`}>Open<//>`;
+  var mounts = {
+    "logo-wide": function () { return html`<${BG.Logo} height=${30} />`; },
+    "logo-mark": function () { return html`<${BG.Logo} layout="mark" height=${20} />`; },
+    "hero-mark": function () { return html`<${BG.Parallax} speed=${-0.12}><${BG.Logo} layout="mark" height=${440} /><//>`; },
+    "theme-toggle": function () { return html`<${BG.ThemeToggle} />`; },
+    "scroll-progress": function () { return html`<${BG.ScrollProgress} aria-label="Page scroll" />`; },
+    "theme-demo": function () { return html`<div className="grid justify-items-center gap-4"><${BG.ThemeToggle} /><${BG.ThemeToggle} size="sm" showLabel=${false} /></div>`; },
+    "transitions": function () { return R.createElement(Transitions); },
+    "reveals": function () { return R.createElement(Reveals); },
+    "morph": function () { return R.createElement(Morph); },
+    "depth": function () { return R.createElement(Depth); },
+    "logo-stacked-light": function () { return html`<${BG.Logo} layout="stacked" height=${150} />`; },
+    "logo-stacked-dark": function () { return html`<${BG.Logo} layout="stacked" height=${150} />`; },
+    "theme-light": function () { return html`<div className="flex flex-wrap gap-2"><${BG.Button} size="sm" variant="primary">Claim a card<//><${BG.StatusBadge} status="approved" size="sm" /></div>`; },
+    "theme-dark": function () { return html`<div className="flex flex-wrap gap-2"><${BG.Button} size="sm" variant="primary">Claim a card<//><${BG.StatusBadge} status="approved" size="sm" /></div>`; },
+    "buttons": function () { return html`<div className="grid gap-4">
+      <div className="row"><${BG.Button} variant="primary" iconEnd=${html`<${I.ArrowUpRight}/>`}>Claim a card<//><${BG.Button} variant="strong">Approve profile<//><${BG.Button} variant="secondary" iconStart=${html`<${I.Download}/>`}>Export<//><${BG.Button} variant="ghost" iconStart=${html`<${I.Undo2}/>`}>Undo<//></div>
+      <div className="row"><${BG.Button} variant="danger" size="sm" iconStart=${html`<${I.Trash2}/>`}>Remove access<//><${BG.Button} variant="primary" size="sm" loading>Saving<//><${BG.IconButton} label="Search" variant="secondary" icon=${html`<${I.Search}/>`} /><${BG.IconButton} label="Add" variant="primary" icon=${html`<${I.Plus}/>`} /></div>
+    </div>`; },
+    "status": function () { return html`<div className="row">${Object.keys(BG.statusMeta).map(function (k) { return html`<${BG.StatusBadge} key=${k} status=${k} />`; })}</div>`; },
+    "form": function () { return html`<div className="grid gap-4">
+      <${BG.Field} label="ZIP code" error="Enter a 5-digit ZIP code, like 90026."><${BG.Input} id="sc-zip" defaultValue="9002" /><//>
+      <${BG.Field} label="What do you need help with?"><${BG.Select} id="sc-svc" placeholder="Choose a service" options=${[{ value: "b", label: "Furniture & creative builds" }, { value: "m", label: "Makeup services" }]} /><//>
+      <${BG.Checkbox} id="sc-wall" defaultChecked label="Add me to the Founding Members wall" />
+    </div>`; },
+    "controls": function () { return html`<${Controls} />`; },
+    "feedback": function () { return html`<div className="grid gap-3">
+      <${BG.Banner} tone="warning" title="Draft · not public.">Submissions are disabled.<//>
+      <${BG.Banner} tone="info" title="Design stays locked">Text edits only.<//>
+      <${BG.Toast} message="Profile approved" tone="success" action=${{ label: "Undo", onClick: function () {} }} />
+    </div>`; },
+    "profile": function () { return html`<${BG.ProfileCard} sample name="Maya Chen" specialty="Costume & wardrobe" summary="Thoughtful alterations, wardrobe edits and custom pieces for everyday life." tags=${["Alterations", "Closet styling"]} location="Silver Lake · 3 miles away" availability="Available this week" rate=${45} action=${html`<${BG.Button} size="sm" variant="secondary">View profile<//>`} save=${html`<${BG.IconButton} size="sm" label="Save" pressed icon=${html`<${I.Star}/>`} />`} />`; },
+    "module": function () { return html`<${BG.ModuleCard} title="Connected work" status="preview" version="v3.46" action=${open} pin=${html`<${BG.IconButton} size="sm" label="Pin" icon=${html`<${I.Pin}/>`} />`} progress=${{ value: 55, label: "Building" }} selected />`; },
+    "flow": function () { return html`<${Flow} />`; },
+    "icons": function () { return html`${Object.keys(I).map(function (k) { var C = I[k]; return html`<div key=${k} className="ico" title=${k}><${C} aria-hidden="true" /><span>${k}</span></div>`; })}`; },
+    "funnel": function () { return html`<div className="flex items-stretch" style=${{ minWidth: "940px" }}>
+      <${BG.FunnelStepCard} fluid type="traffic" step=${1} status="published" title="As seen in Deadline" description="Press and Peter's network bring visitors to the landing page." />
+      <${BG.FlowConnector} label="Clicks" />
+      <${BG.FunnelStepCard} fluid type="page" step=${2} status="draft" title="Founding 20 landing" description="Card wheel, the offer and how it works, ending in Claim." selected />
+      <${BG.FlowConnector} label="Claims a card" />
+      <${BG.FunnelStepCard} fluid type="form" step=${3} status="draft" title="Claim your card" description="Name, email and ZIP reserve a numbered card." />
+      <${BG.FlowConnector} label="Books" variant="dashed" />
+      <${BG.FunnelStepCard} fluid type="marketplace" step=${4} status="not-started" title="Book a professional" description="The client books and the $250 is applied at checkout." />
+    </div>`; },
+  };
+  document.querySelectorAll("[data-mount]").forEach(function (el) {
+    var f = mounts[el.getAttribute("data-mount")];
+    if (f) ReactDOM.createRoot(el).render(R.createElement(function () { return f(); }));
+  });
+
+  // "Open full page" / "Try it": the template opens full screen, morphing out of its tile.
+  (function () {
+    var dlgT = document.getElementById("tpl-full"); if (!dlgT) return;
+    var rootT = ReactDOM.createRoot(document.getElementById("tpl-full-root"));
+    var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var morph = function (from, to, update) {
+      if (!document.startViewTransition || still || !from) { update(); return; }
+      from.style.viewTransitionName = "morph";
+      var t = document.startViewTransition(function () { from.style.viewTransitionName = ""; update(); to.style.viewTransitionName = "morph"; });
+      t.finished.finally(function () { from.style.viewTransitionName = ""; to.style.viewTransitionName = ""; });
+    };
+    var links = [{ label: "Instagram", href: "#instagram" }, { label: "Privacy", href: "#privacy" }, { label: "Terms", href: "#terms" }];
+    var lastBtn = null, lastFrom = null;
+    document.querySelectorAll(".tpl-launch").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var name = btn.getAttribute("data-launch"), route = btn.getAttribute("data-route");
+        var props = name === "ComingSoon" ? { links: links } : { imageBase: "app/img/", initial: route ? { page: route.split("/")[0], id: route.split("/")[1] } : { page: "search" } };
+        var tile = btn.closest(".tile"); lastBtn = btn; lastFrom = tile.querySelector(".frame") || tile;
+        dlgT.setAttribute("aria-label", (name === "ComingSoon" ? "Coming soon" : "Between Gigs prototype") + ", full page");
+        morph(lastFrom, dlgT, function () { ReactDOM.flushSync(function () { rootT.render(R.createElement(BG.Templates[name], props)); }); dlgT.showModal(); dlgT.scrollTop = 0; });
+      });
+    });
+    var close = function () { morph(dlgT, lastFrom, function () { dlgT.close(); }); };
+    document.getElementById("tpl-close").addEventListener("click", close);
+    dlgT.addEventListener("cancel", function (e) { e.preventDefault(); close(); });
+    dlgT.addEventListener("close", function () { rootT.render(null); if (lastBtn) lastBtn.focus(); });
+  })();
+
+  // Live templates, rendered at 1440px and scaled into their frames.
+  document.querySelectorAll("[data-template]").forEach(function (vp) {
+    var T = BG.Templates && BG.Templates[vp.getAttribute("data-template")];
+    if (!T) return;
+    var h = Number(vp.getAttribute("data-h"));
+    var canvas = document.createElement("div");
+    canvas.className = "canvas";
+    canvas.style.height = h + "px";
+    canvas.setAttribute("inert", "");
+    canvas.setAttribute("aria-hidden", "true");
+    vp.appendChild(canvas);
+    var fit = function () { var k = vp.clientWidth / 1440; canvas.style.transform = "scale(" + k + ")"; vp.style.height = (h * k) + "px"; };
+    fit();
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(vp);
+    var name = vp.getAttribute("data-template");
+    var props = name === "ComingSoon" ? { links: [{ label: "Instagram", href: "#instagram" }, { label: "Privacy", href: "#privacy" }, { label: "Terms", href: "#terms" }] } : { imageBase: "app/img/" };
+    ReactDOM.createRoot(canvas).render(R.createElement(T, props));
+  });
+
+})();
+</script>
+<script src="details.js"></script>
+</body>
+</html>
+
+</body></html>

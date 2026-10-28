@@ -1,0 +1,29 @@
+<!-- @dsCard group="Forms" height=200 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Select</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Select } = BG;
+  const opts = [{ value: "all", label: "All" }, { value: "working", label: "Working" }, { value: "preview", label: "Preview" }, { value: "not-started", label: "Not started" }];
+  return html`<div className="grid max-w-md gap-4 p-6">
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-label-sm text-ink-muted">Status</span>
+      <${Select} aria-label="Status" size="sm" defaultValue="all" options=${opts} start=${html`<${I.Filter}/>`} className="w-40" />
+    </div>
+    <${Select} aria-label="Working version" defaultValue="patti" options=${[{ value: "patti", label: "Patti · approved copy" }, { value: "public", label: "Before Patti · public archive" }]} />
+    <${Select} aria-label="Service" placeholder="Choose a service" options=${opts} invalid />
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>C · Pulso — member app home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1C2E42}a:hover{color:#35597D}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #EDE4D4; color: #1C2E42; font-family: 'DM Sans', system-ui, sans-serif; padding: 20px 16px 0; display: flex; flex-direction: column; gap: 12px;">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 4px 6px;">
+    <div style="display: flex; flex-direction: column;">
+      <span style="font-size: 13px; color: #4C5D70;">Jue 30 oct</span>
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; line-height: 1.05;">Hola, <em style="font-style: italic;">Sofía</em></span>
+    </div>
+    <span style="width: 44px; height: 44px; border-radius: 50%; background: #FBF7EF; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600;" aria-label="Sofía Arango">SA</span>
+  </header>
+
+  <section style="position: relative; overflow: hidden; border-radius: 30px; background: #35597D; color: #FBF7EF; padding: 22px; display: flex; flex-direction: column; gap: 6px;" aria-label="Tu próxima clase">
+    <div style="position: absolute; right: -60px; top: -60px; width: 200px; height: 200px; border-radius: 50%; border: 1.5px solid rgba(251,247,239,0.22); box-shadow: 0 0 0 26px rgba(251,247,239,0.05), 0 0 0 52px rgba(251,247,239,0.035);" aria-hidden="true"></div>
+    <span style="position: relative; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(251,247,239,0.8);">Próxima · en 1 h 48 min</span>
+    <span style="position: relative; display: flex; align-items: baseline; gap: 10px;"><span style="font-size: 52px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums;">7:10</span><span style="font-size: 15px; color: rgba(251,247,239,0.8);">a. m.</span></span>
+    <span style="position: relative; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; line-height: 1.05;">Barre Full Body</span>
+    <span style="position: relative; font-size: 14px; color: rgba(251,247,239,0.8);">Carolina · Sala principal</span>
+    <a href="#llegue" style="position: relative; margin-top: 10px; display: inline-flex; align-items: center; justify-content: center; min-height: 50px; border-radius: 999px; background: #F7F3B2; color: #1C2E42; text-decoration: none; font-size: 15px; font-weight: 600;">Llegué al estudio</a>
+  </section>
+
+  <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;" aria-label="Tu práctica">
+    <div style="border-radius: 26px; background: #FBF7EF; padding: 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
+      <svg width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="9 de 12 clases restantes"><circle cx="32" cy="32" r="26" fill="none" stroke="#E3DBCB" stroke-width="8"/><circle cx="32" cy="32" r="26" fill="none" stroke="#35597D" stroke-width="8" stroke-linecap="round" stroke-dasharray="122.5 163.4" transform="rotate(-90 32 32)"/></svg>
+      <span><span style="display: block; font-size: 24px; font-weight: 700; line-height: 1;">9 / 12</span><span style="font-size: 13px; color: #4C5D70;">clases en tu paquete</span></span>
+    </div>
+    <div style="border-radius: 26px; background: #C4704F; color: #1C1410; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px;">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;">Racha</span>
+      <span><span style="display: block; font-size: 44px; font-weight: 700; line-height: 0.9; letter-spacing: -0.03em;">4</span><span style="font-size: 13px;">semanas cumpliendo tu meta</span></span>
+    </div>
+  </section>
+
+  <section style="border-radius: 26px; background: #FBF7EF; padding: 16px 18px 6px;" aria-label="Más tarde hoy">
+    <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #4C5D70;">Más tarde hoy</span>
+    <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(36,56,79,0.12);"><span style="width: 10px; height: 10px; border-radius: 50%; background: #5A7355;" aria-hidden="true"></span><span style="flex: 1; font-size: 15px;">Pilates Mat</span><span style="font-size: 14px; font-weight: 600; white-space: nowrap;">9:10 a. m.</span></div>
+    <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #D8C24A;" aria-hidden="true"></span><span style="flex: 1; font-size: 15px;">Vinyasa Yoga</span><span style="font-size: 14px; font-weight: 600; white-space: nowrap;">6:10 p. m.</span></div>
+  </section>
+
+  <nav aria-label="Principal" style="position: absolute; left: 16px; right: 16px; bottom: 16px; height: 66px; border-radius: 26px; background: #FBF7EF; box-shadow: 0 12px 30px -12px rgba(36,56,79,0.35); display: flex; align-items: center; justify-content: space-around; padding: 0 8px; box-sizing: border-box;">
+    <a href="#inicio" aria-label="Inicio" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 16px; border-radius: 999px; background: #1C2E42; color: #FBF7EF; text-decoration: none; font-size: 14px; font-weight: 500;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Inicio</a>
+    <a href="#horario" aria-label="Horario" style="width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></a>
+    <a href="#historial" aria-label="Historial" style="width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></a>
+    <a href="#perfil" aria-label="Perfil" style="width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!-- @dsCard group="Display" height=300 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Accordion</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Accordion, Tag } = BG;
+  return html`<div className="grid max-w-lg gap-6 p-6">
+    <${Accordion} defaultOpen=${["setup"]} items=${[
+      { id: "setup", title: "Thread setup", meta: "Personal notes · Workspace", content: html`<p>Drafts save to your personal notes until you share them with the team.</p>` },
+      { id: "labels", title: "Suggested labels", meta: "3", content: html`<div className="flex flex-wrap gap-2"><${Tag}>Hub<//><${Tag}>Feature<//><${Tag}>Needs review<//></div>` },
+      { id: "history", title: "Writing history", meta: "12 checkpoints", content: html`<p>Every save keeps a checkpoint you can return to.</p>` },
+    ]} />
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

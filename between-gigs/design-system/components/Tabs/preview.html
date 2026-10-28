@@ -1,0 +1,32 @@
+<!-- @dsCard group="Navigation" height=220 -->
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../bundle.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script><script src="../bundle.js"></script>
+<meta charset="utf-8">
+<title>Tabs</title>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState } = React;
+const BG = window.BetweenGigs;
+const { html, Icons: I } = BG;
+function Demo() {
+  const { Tabs, TabList, Tab, TabPanel } = BG;
+  const [t, setT] = useState("studies");
+  return html`<div className="p-6"><${Tabs} value=${t} onChange=${setT}>
+    <${TabList} label="Experiment workspace">
+      <${Tab} value="studies" icon=${html`<${I.Layers}/>`} count=${10}>Studies<//>
+      <${Tab} value="media" icon=${html`<${I.Image}/>`}>Media lab<//>
+      <${Tab} value="profiles" icon=${html`<${I.Users}/>`} count=${3}>Profiles<//>
+      <${Tab} value="campaign" disabled>Campaign Studio<//>
+    <//>
+    <${TabPanel} value="studies"><p className="text-body-md text-ink-muted">Visual studies, benchmarks and evidence, connected to the places you use them.</p><//>
+    <${TabPanel} value="media"><p className="text-body-md text-ink-muted">Generated images and screen recordings.</p><//>
+    <${TabPanel} value="profiles"><p className="text-body-md text-ink-muted">Sample people and their profile cards.</p><//>
+  <//></div>`;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Demo));
+</script>
+</body>
+</html>

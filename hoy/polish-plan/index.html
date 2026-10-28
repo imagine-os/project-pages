@@ -1,0 +1,310 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Hoy UI Polish Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; wide tables scroll in their own frames. Built on Hoy's own tokens. */
+:root {
+  --bg: #FBF7EF; --surface: #F5EEE1; --raised: #FFFCF6; --sunken: #EFE7DA;
+  --ink: #1C2E42; --muted: #4C5D70; --line: rgba(36,56,79,.14); --line-strong: rgba(53,89,125,.32);
+  --brand: #35597D; --brand-ink: #F5EEE1; --sun: #F7F3B2; --on-sun: #4A4212; --focus: #5F85B1;
+  --ok: #4F7D5A; --ok-soft: rgba(90,115,85,.18); --warn: #7A5C14; --warn-soft: rgba(216,194,74,.30);
+  --bad: #7E3B2C; --bad-soft: rgba(196,112,79,.20); --info: #2C4A6B; --info-soft: rgba(95,133,177,.20);
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r-ctl: 12px; --r-card: 16px; --r-panel: 24px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1B2E44; --surface: #22384F; --raised: #2A4159; --sunken: #16263A;
+  --ink: #F1E7D2; --muted: #A3B3C5; --line: rgba(241,231,210,.13); --line-strong: #3B5C7C;
+  --brand: #9BC0E4; --brand-ink: #1C2E42; --sun: #F7F3B2; --on-sun: #3A3410; --focus: #9BC0E4;
+  --ok: #7FB08A; --ok-soft: rgba(127,176,138,.16); --warn: #D8C24A; --warn-soft: rgba(216,194,74,.16);
+  --bad: #E0A08F; --bad-soft: rgba(224,160,143,.16); --info: #9BC0E4; --info-soft: rgba(155,192,228,.16);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #1B2E44; --surface: #22384F; --raised: #2A4159; --sunken: #16263A;
+  --ink: #F1E7D2; --muted: #A3B3C5; --line: rgba(241,231,210,.13); --line-strong: #3B5C7C;
+  --brand: #9BC0E4; --brand-ink: #1C2E42; --sun: #F7F3B2; --on-sun: #3A3410; --focus: #9BC0E4;
+  --ok: #7FB08A; --ok-soft: rgba(127,176,138,.16); --warn: #D8C24A; --warn-soft: rgba(216,194,74,.16);
+  --bad: #E0A08F; --bad-soft: rgba(224,160,143,.16); --info: #9BC0E4; --info-soft: rgba(155,192,228,.16);
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--sans); }
+.wrap { max-width: 64rem; margin: 0 auto; padding-block: 56px 96px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h1 { font: 500 clamp(2.6rem, 6vw, 4rem)/1.02 var(--serif); letter-spacing: -.01em; }
+h1 em { font-style: italic; color: var(--brand); }
+h2 { font: 600 2rem/1.1 var(--serif); }
+h3 { font: 600 1.05rem/1.3 var(--sans); }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font: 600 .72rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.15rem; color: var(--muted); }
+.mark { background: var(--sun); color: var(--on-sun); padding: 0 .2em; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: .82em; }
+code { background: var(--sunken); padding: .1em .35em; border-radius: 4px; }
+section { display: grid; gap: 20px; padding-top: 64px; }
+header.top { display: grid; gap: 20px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .88rem; color: var(--muted); }
+
+/* the two-layer model */
+.layers { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.layer { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-panel); padding: 24px; display: grid; gap: 12px; align-content: start; }
+.layer.skin { background: var(--brand); color: var(--brand-ink); border-color: transparent; }
+.layer.skin .eyebrow { color: inherit; opacity: .8; }
+.layer ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+
+/* tiers */
+.tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.tier { border: 1px solid var(--line); border-radius: var(--r-card); padding: 20px; display: grid; gap: 10px; align-content: start; background: var(--raised); }
+.dial { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.dial i { height: 6px; border-radius: 999px; background: var(--line); }
+.dial i.on { background: var(--brand); }
+.tier .routes { font-family: var(--mono); font-size: .76rem; color: var(--muted); }
+.tier p { font-size: .92rem; }
+
+/* tables */
+.frame { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--raised); }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 640px; }
+th { text-align: left; font: 600 .7rem/1.2 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
+th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.n { font-family: var(--mono); font-size: .8rem; white-space: nowrap; }
+.sw { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-family: var(--mono); font-size: .76rem; }
+.sw b { width: 18px; height: 18px; border-radius: 5px; border: 1px solid var(--line-strong); display: inline-block; }
+.tag { display: inline-block; font: 600 .7rem/1 var(--sans); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }
+.t-ok { background: var(--ok-soft); color: var(--ok); }
+.t-warn { background: var(--warn-soft); color: var(--warn); }
+.t-bad { background: var(--bad-soft); color: var(--bad); }
+.t-info { background: var(--info-soft); color: var(--info); }
+.t-neutral { background: var(--sunken); color: var(--muted); }
+
+/* findings */
+.findings { display: grid; gap: 12px; }
+.f { display: grid; grid-template-columns: 7.5rem 1fr; gap: 16px; padding: 16px 18px; background: var(--raised); border: 1px solid var(--line); border-radius: var(--r-card); }
+.f .where { font-family: var(--mono); font-size: .76rem; color: var(--muted); display: grid; gap: 8px; align-content: start; }
+.f div:last-child { display: grid; gap: 6px; min-width: 0; }
+.f .fix { font-size: .9rem; color: var(--muted); }
+.f .fix strong { color: var(--ink); font-weight: 600; }
+
+/* phases */
+.phases { display: grid; gap: 16px; }
+.phase { display: grid; grid-template-columns: 5rem 1fr; gap: 20px; padding: 22px; border-radius: var(--r-panel); background: var(--surface); border: 1px solid var(--line); }
+.phase .num { font: 500 3rem/1 var(--serif); color: var(--brand); }
+.phase .body { display: grid; gap: 10px; min-width: 0; }
+.phase ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: .94rem; }
+.when { font-size: .82rem; color: var(--muted); }
+
+.qs { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; }
+.note { font-size: .85rem; color: var(--muted); }
+a { color: var(--brand); }
+a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+@media (max-width: 760px) {
+  .layers, .tiers { grid-template-columns: 1fr; }
+  .f, .phase { grid-template-columns: 1fr; gap: 8px; }
+  .f .where { grid-auto-flow: column; justify-content: start; align-items: center; }
+}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">HoyOS · UI polish · kickoff</span>
+  <h1>Between Gigs builds it.<br><em>Hoy</em> dresses it.</h1>
+  <p class="lede">The plan for polishing HoyOS: take the component structure, roles and rules from the Between Gigs design system, keep every colour, typeface and material from Hoy, and add the cosmetic layer in stages.</p>
+  <div class="meta">
+    <span>Audited build <span class="mono">v0.25.0</span></span>
+    <span>imagine-os.github.io/hoy</span>
+    <span>22 Oct 2026 · 8 days to MVP launch (Oct 30)</span>
+    <span>Owner: Anowar (UI polish)</span>
+  </div>
+</header>
+
+<section>
+  <span class="eyebrow">The model</span>
+  <h2>Two layers, kept apart</h2>
+  <div class="layers">
+    <div class="layer">
+      <span class="eyebrow">Structure · from Between Gigs</span>
+      <h3>What things are and how they behave</h3>
+      <ul>
+        <li>The 55 components and their variants, states and props</li>
+        <li>Semantic token names (<code>bg</code>, <code>surface</code>, <code>ink</code>, <code>action</code>, <code>line</code>…)</li>
+        <li>Rules: one primary action per view, one tab style, fixed status words</li>
+        <li>Spacing on a 4px base, radius roles, z-index ladder, focus ring</li>
+        <li>Accessibility bar: 4.5:1 text, 3:1 controls, status never colour alone</li>
+      </ul>
+    </div>
+    <div class="layer skin">
+      <span class="eyebrow">Skin · from Hoy</span>
+      <h3>How it looks and feels</h3>
+      <ul>
+        <li>River blues, sand and cream, the sun-yellow highlight</li>
+        <li>Cormorant Garamond for moments, DM Sans for the interface</li>
+        <li>Stone and carved shadows, linen and paper textures</li>
+        <li>Arch shapes, the slow 7s "breath", the "Todo empieza HOY" voice</li>
+        <li>Seven nature tones (moss, river, clay, sun, sage, slate, plum)</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note">The rule that keeps this clean: components only ever read Between Gigs <em>names</em>; those names resolve to Hoy <em>values</em>. Changing the brand never means touching a component.</p>
+</section>
+
+<section>
+  <span class="eyebrow">Where the cosmetics go</span>
+  <h2>Three surface tiers</h2>
+  <p>Between Gigs says "calm workspace, loud moments". For Hoy that becomes a dial per surface. Staff work fast and need quiet screens; members and the public should feel the studio.</p>
+  <div class="tiers">
+    <div class="tier">
+      <span class="eyebrow">Calm</span>
+      <div class="dial" aria-label="Cosmetic level 2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+      <h3>Staff and admin</h3>
+      <p>Flat surfaces, hairlines, light shadows. Hoy colour and type only. No textures behind data.</p>
+      <span class="routes">/staff/* · /admin/* · /dev</span>
+    </div>
+    <div class="tier">
+      <span class="eyebrow">Warm</span>
+      <div class="dial" aria-label="Cosmetic level 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      <h3>Member and teacher apps</h3>
+      <p>Stone shadows on cards, arch-cropped class images, serif for greetings and milestones.</p>
+      <span class="routes">/app · /teach · /manual</span>
+    </div>
+    <div class="tier">
+      <span class="eyebrow">Expressive</span>
+      <div class="dial" aria-label="Cosmetic level 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <h3>Public site and celebrations</h3>
+      <p>Full materials, ambient motion, scroll reveals, the sun marker in headlines.</p>
+      <span class="routes">/site · /coming-soon · booking confirmed</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">Token bridge</span>
+  <h2>Between Gigs names, Hoy values</h2>
+  <p>Hoy already has most of the values. It also has a second, numbered set (<code>--hoy-c1</code> to <code>--hoy-c26</code>) in which <code>#24384F</code> appears four times under four names. The bridge below replaces both with one semantic layer.</p>
+  <div class="frame"><table>
+    <thead><tr><th>Between Gigs token</th><th>Hoy source today</th><th>Light</th><th>Dark</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="n">bg</td><td class="n">--color-bg</td><td><span class="sw"><b style="background:#FBF7EF"></b>#FBF7EF</span></td><td><span class="sw"><b style="background:#1B2E44"></b>#1B2E44</span></td><td>Page ground</td></tr>
+      <tr><td class="n">surface</td><td class="n">--color-surface</td><td><span class="sw"><b style="background:#F5EEE1"></b>#F5EEE1</span></td><td><span class="sw"><b style="background:#22384F"></b>#22384F</span></td><td>Cards, panels, app chrome</td></tr>
+      <tr><td class="n">surface-raised</td><td class="n">--color-surface-elevated</td><td><span class="sw"><b style="background:#FFFCF6"></b>#FFFCF6</span></td><td><span class="sw"><b style="background:#2A4159"></b>#2A4159</span></td><td>Menus, popovers, modals, toasts</td></tr>
+      <tr><td class="n">surface-sunken</td><td class="n">--color-surface-2 / --color-lane</td><td><span class="sw"><b style="background:#EFE7DA"></b>#EFE7DA</span></td><td><span class="sw"><b style="background:#16263A"></b>#16263A</span></td><td>Inputs, filter bars. Dark uses lane so it recedes</td></tr>
+      <tr><td class="n">surface-brand</td><td class="n">--brand-deepBlue</td><td><span class="sw"><b style="background:#35597D"></b>#35597D</span></td><td><span class="sw"><b style="background:#35597D"></b>#35597D</span></td><td>Hub hero, site hero, sign-in. Always a dark-theme island</td></tr>
+      <tr><td class="n">ink</td><td class="n">--color-ink</td><td><span class="sw"><b style="background:#1C2E42"></b>#1C2E42</span></td><td><span class="sw"><b style="background:#F1E7D2"></b>#F1E7D2</span></td><td>Primary text</td></tr>
+      <tr><td class="n">ink-muted</td><td class="n">--color-text-muted</td><td><span class="sw"><b style="background:#4C5D70"></b>#4C5D70</span></td><td><span class="sw"><b style="background:#A3B3C5"></b>#A3B3C5</span></td><td>5.8:1 on surface</td></tr>
+      <tr><td class="n">ink-subtle</td><td class="n">--color-text-faint</td><td><span class="sw"><b style="background:#606D7C"></b>72% ink</span></td><td><span class="sw"><b style="background:#B5B1A6"></b>72% cream</span></td><td><span class="tag t-warn">Check</span> about 4.3:1 on sunken. Make it a solid colour</td></tr>
+      <tr><td class="n">ink-brand</td><td class="n">--color-primary</td><td><span class="sw"><b style="background:#35597D"></b>#35597D</span></td><td><span class="sw"><b style="background:#9BC0E4"></b>#9BC0E4</span></td><td>Eyebrows, headline accent, checked controls</td></tr>
+      <tr><td class="n">action</td><td class="n">--color-accent-fill</td><td><span class="sw"><b style="background:#35597D"></b>#35597D</span></td><td><span class="sw"><b style="background:#9BC0E4"></b>#9BC0E4</span></td><td><span class="tag t-info">Proposed</span> dark uses light blue + ink label; today's dark button nearly matches the page</td></tr>
+      <tr><td class="n">action-strong</td><td class="n">--color-ink</td><td><span class="sw"><b style="background:#1C2E42"></b>#1C2E42</span></td><td><span class="sw"><b style="background:#F1E7D2"></b>#F1E7D2</span></td><td>Decisive step: "Confirmar pago", "Reservar"</td></tr>
+      <tr><td class="n">highlight</td><td class="n">--brand-yellow</td><td><span class="sw"><b style="background:#F7F3B2"></b>#F7F3B2</span></td><td><span class="sw"><b style="background:#F7F3B2"></b>#F7F3B2</span></td><td>Plays BG's lime role: marker and celebration only, never a banner</td></tr>
+      <tr><td class="n">line / line-strong</td><td class="n">--color-border(-strong)</td><td><span class="sw"><b style="background:rgba(36,56,79,.12)"></b>12% ink</span></td><td><span class="sw"><b style="background:#31506E"></b>#31506E</span></td><td>Hairlines / control borders</td></tr>
+      <tr><td class="n">focus</td><td class="n">--color-focus</td><td><span class="sw"><b style="background:#5F85B1"></b>#5F85B1</span></td><td><span class="sw"><b style="background:#9BC0E4"></b>#9BC0E4</span></td><td>3.7:1 on bg, passes 3:1</td></tr>
+      <tr><td class="n">success / warning / danger</td><td class="n">--color-success / warn / danger</td><td><span class="sw"><b style="background:#4F7D5A"></b><b style="background:#8A6A1E"></b><b style="background:#7E3B2C"></b></span></td><td><span class="sw"><b style="background:#7FB08A"></b><b style="background:#D8C24A"></b><b style="background:#E0A08F"></b></span></td><td>Soft grounds come from the moss, sun and clay tones</td></tr>
+      <tr><td class="n">info</td><td class="n">missing</td><td><span class="sw"><b style="background:#2C4A6B"></b>#2C4A6B</span></td><td><span class="sw"><b style="background:#9BC0E4"></b>#9BC0E4</span></td><td><span class="tag t-info">Proposed</span> from river tone. Needed for "Pago por confirmar"</td></tr>
+      <tr><td class="n">cat-1 … cat-7</td><td class="n">--tone-*-dot</td><td colspan="2"><span class="sw"><b style="background:#5A7355"></b><b style="background:#5F85B1"></b><b style="background:#C4704F"></b><b style="background:#D8C24A"></b><b style="background:#7E9C88"></b><b style="background:#848F9B"></b><b style="background:#9E6E8F"></b></span></td><td>Class types and chart series. Always with a label</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Type follows the same idea. Between Gigs has four roles: display, sans, serif, mono. For Hoy: <strong>display</strong> = Cormorant Garamond (heroes, greetings, big moments), <strong>sans</strong> = DM Sans (all interface text, including app page titles, replacing Inter), <strong>serif</strong> = Cormorant for manual and long reading, <strong>mono</strong> = JetBrains Mono for times, IDs and money columns. Radius: controls 12px, cards 16px, panels 24px, pills full. Arches stay as a Hoy-only shape for imagery.</p>
+</section>
+
+<section>
+  <span class="eyebrow">Status vocabulary</span>
+  <h2>One word, one colour, everywhere</h2>
+  <p>Between Gigs fixes its status words. Hoy needs its own set, drawn from the agreed rules (15-minute hold, payment by transfer, front-desk confirmation). Draft for Jas and Justin to confirm:</p>
+  <div class="frame"><table>
+    <thead><tr><th>Object</th><th>Statuses</th></tr></thead>
+    <tbody>
+      <tr><td>Reserva</td><td><span class="tag t-warn">Pendiente de pago</span> <span class="tag t-info">Pago por confirmar</span> <span class="tag t-ok">Confirmada</span> <span class="tag t-ok">Asistió</span> <span class="tag t-bad">No vino</span> <span class="tag t-neutral">Cancelada</span> <span class="tag t-neutral">Liberada</span></td></tr>
+      <tr><td>Pago</td><td><span class="tag t-info">Comprobante enviado</span> <span class="tag t-ok">Confirmado</span> <span class="tag t-bad">Rechazado</span></td></tr>
+      <tr><td>Clase</td><td><span class="tag t-neutral">Programada</span> <span class="tag t-info">En curso</span> <span class="tag t-warn">Casi llena</span> <span class="tag t-bad">Llena</span> <span class="tag t-neutral">Terminó</span></td></tr>
+      <tr><td>Bono / paquete</td><td><span class="tag t-ok">Activo</span> <span class="tag t-warn">Por vencer</span> <span class="tag t-neutral">Vencido</span> <span class="tag t-neutral">Sin plan</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <span class="eyebrow">Component map</span>
+  <h2>Where each Between Gigs component lands</h2>
+  <div class="frame"><table>
+    <thead><tr><th>Component</th><th>Hoy screens</th><th>Hoy finish</th></tr></thead>
+    <tbody>
+      <tr><td>AppShell, NavItem, PageHeader</td><td>/admin, /staff</td><td>Calm tier. Sidebar groups as NavSection, user and "Hub" link pinned at the bottom, no visible inner scrollbar</td></tr>
+      <tr><td>Stat, StatRow</td><td>Admin panel KPIs</td><td>Values in mono with tabular numbers, compact money ($8,0 M), never truncated</td></tr>
+      <tr><td>Table, FilterBar, Tabs</td><td>CRM, Finanzas, Bonos</td><td>Filter pills become underline Tabs with counts ("En riesgo · 0")</td></tr>
+      <tr><td>Combobox, Field, Input</td><td>Check-in "Reservar para un cliente", search</td><td>Full class label visible in the option list</td></tr>
+      <tr><td>StatusBadge, Banner</td><td>Every booking and payment view</td><td>Vocabulary above. Banners on soft status grounds</td></tr>
+      <tr><td>Progress</td><td>Class capacity, package classes left</td><td>Bar in ink-brand, "6 / 10 cupos" label beside it</td></tr>
+      <tr><td>Toast (with Undo)</td><td>Check-in, "No vino", payment confirmed</td><td>"Check-in hecho · Deshacer"</td></tr>
+      <tr><td>Stepper, ConfirmDialog</td><td>Book → pay → upload receipt</td><td>Shows the 15-minute hold as a live countdown</td></tr>
+      <tr><td>EmptyState</td><td>App home, history, inbox</td><td>Warm tier: serif line, arch illustration slot</td></tr>
+      <tr><td>Drawer, Modal</td><td>Walk-in "Registrar nuevo y cobrar"</td><td>Right drawer so the class list stays visible</td></tr>
+      <tr><td>CommandPalette</td><td>Topbar "Buscar páginas y personas"</td><td>Ctrl K; topbar keeps a short trigger</td></tr>
+      <tr><td>ComingSoon, Reveal, PageTransition, Parallax</td><td>/coming-soon, /site</td><td>Expressive tier, with reduced-motion fallbacks</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <span class="eyebrow">Audit · v0.25.0</span>
+  <h2>What I found on the live build</h2>
+  <p>Checked at a desktop width of about 800px in the light theme. Data mismatches already in Demo Findings (HALL-1 to HALL-16) are left out unless they affect the UI.</p>
+  <div class="findings">
+    <div class="f"><div class="where"><span class="tag t-bad">Fix now</span>/site</div><div><h3>The public site scrolls sideways and shows dev controls</h3><p class="fix">A horizontal scrollbar appears at 800px. The nav carries a "Latest · Actual" version picker. The logo slot rendered empty above a small "HUMAN CLUB" line (relates to HALL-8). <strong>Fix:</strong> find the overflowing element, move the version picker to the dev bar, use the HOY wordmark.</p></div></div>
+    <div class="f"><div class="where"><span class="tag t-bad">Fix now</span>/admin</div><div><h3>KPI values are cut off</h3><p class="fix">"Ingresos 30 días" reads "$ 8.020.0…". <strong>Fix:</strong> Stat component with compact money format and a smaller size step instead of an ellipsis.</p></div></div>
+    <div class="f"><div class="where"><span class="tag t-bad">Fix now</span>/admin</div><div><h3>Class times break over two lines</h3><p class="fix">"Hoy en un vistazo" shows "7:10 a." then "m." on the next line. <strong>Fix:</strong> times in mono with <code>white-space: nowrap</code> and a non-breaking space before "a. m.".</p></div></div>
+    <div class="f"><div class="where"><span class="tag t-bad">Fix now</span>/staff/checkin</div><div><h3>Labels clip in the busiest staff screen</h3><p class="fix">The class picker ends at "(9/1(", the class chips cut "Pilates Upper Body", and the search placeholder is cut. <strong>Fix:</strong> Combobox with full option text, chips that wrap to two lines, a shorter placeholder ("Buscar").</p></div></div>
+    <div class="f"><div class="where"><span class="tag t-warn">Polish</span>/app</div><div><h3>The sun yellow is used as a banner</h3><p class="fix">"Aún no tienes paquete" sits on a full yellow band. In the system, yellow is for markers and celebrations. <strong>Fix:</strong> info Banner; save the yellow for "Todo empieza <span class="mark">HOY</span>" and booking-confirmed moments.</p></div></div>
+    <div class="f"><div class="where"><span class="tag t-warn">Polish</span>/admin/*</div><div><h3>Every card carries the heaviest shadow</h3><p class="fix">Dense admin screens stack the multi-layer stone shadow on every block, so nothing stands out. <strong>Fix:</strong> calm tier uses surface, line and a small shadow. Stone stays for the member app and site.</p></div></div>
+    <div class="f"><div class="where"><span class="tag t-warn">Polish</span>/admin/crm</div><div><h3>Two tab styles and a hidden column</h3><p class="fix">The segment filters are pills and the last column header is cut to "V". <strong>Fix:</strong> underline Tabs with counts, a sticky first column, and the table scrolling inside its own frame.</p></div></div>
+    <div class="f"><div class="where"><span class="tag t-warn">Polish</span>All shells</div><div><h3>Testing tools sit in the product chrome</h3><p class="fix">"Wireframe", "Modo dev", the version badge and the demo user picker share the top bar with real controls (relates to HALL-16). <strong>Fix:</strong> one thin dev bar that the production build leaves out.</p></div></div>
+    <div class="f"><div class="where"><span class="tag t-info">Brand</span>Hub, app, site</div><div><h3>Titles change typeface from surface to surface</h3><p class="fix">The site uses Cormorant, the hub and apps use Inter, and body text is DM Sans. <strong>Fix:</strong> the type roles above. Drop Inter.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">Roadmap</span>
+  <h2>Cosmetics in stages</h2>
+  <p>Each stage ships on its own and leaves the product better than before. Nothing waits for Aleja's final artwork; image slots keep their shapes.</p>
+  <div class="phases">
+    <div class="phase"><div class="num">0</div><div class="body">
+      <h3>Bridge the tokens</h3>
+      <p class="when">Before Oct 30 · no visible change</p>
+      <ul><li>Add the Between Gigs semantic names as aliases of the Hoy values above</li><li>Point components at the new names; retire <code>--hoy-c*</code> and <code>--brand-*</code> in component code</li><li>Add the missing <code>info</code> and soft status grounds</li></ul>
+    </div></div>
+    <div class="phase"><div class="num">1</div><div class="body">
+      <h3>Structure on launch screens</h3>
+      <p class="when">Before Oct 30 · MVP routes only</p>
+      <ul><li>All "Fix now" items above</li><li>StatusBadge with the Hoy vocabulary on booking and payment views</li><li>Pending payments, check-in, register, CRM: Combobox, Table, Tabs, Toast with Undo</li><li>Dev bar separated from product chrome</li></ul>
+    </div></div>
+    <div class="phase"><div class="num">2</div><div class="body">
+      <h3>Brand finish</h3>
+      <p class="when">November · alongside the Nov 30 delivery</p>
+      <ul><li>Surface tiers applied: calm admin, warm member app, expressive site</li><li>Cormorant for greetings and milestones ("Hola, Sofía"), the sun marker in headlines</li><li>Arch crops on class and teacher images; linen and paper textures as an opt-in finish, never behind text</li><li>Dark theme pass with the proposed action colour</li></ul>
+    </div></div>
+    <div class="phase"><div class="num">3</div><div class="body">
+      <h3>Moments and motion</h3>
+      <p class="when">After Nov 30</p>
+      <ul><li>Scroll reveals and page transitions on the site</li><li>The 7-second breath on coming-soon and the hub hero</li><li>Small celebrations: first class booked, a package finished, a 4-week streak</li><li>Every motion has a reduced-motion version</li></ul>
+    </div></div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">Needed to start</span>
+  <h2>Open decisions</h2>
+  <ol class="qs">
+    <li><strong>Repo access.</strong> Which repo and branch should polish land on, and does it go through Jas (RN-16)?</li>
+    <li><strong>Status words.</strong> Confirm or edit the vocabulary above before badges are built.</li>
+    <li><strong>Dark action colour.</strong> Approve light blue buttons with ink labels in dark mode.</li>
+    <li><strong>Brand name.</strong> HOY or Human Club on the site and coming-soon page (HALL-8).</li>
+    <li><strong>Inter.</strong> OK to drop it and use DM Sans for app titles?</li>
+  </ol>
+</section>
+</div>
+
+</body></html>
